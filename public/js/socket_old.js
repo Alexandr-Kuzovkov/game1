@@ -23,7 +23,7 @@ var TIME_SCALE = 20;/*масштаб времени*/
 * генерация события get_missions
 **/
 socket.on('connect', function(data){
-    socket.emit('get_game', {user:user, location:pathname}); 
+    socket.emit('get_missions'); 
 });
 
 /**
@@ -111,16 +111,6 @@ function sendDataToServer(){
     socket.emit('data_from_client', {game: game.toString(), user: user.toString()});
 }
 
-function setMapOptions(game){
-    var SW_lat = game.location.bounds.SW[0];
-    var SW_lng = game.location.bounds.SW[1];
-    var NE_lat = game.location.bounds.NE[0];
-    var NE_lng = game.location.bounds.NE[1];
-    var center = [(SW_lat + NE_lat)/2, (SW_lng + NE_lng)/2];
-    map.setView(center,13);
-    map.setMaxBounds(L.latLngBounds(L.latLng(SW_lat, SW_lng),L.latLng(NE_lat, NE_lng)));
-}
-
 /**
 * восстановление данных игры с сервера при
 * перезагрузке страницы
@@ -138,7 +128,7 @@ function restoreGame(){
 **/
 
 function userLive(){
-    socket.emit('user_live',{user:user.toString(), location:game.location.id});
+    socket.emit('user_live',{user:user.toString()});
 }
 
 
@@ -150,8 +140,8 @@ function beginUserLive(){
     if ( interval == null ){
         interval = setInterval( userLive, LIVE_INTERVAL );
     }
-    //updateElevation();
-    //updateWeather();
+    updateElevation();
+    updateWeather();
 }
 
 
@@ -188,13 +178,17 @@ function getGameMessages(){
 * инициализация объекта remoteGame
 **/
 socket.on('send_game', function(data){
-   var remoteGame = data.game;
+   Missions = data.missions;
+   isGameInit = data.isGameInit;
+   if ( data.isGameInit ) remoteGame = data.remoteGame;
+   game.selectCountry(Countries[Missions.country.id][0]);
+   game.selectMission(Missions.object);
    if ( remoteGame ) {
-        game = new Game(user);
         game.restore(remoteGame, beginUserLive);
         user.gameId = remoteGame.id;
-        setMapOptions(game);
    }
+   map.setView(game.mission.center,13);
+   map.setMaxBounds(L.latLngBounds(L.latLng(32.5, 43.5), L.latLng(33.9, 45)));
 }); 
 
 /**
@@ -235,7 +229,7 @@ socket.on('game_clone_server',function(data){
 /**
 * обработчик события от сервера о готовности к началу игры
 * старт игры и начало посылки событий активности клиента
-**
+**/
 socket.on('game_ready', function(data){
    game.startGame();
    beginUserLive();
@@ -254,7 +248,7 @@ socket.on('data_from_server',function(data){
 
 /**
 * обработчик события получения сообщений от сервера для вывода
-**
+**/
 socket.on('server_msg',function(data){
     iface.addLog( data.msg );
 });
@@ -262,7 +256,7 @@ socket.on('server_msg',function(data){
 /**
 * обработчик события от сервера о прекращении игры
 * удаление клиентского объкта game и перезагрузка страницы
-**
+**/
 socket.on('game_exit_server',function(data){
    game.destroy(function(){
        iface.reloadPage('/');    
@@ -271,7 +265,7 @@ socket.on('game_exit_server',function(data){
 
 /**
 * обработчик события от сервера о перезагрузке страницы
-**
+**/
 socket.on('client_refresh_by_server',function(data){
     iface.reloadPage('/');
 });
@@ -280,7 +274,7 @@ socket.on('client_refresh_by_server',function(data){
 * обработчик события от сервера об окончании цикла
 * проверки окружения полков
 * запуск следующего цикла проверки
-**
+**/
 socket.on('check_around_done',function(data){
     setTimeout( checkAround, AROUND_TIMEOUT );
 });
@@ -289,7 +283,7 @@ socket.on('check_around_done',function(data){
 * обработчик события от сервера об окончании цикла
 * обновления высотных данных
 * запуск следующего цикла обновления
-**
+**/
 socket.on('update_elevation_done',function(data){
     setTimeout( updateElevation, ELEVATION_TIMEOUT );
 });
@@ -299,7 +293,6 @@ socket.on('update_elevation_done',function(data){
 * обновления погодных данных
 * запуск следующего цикла обновления
 **/
-/*
 socket.on('update_weather_done',function(data){
     setTimeout( updateWeather, WEATHER_TIMEOUT );
 });
@@ -307,15 +300,13 @@ socket.on('update_weather_done',function(data){
 /**
 * обработчик события получения игрового сообщения от сервера
 **/
-/*
 socket.on('server_game_msg', function(data){
     iface.addInfo(data.msg);
 });
-*/
+
 /**
 * обработчик сообщения события окончания игры 
 **/
-/*
 socket.on('game_over', function(data){
     iface.showGameOver(getGameOverMess(user, data.won));
 });
@@ -324,10 +315,8 @@ socket.on('around_ready', function(data){
     checkAround();
 });
 
-*/
 
-socket.on('to_user_live', function(data){
-    console.log(data.location);
-});    
+
+    
 
     

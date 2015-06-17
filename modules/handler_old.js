@@ -4,7 +4,7 @@ var missions = require(parameters.missions_module).missions;
 var around = require(parameters.services.around); /*подключение модуля окружения*/
 var elevation = require(parameters.services.elevation); /*подключение модуля высот*/
 var weather = require(parameters.services.weather); /*подключение модуля погоды*/
- 
+
 
 /**
 * обработчик события инициализации игры клиентом
@@ -171,10 +171,17 @@ function get_missions(socket,sdata){
 **/
 function get_game( socket, sdata ){
    socket.on('get_game', function(data){
-       var location = data.location.slice(1);
-       console.log('location='+location);
-       socket.emit('send_game', {game:sdata.games[location].toString()}); 
+        if ( sdata.game == null ){
+            socket.emit('send_game',{game: null, missions:missions, isGameInit:false});
+        }else{
+            var mission = missions[sdata.game.mission.id];
+            mission.country = getUserCountry(sdata.game.regiments, data.user);
+            socket.emit('send_game',{missions:mission, isGameInit:true, remoteGame: sdata.game.toString() });
+        }
+        sendLogMessages(socket, sdata);
+        sendGameMessages(socket, sdata);
     }); 
+    
 }
 
 /**
@@ -187,9 +194,23 @@ function get_game( socket, sdata ){
 **/
 function user_live( socket, sdata ){
    socket.on('user_live', function(data){
-       console.log('user_live_location='+data.location);
-       socket.emit('to_user_live',{location:data.location});
-       socket.broadcast.emit('to_user_live',{location:data.location});
+        if ( sdata.game != null ){
+            //console.log(JSON.stringify(data.user));
+            sdata.game.userLive(data.user);
+            //console.log(JSON.stringify(sdata.game.users));
+            if ( !sdata.game.isUsersLive() ){
+                sdata.game.addLogMessage('client was lost');
+                console.log('client was lost');
+                sendLogMessages(socket, sdata);
+                sdata.game.exit(function(){
+                    sdata.game = null;
+                    sdata.clearUsers();
+                });
+                
+                socket.broadcast.emit('game_exit_server');
+                socket.emit('game_exit_server'); 
+            }
+        } 
     });   
 }
 

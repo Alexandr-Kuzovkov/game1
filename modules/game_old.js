@@ -2,15 +2,15 @@
 var Helper = require('./helper');
 var Battle = require('./battle');
 
-function Game(location)
+function Game()
 {
-    this.id = Helper.getRandomInt(1000000,2000000);; /*id игры*/
-    this.location = location;/*объект, описывающий локацию*/
+    this.id = 0; /*id игры*/
     this.ready = false; /*флаг готовности игры*/
     this.users = []; /*массив игроков*/ 
     this.status = ''; /*состояние игры*/
     this.regiments = []; /*массив полков*/
     this.bases = []; /*массив баз*/
+    this.mission = null; /*текущая миссия*/
     this.MAX_LIVE_TIMEOUT = 13000; /*время в мс по истечении которого если от любого юзера нет события user_live игра прекращается*/
     this.setId = function(){
         this.id = Helper.getRandomInt(1000000,2000000);    
@@ -263,7 +263,6 @@ function Game(location)
         game.status = this.status;
         game.regiments = this.regiments;
         game.bases = this.bases;
-        game.location = this.location;
         return game;
     };
     

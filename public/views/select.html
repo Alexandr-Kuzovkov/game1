@@ -1,0 +1,10 @@
+{% extends 'empty.html' %}
+
+{% block content %}
+    <ul class="ul-select">
+        {% for location in locations %}
+        <li><a href="/{{location.id}}">{{location.name}}</a></li>
+        {%endfor%}
+    </ul>
+
+{% endblock %}

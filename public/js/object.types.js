@@ -113,7 +113,7 @@ function getType(type)
     switch (type){
         case 'tank': return new Tank(); break;
         case 'foot': return new Foot(); break;
-        case 'none': return new Base(); break;
+        case 'base': return new Base(); break;
     }
 };
 

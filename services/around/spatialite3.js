@@ -15,7 +15,7 @@ var NEG_INF = -999999999 /**отрицательное большое число
 var margin = 0.6; /**коэффициент расширения для определения части графа для обсчета**/
 var margin2 = 2.0;/**коэффициент расширения для определения части графа для обсчета**/
 var ready = false;
-var DB_FOLDER = 'db'; /*каталог с базами данных*/
+var DB_FOLDER = '/site5/services/around/db'; /*каталог с базами данных*/
 var CONNECTED_COFF = 0.95; /**часть связных узлов**/
 var boundary = {    /**объект задающий границы графа дорожной сети **/
                     min_lat:null,
@@ -188,7 +188,7 @@ function init(db_file, callback){
     loaded_file = db_file;
     clear();
     console.log('load graph...');
-    db = new sqlite.Database('services/around/' + DB_FOLDER + '/' + db_file);
+    db = new sqlite.Database(DB_FOLDER + '/' + db_file);
     loadNodes(function(){
 		loadRoads(function(){
 			fillConnectedNodes(0, function(){
@@ -822,7 +822,7 @@ function setBoundary(regiments, bases){
     if ( boundary.max_lat < -90 ){ boundary.max_lat = -90;} else if ( boundary.max_lat > 90 ){boundary.max_lat = 90;}
     if ( boundary.min_lng < -180 ){ boundary.min_lng = 360 + boundary.min_lng;} else if ( boundary.min_lng > 180 ){ boundary.min_lng = boundary.min_lng - 360;}
     if ( boundary.max_lng < -180 ){ boundary.max_lng = 360 + boundary.max_lng;} else if ( boundary.max_lng > 180 ){ boundary.max_lng = boundary.max_lng - 360;}
-    //console.log('min_lat: '+boundary.min_lat+'\nmax_lat: '+boundary.max_lat+'\nmin_lng: '+boundary.min_lng+'\nmax_lng: '+boundary.max_lng);
+    console.log('min_lat: '+boundary.min_lat+'\nmax_lat: '+boundary.max_lat+'\nmin_lng: '+boundary.min_lng+'\nmax_lng: '+boundary.max_lng);
     //отбираем нужную часть графа
 	//отбираем узлы 
     for ( var i = 0; i < n; i++ ){

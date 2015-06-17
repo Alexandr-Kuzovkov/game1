@@ -5,10 +5,10 @@
   
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta charset="utf-8" />
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<link rel="stylesheet" href="/css/leaflet.css" />
 	<link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/unit.css" />
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="/js/lib/leaflet.js"></script>
 	<script src="/js/lib/leaflet-providers.js"></script>
     <script src="/js/lib/google_tiles.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -37,7 +37,7 @@
                 <div id="map">
                 <div id="weather-info" class="font-response weather-info"></div>
                 </div>
-                <div class="title"><h3 class="grad rad2">Online стратегия</h3></div>
+                <div class="title"><h3 class="grad rad2">{% block title %}{% endblock %}</h3></div>
                 <div class="btn-block control-block grad2 font-response">
                     
                     <label id="label-btn-block" class="text-hover font-response">Скрыть кнопки</label><br />
@@ -75,6 +75,6 @@
                 </div>
                 
         <hr size="3" />
-        
+    <script type="text/javascript" src="/js/map.js"></script>    
     </body>
 </html>

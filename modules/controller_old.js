@@ -9,28 +9,36 @@ var MISSIONS_DIR = 'missions/';
 * обработчик GET запроса на '/' (сама игра)
 **/
 function index(req,res){
-    var locations = [];
-    for (var key in global.locations){
-        
-        locations.push({
-                            id: global.locations[key].id,
-                            name: global.locations[key].name
-                        });
+    var userId = null;
+    var userName = null;
+    if ( userNew(req)){
+        res.cookie('user_id',global.helper.getRandomInt(1000000,2000000));
+    }else{
+        userId  = parseInt(req.cookies.user_id);
+        if ( gameExists() ){
+            if ( !hasUserName(req) && userIdPresent(userId)){
+                res.cookie('user', global.sdata.game.getUserName(userId));
+                res.render('start');
+                return;
+            }
+            
+            if ( hasUserName(req) && userIdNamePresent(userId, req.cookies.user)){
+                res.render('start');
+                return;
+            } 
+        }
     }
-    res.render('select',{locations:locations});
-}
-
-
-function location1(req, res){
-    res.render('game',{title:global.locations.location1.name});
-}
-
-function location2(req, res){
-     res.render('game',{title:global.locations.location2.name});
-}
-
-function location3(req, res){
-     res.render('game',{title:global.locations.location3.name});
+    
+    if ( countUsers() >= 2 ){
+        res.render('busy');
+        return;
+    }
+    
+    if( !gameExists() ){
+        res.render('start');
+    }else{
+        res.render('join');
+    }      
 }
 
 /*обработчик запроса на /consruct (конструктор миссий)*/
@@ -136,9 +144,5 @@ function makeMissionsContent(data, countries){
 
 
 exports.index = index;
-exports.location1 = location1;
-exports.location2 = location2;
-exports.location3 = location3;
-
 exports.construct = construct;
 exports.makemissions = makemissions;

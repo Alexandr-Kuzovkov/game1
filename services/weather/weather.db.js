@@ -1,7 +1,7 @@
 /**модуль получения погоды из базы**/
 var START_YEAR = 1994;
 var END_YEAR = 2014;
-var DB_DIR = 'services/weather/db/';
+var DB_DIR = '/site5/services/weather/db/';
 var BIG_NUM = 9999999999999999;
 
 var sqlite3 = require('sqlite3');

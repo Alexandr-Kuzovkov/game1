@@ -1,0 +1,344 @@
+body
+{
+    background-image: url(/img/bg/2.jpg);
+    /*text-align: center;*/
+}
+
+
+
+
+ .title h3
+{
+    font-size: 0.6em;
+}
+
+.font-response
+{
+    font-size: 0.5em
+}
+
+@media screen and (min-width: 320px)
+{
+    #map
+    {
+    	width: 320px; 
+        
+    }
+    
+    
+    
+     .title h3
+    {
+        font-size: 0.8em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.6em;
+    }
+}
+
+
+@media screen and (min-width: 480px)
+{
+    #map
+    {
+    	width: 480px; 
+        
+    }
+    
+   
+    
+     .title h3
+    {
+        font-size: 0.9em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.7em;
+    }
+}
+
+@media screen and (min-width: 640px)
+{
+    #map
+    {
+    	width: 640px; 
+        
+    }
+    
+   
+    
+     .title h3
+    {
+        font-size: 1.0em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.7em;
+    }
+}
+
+@media screen and (min-width: 800px)
+{
+    #map
+    {
+    	width: 800px; 
+        
+    }
+    
+    
+    
+     .title h3
+    {
+        font-size: 1.1em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.7em;
+    }
+}
+
+@media screen and (min-width: 960px)
+{
+    #map
+    {
+    	width: 960px; 
+        
+    }
+    
+    
+    
+     .title h3
+    {
+        font-size: 1.2em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.7em;
+    }
+}
+
+@media screen and (min-width: 1020px)
+{
+    #map
+    {
+    	width: 1020px; 
+    }
+    
+    
+    
+     .title h3
+    {
+        font-size: 1.4em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.8em;
+    }
+}
+
+
+@media screen and (min-width: 1240px)
+{
+    #map
+    {
+    	width: 1240px; 
+        
+    }
+    
+    
+    
+     .title h3
+    {
+        font-size: 1.4em;
+    }
+    
+    .font-response
+    {
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (min-height: 320px)
+{
+    #map
+    {
+    	height: 320px; 
+    }
+    
+}
+
+@media screen and (min-height: 480px)
+{
+    #map
+    {
+    	height: 480px; 
+    }
+}
+
+@media screen and (min-height: 640px)
+{
+    #map
+    {
+    	height: 640px; 
+    }
+}
+
+@media screen and (min-height: 760px)
+{
+    #map
+    {
+    	height: 760px; 
+    }
+    
+}
+
+@media screen and (min-height: 800px)
+{
+    #map
+    {
+    	height: 800px; 
+    }
+    
+}
+
+@media screen and (min-height: 850px)
+{
+    #map
+    {
+    	height: 850px; 
+    }
+    
+}
+
+
+@media screen and (min-height: 968px)
+{
+    #map
+    {
+    	height: 968px; 
+    }
+    
+}
+
+@media screen and (min-height: 1020px)
+{
+    #map
+    {
+    	height: 1020px; 
+    }
+    
+}
+
+
+
+
+
+.btn
+{
+	padding: 5px;
+    margin: 2px 1px 2px 1px;
+	font-family: Verdana;
+	z-index:2;
+    width: 100%;
+}
+
+label
+{
+    font-family: Verdana;
+}
+
+
+.text-hover:hover
+{
+    color: #aaa;
+}
+
+.grad
+{
+    background: linear-gradient(to top, #b5bdc8 0%, #828c95 36%, #28343b 100%);
+}
+
+.grad2
+{
+    background: linear-gradient(to top, #e5edf8 0%, #b2bcc5 36%, #58646b 100%);
+}
+
+.rad
+{
+    border-radius: 5px;
+}
+
+.rad2
+{
+    border-radius: 20px;
+}
+
+hr
+{
+    color: #ccc;
+}
+
+.title
+{
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 30%;
+    margin-left: -15%; 
+    text-align: center;
+    z-index: 2;
+    
+}
+
+.title h3
+{
+    
+    color: #fff;
+    font-family: Verdana;
+   
+}
+
+
+.cursor
+{
+    cursor: pointer;
+}
+
+
+.ul-select
+{
+    font-family: Verdana;
+    font-size: 3.6em;
+    
+    position: absolute;
+    top: 40%;
+    left: 40%;
+}
+
+.ul-select li a
+{
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+.ul-select li a:visited
+{
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
+.ul-select li a:hover
+{
+    cursor: pointer;
+    text-decoration: none;
+    color: #ff5;
+}

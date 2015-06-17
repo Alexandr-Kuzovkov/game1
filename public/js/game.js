@@ -10,6 +10,7 @@ function Game( user )
     this.mission = null; /*выбранная миссия*/
     this.regimentId = 0; 
 	this.baseId = 0;
+    this.location = null;
 	this.regiments = []; /**массив полков*/
 	this.bases = [];     /*массив баз*/
     this.interval = null; /*переменная для хранения интервала*/
@@ -221,9 +222,8 @@ function Game( user )
         for ( var i =0; i < bases.length; i++ ) 
             this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id ); 
         this.id = remoteGame.id;
-        this.regimentId = remoteGame.regimentId;
-        this.baseId = remoteGame.baseId;
         this.start = false;
+        this.location = remoteGame.location;
         Move.ENABLED = false;
         this.startGame();
         callback();
