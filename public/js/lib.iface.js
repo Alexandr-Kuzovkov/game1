@@ -124,7 +124,7 @@ function updateCountry(){
 * обработчик кнопки выхода из игры
 **/
 function btnExitHandler(){
-    gameExit();
+    window.location.replace('/');
 }
 
 /**

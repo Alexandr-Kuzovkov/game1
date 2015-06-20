@@ -1,6 +1,6 @@
 /*серверный модуль обработчиков событий при взаимодействии клиентов и сервера*/
 var parameters = require('./parameters').parameters;
-var missions = require(parameters.missions_module).missions;
+//var missions = require(parameters.missions_module).missions;
 var around = require(parameters.services.around); /*подключение модуля окружения*/
 var elevation = require(parameters.services.elevation); /*подключение модуля высот*/
 var weather = require(parameters.services.weather); /*подключение модуля погоды*/
@@ -13,6 +13,7 @@ var weather = require(parameters.services.weather); /*подключение м�
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
 **/
+/*
 function game_init_client(socket, sdata){
     socket.on('game_init_client',function(data){
         if (sdata.game != null){
@@ -43,7 +44,7 @@ function game_init_client(socket, sdata){
 * генерация событий game_clone_server, game_ready
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function game_clone_client(socket, sdata){
     socket.on('game_clone_client',function(data){
         if (sdata.game == null) return; 
@@ -71,21 +72,21 @@ function game_clone_client(socket, sdata){
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
 **/
-function game_data_from_client(socket,sdata){
+function data_from_client(socket,sdata){
     socket.on('data_from_client',function(data){
-        if ( sdata.game != null ){
-            sdata.game.sync(data.game);
-            if ( sdata.game.users[0].id == data.user.id ){
-                sdata.game.battleLoop();
-            }
-            if ( !sdata.game.checkGameOver()){
-                socket.emit('data_from_server',{game:sdata.game.toString()}); 
+        if ( sdata.games[data.location] ){
+            sdata.games[data.location].sync(data.game);
+            sdata.games[data.location].battleLoop();
+            
+            if ( !sdata.games[data.location].checkGameOver()){
+                socket.emit('data_from_server',{game:sdata.games[data.location].toString()}); 
             }else{
-                var won = ( sdata.game.users[0].loser )? sdata.game.users[1] : sdata.game.users[0];
-                sdata.game.addLogMessage('Game over, user ' + won.name + ' won');
-                sendLogMessages(socket, sdata);
-                socket.emit('game_over',{won:won});
-                socket.broadcast.emit('game_over',{won:won});
+                if( sdata.games[location].users[data.user.id].loser ){
+                    sdata.games[data.location].addLogMessage('Game over, user ' + won.name + ' won');
+                    sendLogMessages(socket, sdata, data.location);
+                    socket.emit('game_over',{won:won});
+                }
+                
             }
         }
     });
@@ -96,7 +97,7 @@ function game_data_from_client(socket,sdata){
 * генерация событий game_pause_server
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function game_pause(socket, sdata){
     socket.on('game_pause_client',function(data){
         //console.log(data.msg+': '+JSON.stringify(data.user));
@@ -112,7 +113,7 @@ function game_pause(socket, sdata){
 * генерация событий game_start_server
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function game_start(socket, sdata){
     socket.on('game_start_client',function(data){
         socket.broadcast.emit('game_start_server',{user:data.user});
@@ -128,7 +129,7 @@ function game_start(socket, sdata){
 * генерация событий game_exit_server
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function game_exit(socket, sdata){
     socket.on('game_exit_client',function(data){
         //console.log(data.msg+': '+JSON.stringify(data.user));
@@ -149,7 +150,7 @@ function game_exit(socket, sdata){
 * генерация событий send_missions и посылка данных о миссиях
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function get_missions(socket,sdata){
     socket.on('get_missions', function(data){
         if ( sdata.game == null ){
@@ -171,10 +172,25 @@ function get_missions(socket,sdata){
 **/
 function get_game( socket, sdata ){
    socket.on('get_game', function(data){
-       var location = data.location.slice(1);
-       console.log('location='+location);
-       socket.emit('send_game', {game:sdata.games[location].toString()}); 
+       var location = data.location.slice(10);
+       //console.log('location='+location);
+       if (sdata.games[location].users[data.user.id] == undefined){
+            socket.emit('new_game', {game:sdata.games[location].toString(), location:locations[location]}); 
+       }else{
+            socket.emit('resume_game', {game:sdata.games[location].toString()}); 
+       }
+       
     }); 
+}
+
+
+function set_units( socket, sdata ){
+    socket.on('set_units', function(data){
+        sdata.games[data.location].joinUser(data.units, data.user, function(){
+            socket.emit('client_refresh_by_server',{url:'/location/'+data.location});
+            socket.broadcast.emit('client_refresh_by_server',{url:'/location/'+data.location});
+        });
+    });
 }
 
 /**
@@ -187,7 +203,7 @@ function get_game( socket, sdata ){
 **/
 function user_live( socket, sdata ){
    socket.on('user_live', function(data){
-       console.log('user_live_location='+data.location);
+       //console.log('user_live_location='+data.location);
        socket.emit('to_user_live',{location:data.location});
        socket.broadcast.emit('to_user_live',{location:data.location});
     });   
@@ -200,7 +216,7 @@ function user_live( socket, sdata ){
 * генерация события check_around_done после окончания цикла проверки
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function check_around(socket,sdata){
     socket.on('check_around', function(data){
         if ( sdata.game == null ){
@@ -222,7 +238,7 @@ function check_around(socket,sdata){
 * генерация события check_around_done после окончания цикла проверки
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function update_elevation(socket,sdata){
     socket.on('update_elevation', function(data){
          if ( sdata.game == null ){
@@ -244,7 +260,7 @@ function update_elevation(socket,sdata){
 * генерация события check_around_done после окончания цикла проверки
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function update_weather(socket,sdata){
     socket.on('update_weather', function(data){
          if ( sdata.game == null ){
@@ -263,7 +279,7 @@ function update_weather(socket,sdata){
 * обработчик события connect
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
+**
 function connect(socket,sdata){
     socket.on('connect',function(data){
         socket.emit('connect',{msg:'connect!!!'});
@@ -274,7 +290,7 @@ function connect(socket,sdata){
 * получение незанятой страны при присоединении к игре второго игрока
 * @param regiments массив объектов regiment
 * @return country_id или false 
-**/
+**
 function getFreeCountry(regiments){
     for ( var i = 0; i < regiments.length; i++ ){
         if ( regiments[i].userId == 0 ) return regiments[i].country;
@@ -287,7 +303,7 @@ function getFreeCountry(regiments){
 * @param regiments массив объектов regiment
 * @param user объект user
 * @return country_id или false
-**/
+**
 function getUserCountry(regiments,user){
     for ( var i = 0; i < regiments.length; i++ ){
         if ( regiments[i].userId == user.id ) return regiments[i].country;
@@ -301,8 +317,8 @@ function getUserCountry(regiments,user){
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user
 * @param mess строка сообщения
 **/
-function sendLogMessages(socket, sdata ){
-    var messages = sdata.game.getLogMessages();
+function sendLogMessages(socket, sdata, location ){
+    var messages = sdata.games[location].getLogMessages();
     socket.emit('server_msg',{msg: messages});
     socket.broadcast.emit('server_msg',{msg: messages});
 }
@@ -313,7 +329,7 @@ function sendLogMessages(socket, sdata ){
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user
 * @param mess строка сообщения
-**/
+**
 function sendGameMessages(socket, sdata ){
     if (sdata.game == null) return;
     var messages = sdata.game.getGameMessages();
@@ -325,25 +341,27 @@ function sendGameMessages(socket, sdata ){
 * обработчик события запроса игрового сообщения клиентом
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user
-**/
+**
 function get_game_message_client(socket, sdata){
     socket.on('get_game_message_client', function(data){
         sendGameMessages(socket, sdata);
     });
 }
 
+*/
 
-exports.game_init_client = game_init_client;
-exports.game_clone_client = game_clone_client;
-exports.game_data_from_client = game_data_from_client;
-exports.game_pause = game_pause;
-exports.game_start = game_start;
-exports.game_exit = game_exit;
-exports.get_missions = get_missions;
-exports.connect = connect;
+//exports.game_init_client = game_init_client;
+//exports.game_clone_client = game_clone_client;
+exports.data_from_client = data_from_client;
+//exports.game_pause = game_pause;
+//exports.game_start = game_start;
+//exports.game_exit = game_exit;
+//exports.get_missions = get_missions;
+//exports.connect = connect;
 exports.get_game = get_game;
 exports.user_live = user_live;
-exports.check_around = check_around;
-exports.update_elevation = update_elevation;
-exports.update_weather = update_weather;
-exports.get_game_message_client = get_game_message_client;
+//exports.check_around = check_around;
+//exports.update_elevation = update_elevation;
+//exports.update_weather = update_weather;
+//exports.get_game_message_client = get_game_message_client;
+exports.set_units = set_units;

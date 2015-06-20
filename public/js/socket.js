@@ -1,19 +1,14 @@
 /*клиентский модуль обработчиков событий при взаимодействии клиента и сервера*/
-url = window.location.host;
-pathname = window.location.pathname;
-socket = io.connect(url+pathname);
-
-console.log('url='+url+pathname);
+var url = window.location.host;
+var pathname = window.location.pathname;
+var socket = io.connect(url+pathname);
+var hostname = window.location.hostname;
 var user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/
-Debug.trace(user.toString());
-var Missions = null; /*объект для хранения миссий игры*/
 var game = null; /*переменная для хранения клиентского объекта game*/
-var isGameInit = false; /*флаг инициализации игры на сервере*/
-var remoteGame = false; /*объект для хранения принятого серверного объекта игры*/
 var interval = null; /*интервал обновления клиента и сервера*/
 var LIVE_INTERVAL = 4000; /*интервал генерации события об активности клиента*/ 
 var AROUND_TIMEOUT = 4000; /*интервал генерации событий запроса проверки окружения*/
-var hostname = window.location.hostname;
+
 var ELEVATION_TIMEOUT = 2000; /*интервал генерации событий запроса высотных данных*/
 var WEATHER_TIMEOUT = 300000; /*интервал генерации событий запроса погодных данных*/
 var TIME_SCALE = 20;/*масштаб времени*/
@@ -31,27 +26,17 @@ socket.on('connect', function(data){
 * перезагрузка страницы
 **/
 socket.on('disconnect', function(data){
-   iface.reloadPage('/');
+   //window.location.replace('/');
     
 });
 
-/**
-* обработчик события получения миссий
-* инициализация объекта remoteGame
-* загрузка скрипта управляющего начальным интерфейсом
-**/
-socket.on('send_missions', function(data){
-    Missions = data.missions;
-    isGameInit = data.isGameInit;
-    if ( data.isGameInit ) remoteGame = data.remoteGame;
-    Helper.addScript('/js/iface.js');
-});
+
 
 
 /**
 * инициализация игры клиентом и генерация события game_init_client
 * с посылкой данных объекта game и user
-**/
+**
 function gameInit(){
     map.setView(game.mission.center,13);
     map.setMaxBounds(L.latLngBounds(L.latLng(32.5, 43.5), L.latLng(33.9, 45)));
@@ -66,7 +51,7 @@ function gameInit(){
 * клонирование игры клиентом при присоединении к игре 
 * и генерация события game_clone_client
 * с посылкой данных объекта game и user
-**/
+**
 function gameClone(){
     map.setView(game.mission.center,13);
     map.setMaxBounds(L.latLngBounds(L.latLng(32.5, 43.5), L.latLng(33.9, 45)));
@@ -79,7 +64,7 @@ function gameClone(){
 * постановка игры на паузу 
 * и генерация события game_pause_client
 * с посылкой данных объекта user
-**/
+**
 function gamePause(){
     socket.emit('game_pause_client',{user: user.toString(), msg: 'Game pause'}); 
 };
@@ -88,7 +73,7 @@ function gamePause(){
 * старт игры 
 * и генерация события game_start_client
 * с посылкой данных объекта user
-**/
+**
 function gameStart(){
     socket.emit('game_start_client',{user: user.toString(), msg: 'Game start'}); 
 };
@@ -97,7 +82,7 @@ function gameStart(){
 * выход из игры 
 * и генерация события game_exit_client
 * с посылкой данных объекта game и user
-**/
+**
 function gameExit(){
     socket.emit('game_exit_client',{user: user.toString(), game: game.toString(), msg: 'Game exit'}); 
 };
@@ -108,9 +93,13 @@ function gameExit(){
 * с посылкой данных объекта game
 **/
 function sendDataToServer(){
-    socket.emit('data_from_client', {game: game.toString(), user: user.toString()});
+    socket.emit('data_from_client', {game: game.toString(), user: user.toString(), location:pathname.slice(10)});
 }
 
+/**
+* позиционирование карты и установка границ
+* @param game объект игры
+**/
 function setMapOptions(game){
     var SW_lat = game.location.bounds.SW[0];
     var SW_lng = game.location.bounds.SW[1];
@@ -126,7 +115,7 @@ function setMapOptions(game){
 * перезагрузке страницы
 * и генерация события get_game
 * с посылкой данных объекта user
-**/
+**
 function restoreGame(){
     socket.emit('get_game',{user:user.toString()});
 }
@@ -157,28 +146,28 @@ function beginUserLive(){
 
 /**
 * запрос на проверку окружения полков
-**/
+**
 function checkAround(){
     //socket.emit('check_around',{user:user.toString()});
 }
 
 /**
 * запрос на обновление высотных данных
-**/
+**
 function updateElevation(){
     //socket.emit('update_elevation',{user:user.toString()});
 }
 
 /**
 * запрос на обновление погодных данных
-**/
+**
 function updateWeather(){
     //socket.emit('update_weather',{user:user.toString()});
 }
 
 /**
 * запрашивает игровые сообщения с сервера 
-**/
+**
 function getGameMessages(){
     socket.emit('get_game_message_client',{user:user.toString()});
 }
@@ -187,26 +176,41 @@ function getGameMessages(){
 * обработчик события получения игры от сервера
 * инициализация объекта remoteGame
 **/
-socket.on('send_game', function(data){
-   var remoteGame = data.game;
-   if ( remoteGame ) {
+socket.on('resume_game', function(data){
+   if ( data.game ) {
         game = new Game(user);
-        game.restore(remoteGame, beginUserLive);
-        user.gameId = remoteGame.id;
+        game.restore(data.game, beginUserLive);
+        user.gameId = data.game.id;
         setMapOptions(game);
+        game.startGame();       
    }
+});
+
+/**
+* обработчик события получения игры от сервера
+* инициализация объекта remoteGame
+* присоединение к игре
+**/
+socket.on('new_game', function(data){
+   if ( data.game ) {
+        game = new Game(user);
+        game.restore(data.game, function(){});
+        user.gameId = data.game.id;
+        setMapOptions(game);
+        showAvailUnits(data.location);
+   } 
 }); 
 
 /**
 * обработчик события от сервера постановки игры на паузу
-**/
+**
 socket.on('game_pause_server', function(data){
     game.pauseGame();
 });
 
 /**
 * обработчик события от сервера старта игры
-**/
+**
 socket.on('game_start_server', function(data){
     game.startGame();
 });
@@ -214,7 +218,7 @@ socket.on('game_start_server', function(data){
 /**
 * обработчик события от сервера об инициализации игры
 * получение и установка id игры и юзера
-**/
+**
 socket.on('game_init_server',function(data){ 
     game.id = data.gameId;
     user.gameId = data.gameId;
@@ -225,7 +229,7 @@ socket.on('game_init_server',function(data){
 /**
 * обработчик события от сервера о клонировании игры
 * получение и установка id игры и юзера
-**/
+**
 socket.on('game_clone_server',function(data){
     game.id = data.gameId;
     user.gameId = data.gameId;
@@ -271,9 +275,9 @@ socket.on('game_exit_server',function(data){
 
 /**
 * обработчик события от сервера о перезагрузке страницы
-**
+**/
 socket.on('client_refresh_by_server',function(data){
-    iface.reloadPage('/');
+    window.location.assign(data.url);
 });
 
 /**
@@ -312,14 +316,16 @@ socket.on('server_game_msg', function(data){
     iface.addInfo(data.msg);
 });
 */
+
 /**
 * обработчик сообщения события окончания игры 
 **/
-/*
+
 socket.on('game_over', function(data){
     iface.showGameOver(getGameOverMess(user, data.won));
 });
 
+/*
 socket.on('around_ready', function(data){
     checkAround();
 });

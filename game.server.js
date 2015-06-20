@@ -33,28 +33,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 /*основной маршрут*/
 app.get('/', controller.index );
 
+/*установка обработчика на url /location/:loc*/
 for ( var key in locations){
-    app.get('/'+key, controller[key]);
+    app.get('/location/:id', controller.location);
     var game = new sdata.Game(locations[key]);
     game.setId();
     sdata.games[key] = game;
-    //console.log(sdata.games[locations[i].id].toString());
+    
     /*обработчики событий модуля socket.io*/
-    io.of('/'+key).on('connection',function(socket){
-        //Handler.game_init_client(socket, sdata);
-        //Handler.game_clone_client(socket, sdata);
-        //Handler.game_data_from_client(socket,sdata);
-        //Handler.game_pause(socket,sdata);
-        //Handler.game_start(socket,sdata);
-        //Handler.game_exit(socket,sdata);
-        //Handler.get_missions(socket,sdata);
-        //Handler.connect(socket, sdata);
+    io.of('/location/'+key).on('connection',function(socket){
         Handler.get_game(socket, sdata);
         Handler.user_live(socket, sdata);
-        //Handler.check_around(socket, sdata);
-        //Handler.update_elevation(socket, sdata);
-        //Handler.update_weather(socket, sdata);
-        //Handler.get_game_message_client(socket, sdata);   
+        Handler.set_units(socket, sdata);
+        Handler.data_from_client(socket, sdata);
+          
     });
 
 }

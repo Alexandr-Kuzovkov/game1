@@ -316,7 +316,7 @@ hr
 {
     font-family: Verdana;
     font-size: 3.6em;
-    
+    list-style-image: url(/img/2/rod10.png);
     position: absolute;
     top: 40%;
     left: 40%;

@@ -6,11 +6,12 @@ function Game(location)
 {
     this.id = Helper.getRandomInt(1000000,2000000);; /*id игры*/
     this.location = location;/*объект, описывающий локацию*/
-    this.ready = false; /*флаг готовности игры*/
-    this.users = []; /*массив игроков*/ 
+    this.ready = true; /*флаг готовности игры*/
+    this.users = {}; /*объект игроков*/ 
     this.status = ''; /*состояние игры*/
     this.regiments = []; /*массив полков*/
     this.bases = []; /*массив баз*/
+    this.unitcnt = 0
     this.MAX_LIVE_TIMEOUT = 13000; /*время в мс по истечении которого если от любого юзера нет события user_live игра прекращается*/
     this.setId = function(){
         this.id = Helper.getRandomInt(1000000,2000000);    
@@ -32,22 +33,21 @@ function Game(location)
     * присоединение игрока к игре
     * @param user объект User
     **/
-    this.joinUser = function(user){
-        for ( var i = 0; i < this.users.length; i++ ){
-            if ( this.users[i].id == user.id ){
-                this.users[i] = user;
-                return true; 
-            }
+    this.joinUser = function(units, user, callback){
+        this.users[user.id] = user;
+        for ( var i = 0; i < units.regiments.length; i++ ){
+            units.regiments[i].iserId = user.id;
+            units.regiments[i].id = this.unitcnt++;
+            this.regiments.push(units.regiments[i]);
         }
-        if ( this.users.length < 2 ){
-            var now = new Date();
-            user.lastTime = now.getTime();
-            this.users.push(user);
-        } 
         
-        if ( this.users.length > 1 ){
-            this.setReady(true);
+        for ( var i = 0; i < units.bases.length; i++ ){
+            units.bases[i].iserId = user.id;
+            units.bases[i].id = this.unitcnt++;
+            this.bases.push(units.bases[i]);
         }
+        callback();
+        
     };
     
     /**
@@ -178,7 +178,7 @@ function Game(location)
                 if ( this.bases[i].id == game.bases[j].id ) unitPresent = true;
             }
             if ( !unitPresent ){
-                this.addGameMessage(this.gameMsgText('unitKilled',this.regiments[i]));
+                this.addGameMessage(this.gameMsgText('unitKilled',this.bases[i]));
                 delete this.bases[i];
                 this.bases.splice(i,1);
             }else{
@@ -334,17 +334,18 @@ function Game(location)
     **/
     this.checkGameOver = function(){
         var gameOver = false;
-        for ( var i = 0; i < this.users.length; i++ ){
+        var iserId = 0;
+        for ( userId in this.users ){
             var unitCount = 0;
             for ( var j = 0; j < this.regiments.length; j++ ){
-                if ( this.regiments[j].userId == this.users[i].id ) unitCount++;
+                if ( this.regiments[j].userId == userId ) unitCount++;
             }
             
             for ( var j = 0; j < this.bases.length; j++ ){
-                if ( this.bases[j].userId == this.users[i].id ) unitCount++;
+                if ( this.bases[j].userId == userId ) unitCount++;
             }
             if ( unitCount == 0 ){
-                this.users[i].loser = true;
+                this.users[iserId].loser = true;
                 gameOver = true;
             } 
         }

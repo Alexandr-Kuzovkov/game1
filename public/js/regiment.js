@@ -3,10 +3,10 @@
 * param latlng координаты [lat,lng]
 * param id идентификатор
 **/
-function RegimentBase( latlng, id )
+function RegimentBase( latlng, id, userId )
 {
 	/*Свойства*/
-	this.userId = game.user.id; /*id игрока*/
+	this.userId = userId; /*id игрока*/
     this.id = id;   /*идентификатор*/
 	this.MOVE = false;/*флаг находится ли юнит в движении*/
     this.STOP = false; /*флаг сигнала на остановку*/
@@ -20,6 +20,7 @@ function RegimentBase( latlng, id )
     this.lastbattle = false; /*предыдущее значение флага боя*/
     this.enemyCount = 0; /*количество противников*/
     this.weather = null; /*погодные данные*/
+    this.latlng = L.latLng(latlng[0], latlng[1]);
     this.status = 
     {
         kind: 'march', /*статус юнита; может быть march, attack, defense*/
@@ -77,12 +78,12 @@ function RegimentBase( latlng, id )
     /*объект маркера юнита, с помощью которого он отображается на карте */
 	this.marker = 
 	{
-		area: L.circle([latlng.lat,latlng.lng], 1, {color: '#f03', fillColor: '#f03', opacity: 0.1,fillOpacity:0.1 }).addTo(map),
-        battle: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map),
-        type: L.marker([latlng.lat,latlng.lng],{icon:this.type.icon}).addTo(map),
-		country: L.marker([latlng.lat,latlng.lng],{icon:this.country.icon}).addTo(map),
-		explosion: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map),
-        selected: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map)
+		area: L.circle(this.latlng, 1, {color: '#f03', fillColor: '#f03', opacity: 0.1,fillOpacity:0.1 }).addTo(map),
+        battle: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
+        type: L.marker(this.latlng,{icon:this.type.icon}).addTo(map),
+		country: L.marker(this.latlng,{icon:this.country.icon}).addTo(map),
+		explosion: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
+        selected: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map)
     };
     
     /**
@@ -113,7 +114,7 @@ function RegimentBase( latlng, id )
     
     /**
     * перемещение юнита в точку события по прямой с анимацией
-    * @param e объект события
+    * @param latlng объект {lat:lat,lng:lng}
     **/
     this.goTo = function(latlng){
 		Move.moveMarkerLineAnimation( latlng, this, function(){} );

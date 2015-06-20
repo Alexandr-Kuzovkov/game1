@@ -1,9 +1,15 @@
-{% extends 'empty.html' %}
+{% extends 'layout.html' %}
+
+{% block css%} 
+	<link rel="stylesheet" href="/css/select.css" />
+{%endblock%}
+
+
 
 {% block content %}
     <ul class="ul-select">
         {% for location in locations %}
-        <li><a href="/{{location.id}}">{{location.name}}</a></li>
+        <li><a href="/location/{{location.id}}">{{location.name}}</a></li>
         {%endfor%}
     </ul>
 

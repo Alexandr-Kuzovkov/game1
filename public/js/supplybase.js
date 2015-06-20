@@ -3,11 +3,11 @@
 * param latlng координаты [lat,lng]
 * param id идентификатор
 **/
-function SupplyBase( latlng, id )
+function SupplyBase( latlng, id, userId )
 {
 	/*Свойства*/
 	this.id = id;              /*идентификатор*/
-    this.userId = game.user.id;/*id игрока*/
+    this.userId = userId;/*id игрока*/
 	this.MOVE = false;/*флаг находится ли юнит в движении*/
     this.STOP = false; /*флаг сигнала на остановку*/
     this.OWN = false;/*флаг свой ли юнит*/
@@ -19,6 +19,7 @@ function SupplyBase( latlng, id )
     this.battle = false; /*флаг боя*/
     this.lastbattle = false; /*предыдущее значение флага боя*/
     this.enemyCount = 0; /*количество противников*/
+    this.latlng = L.latLng(latlng[0], latlng[1]);
     this.weather = null; /*погодные данные*/
     this.status = 
     {
@@ -77,12 +78,12 @@ function SupplyBase( latlng, id )
 	/*объект маркера юнита, с помощью которого он отображается на карте */
 	this.marker = 
 	{
-		area: L.circle([latlng.lat,latlng.lng], 1, {color: '#ff0', fillColor: '#f03', opacity: 0.1,fillOpacity:0.1 }).addTo(map),
-        battle: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map),
-        type: L.marker([latlng.lat,latlng.lng],{icon:this.type.icon}).addTo(map),
-		country: L.marker([latlng.lat,latlng.lng],{icon:this.country.icon}).addTo(map),
-		explosion: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map),
-        selected: L.marker([latlng.lat,latlng.lng],{icon:this.iconUnselected}).addTo(map)
+		area: L.circle(this.latlng, 1, {color: '#ff0', fillColor: '#f03', opacity: 0.1,fillOpacity:0.1 }).addTo(map),
+        battle: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
+        type: L.marker(this.latlng,{icon:this.type.icon}).addTo(map),
+		country: L.marker(this.latlng,{icon:this.country.icon}).addTo(map),
+		explosion: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
+        selected: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map)
 	};
 	
 	/**

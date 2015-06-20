@@ -75,7 +75,7 @@ function Foot()
 function Base()
 {
 	this.name =	'База снабжения';
-	this.id = 'none';
+	this.id = 'base';
     this.VELOCITY = 20;
 	this.radius = 0.01;
     this.power = 10;              /*боевая мощь*/
@@ -87,7 +87,7 @@ function Base()
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-    this.icon = 	L.icon({ iconUrl: '/img/type/base3.png',
+    this.icon = 	L.icon({ iconUrl: '/img/type/base24.png',
 			iconSize: [24, 24], 
 			iconAnchor: [12, 12], 
 			shadowAnchor: [4, 23], 
@@ -121,5 +121,6 @@ function getType(type)
 var Types = 
 {
     tank: [ Tank, 'Танковый полк'],
-    foot: [ Foot, 'Мотострелковый полк']  
+    foot: [ Foot, 'Мотострелковый полк'],
+    base: [ Base, 'База снабжения' ]  
 };

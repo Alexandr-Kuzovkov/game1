@@ -142,13 +142,14 @@ var iface =
     }  
 };
 
-if ( !isGameInit )/*если игра еще не создана*/
+/*
+if ( !isGameInit )
 {
-        /*выводим на передний план стартовое меню*/
+        
         iface.wrap_start_div.style.display='block';
         iface.map_div.style.opacity = 0;
         
-        /*создаем select и заполняем его миссиями*/
+        
         iface.mission_select = document.createElement('select');
         iface.parent_mission_select.appendChild(iface.mission_select);
         for ( key in Missions ){
@@ -160,7 +161,7 @@ if ( !isGameInit )/*если игра еще не создана*/
         }
         
         iface.setMissionDecs(Missions[iface.mission_select.value].object.desc.all);
-        /*создаем select и заполняем его соответсвующими странами*/
+        
         iface.country_select = document.createElement('select');
         iface.parent_country_select.appendChild(iface.country_select);
         
@@ -180,23 +181,23 @@ if ( !isGameInit )/*если игра еще не создана*/
             iface.country_select.appendChild(opt);  
         }
         
-        /*при изменении миссии приводим в соответсвие список стран*/
+        
         iface.mission_select.onchange = updateCountry;
         
-        /*обработка кнопки начать*/       
+       
         iface.button_start.onclick = function(){ begin_init(iface);};
         window.onkeypress = function(e){ if(e.keyCode == 13) begin_init(iface);};
 }
 else
-{       /*если игра уже создана*/
+{       
     
     //console.log(JSON.stringify(remoteGame.users) +':'+JSON.stringify(user));
-    if ( Helper.isUserNew() || !Helper.isUserIdPresent(remoteGame, user.id) ){/*если пользователь новый*/
-         /*выводим на передний план стартовое меню*/
+    if ( Helper.isUserNew() || !Helper.isUserIdPresent(remoteGame, user.id) ){
+         
         iface.wrap_start_div.style.display='block';
         iface.map_div.style.opacity = 0;
         
-        /*создаем select и заполняем его уже выбранной миссией*/
+        
         iface.mission_select = document.createElement('select');
         iface.parent_mission_select.appendChild(iface.mission_select);
         
@@ -206,7 +207,7 @@ else
         opt.textContent = Missions.name;
         iface.mission_select.appendChild(opt);
         
-        /*создаем select и заполняем его оставшейся страной*/
+       
         iface.country_select = document.createElement('select');
         iface.parent_country_select.appendChild(iface.country_select);
         
@@ -218,14 +219,13 @@ else
         
         iface.setMissionDecs(Missions.object.desc.all);
         
-        /*обработка кнопки начать*/       
+        
         iface.button_start.onclick = function(){ begin_join(iface);};
         window.onkeypress = function(e){  if(e.keyCode == 13) begin_join(iface);};
     
     }else{
         
-        /*если пользователь старый (обработка перезагрузки страницы), 
-        * то восстанавливаем его состояние игры */
+       
         iface.wrap_start_div.style.display='none';
         iface.map_div.style.opacity = 1;
         showControlBlocks();
@@ -235,13 +235,14 @@ else
     }
 
 }
+*/
 
-/*обработка кнопки выхода*/
+/*обработка кнопки меню*/
 iface.button_exit.onclick = btnExitHandler;
 
 
 /*обработка кнопки паузы*/
-iface.button_pause.onclick = function(){ btnPauseHandler(iface); };
+//iface.button_pause.onclick = function(){ btnPauseHandler(iface); };
 
 /*обработчик клика на метке "Дальше"*/
 iface.label_next.onclick = function(){ gameExit(); };

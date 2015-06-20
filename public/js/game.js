@@ -7,7 +7,6 @@ function Game( user )
 	this.id = 0; /*идентификатор*/
     this.user = user; /*поле для хранения объекта user*/
     this.country = null; /*выбранная страна за которую играет игрок*/
-    this.mission = null; /*выбранная миссия*/
     this.regimentId = 0; 
 	this.baseId = 0;
     this.location = null;
@@ -65,13 +64,13 @@ function Game( user )
     * @param country строковый идентификатор страны
     * @type строка указывающая тип объекта
     **/
-	this.createRegiment = function( latlng, country, type ){
-		regiment = new RegimentBase(  L.latLng(latlng[0],latlng[1]), this.regimentId++ ); 
+	this.createRegiment = function( latlng, country, type, id, userId ){
+		regiment = new RegimentBase(  latlng, id, userId ); 
         for ( key in Countries ){
             if ( key == country ) regiment.country =  Countries[key][0];   
         }
-        regiment.OWN = ( this.country.id == regiment.country.id )? true:false;
-        if ( this.country.id != regiment.country.id ) regiment.userId = 0;
+        regiment.OWN = ( this.user.id == regiment.userId )? true:false;
+        if ( this.user.id != regiment.userId ) regiment.userId = 0;
         regiment.type = getType(type);
         this.regiments.push(regiment);
 		delete regiment;
@@ -84,14 +83,14 @@ function Game( user )
     * @param country строковый идентификатор страны
     * @type строка указывающая тип объекта
     **/
-	this.createSupplyBase = function( latlng, country, type ){
-		base = new SupplyBase( L.latLng(latlng[0],latlng[1]), this.baseId++ ); 
+	this.createSupplyBase = function( latlng, country, type, id, userId ){
+		base = new SupplyBase( latlng, id, userId ); 
         for ( key in Countries ){
             if ( key == country ) base.country =  Countries[key][0];   
         }
-        base.OWN = ( this.country.id == base.country.id )? true:false;
-        if ( this.country.id != base.country.id ) base.userId = 0;
-        base.type = new Base();
+        base.OWN = ( this.user.id == base.userId )? true:false;
+        if ( this.user.id != base.userId ) base.userId = 0;
+        base.type = getType('base');
 		this.bases.push(base);
 		delete base;
 		this.initBases();	
@@ -150,14 +149,6 @@ function Game( user )
     };
     
     /**
-    * установка миссии в которую выбрал играть игрок
-    * @param mission объект миссии
-    **/
-    this.selectMission = function(mission){
-        this.mission = mission;  
-    };
-    
-    /**
     * игровой цикл в котором происходит отправка данных на сервер
     * @param object объект игры
     **/
@@ -173,10 +164,10 @@ function Game( user )
     * данных миссии и страны
     * @param callback функция обратного вызова, вызываемая по завершении операции
     **/
-    this.init = function(callback){
+    this.init = function(units, callback){
         
-        var regiments = this.mission.regiments;
-        var bases = this.mission.bases;
+        var regiments = units.regiments;
+        var bases = units.bases;
         for ( var i =0; i < regiments.length; i++ ) 
             this.createRegiment( regiments[i].latlng, regiments[i].country, regiments[i].type ); 
         for ( var i =0; i < bases.length; i++ ) 
@@ -214,18 +205,19 @@ function Game( user )
     * @param callback функция обратного вызова, вызываемая по завершении операции
     **/
     this.restore = function(remoteGame,callback){
+        console.log(JSON.stringify(remoteGame));
         this.destroyAll();
         var regiments = remoteGame.regiments;
         var bases = remoteGame.bases;
         for ( var i =0; i < regiments.length; i++ ) 
-            this.createRegiment( regiments[i].latlng, regiments[i].country.id, regiments[i].type.id ); 
+            this.createRegiment( regiments[i].latlng, regiments[i].country.id, regiments[i].type.id, regiments[i].id, regiments[i].userId ); 
         for ( var i =0; i < bases.length; i++ ) 
-            this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id ); 
+            this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id, bases[i].id, bases[i].userId ); 
         this.id = remoteGame.id;
         this.start = false;
         this.location = remoteGame.location;
         Move.ENABLED = false;
-        this.startGame();
+        //this.startGame();
         callback();
     };
     
@@ -318,8 +310,7 @@ function Game( user )
     **/
     this.sync = function(game){
         //console.log('client='+this.regiments.length+'; server='+game.regiments.length);
-        var actualGame = ( this.id == game.id && 
-        ( this.user.id == game.users[0].id || this.user.id == game.users[1].id ));
+        var actualGame = ( this.id == game.id );
         //console.log(JSON.stringify(game.regiments));
         //console.log(JSON.stringify(Missions));
         if ( actualGame ){
