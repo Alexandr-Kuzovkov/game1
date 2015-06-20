@@ -252,7 +252,8 @@ socket.on('data_from_server',function(data){
     //Debug.trace(JSON.stringify(data.game));
     game.sync(data.game);
     updateInfoUnit();
-    getGameMessages();
+    iface.addLog( data.game.logMessages );
+    iface.addInfo( data.game.gameMessages );
     
 });
 
@@ -322,7 +323,7 @@ socket.on('server_game_msg', function(data){
 **/
 
 socket.on('game_over', function(data){
-    iface.showGameOver(getGameOverMess(user, data.won));
+    iface.showGameOver(getGameOverMess());
 });
 
 /*

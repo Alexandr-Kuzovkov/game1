@@ -78,15 +78,10 @@ function data_from_client(socket,sdata){
             sdata.games[data.location].sync(data.game);
             sdata.games[data.location].battleLoop();
             
-            if ( !sdata.games[data.location].checkGameOver()){
+            if ( !sdata.games[data.location].checkGameOver(data.user.id)){
                 socket.emit('data_from_server',{game:sdata.games[data.location].toString()}); 
             }else{
-                if( sdata.games[location].users[data.user.id].loser ){
-                    sdata.games[data.location].addLogMessage('Game over, user ' + won.name + ' won');
-                    sendLogMessages(socket, sdata, data.location);
-                    socket.emit('game_over',{won:won});
-                }
-                
+                socket.emit('game_over');                    
             }
         }
     });

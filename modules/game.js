@@ -264,6 +264,8 @@ function Game(location)
         game.regiments = this.regiments;
         game.bases = this.bases;
         game.location = this.location;
+        game.gameMessages = this.gameMessages;
+        game.logMessages = this.logMessages;
         return game;
     };
     
@@ -332,10 +334,9 @@ function Game(location)
     * если у ккакого-то игрока нет ни одного юнита игра закончена
     * @return true/false закончена/не закончена
     **/
-    this.checkGameOver = function(){
+    this.checkGameOver = function(userId){
+        if (!this.users[userId]) return false;
         var gameOver = false;
-        var iserId = 0;
-        for ( userId in this.users ){
             var unitCount = 0;
             for ( var j = 0; j < this.regiments.length; j++ ){
                 if ( this.regiments[j].userId == userId ) unitCount++;
@@ -345,10 +346,9 @@ function Game(location)
                 if ( this.bases[j].userId == userId ) unitCount++;
             }
             if ( unitCount == 0 ){
-                this.users[iserId].loser = true;
+                delete this.users[userId];
                 gameOver = true;
             } 
-        }
         return gameOver;
     };
     

@@ -237,12 +237,8 @@ function getBaseMenu(object){
 * @param объект user
 * @param won объект user победителя в игре, присланный с сервера
 **/
-function getGameOverMess(user, won){
-    if ( user.id == won.id ){
-        return 'Вы выиграли!';
-    }else{
-        return 'Вы проиграли!';
-    }
+function getGameOverMess(){
+    return 'Вы проиграли!'; 
 }
 
 /**

@@ -1,6 +1,6 @@
 var units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
-var markers = [];//маркеры
 var selectCountry = null;
+var unitObject = [];
 var unitsList = null;
 
 window.onload = function(){  
@@ -81,7 +81,7 @@ function makeUnit(e){
         unit.init();
         units.regiments.push(unit.toString());
     }
-    //markers.push(marker);
+    unitObject.push(unit);
     units.country = Countries[selectCountry.value][0].toString();
     selectCountry.disabled = 'disabled'; 
 }
@@ -91,9 +91,8 @@ function clear(){
     for ( var key in units ){
         units[key] = [];
     }
-    for (var i = 0; i < markers.length; i++){
-         map.removeLayer(markers[i][0]);
-         map.removeLayer(markers[i][1]);
+    for (var i = 0; i < unitObject.length; i++){
+         unitObject[i].destroy();
     }
     selectCountry.removeAttribute('disabled'); 
 }

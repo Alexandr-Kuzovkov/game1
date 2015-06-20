@@ -138,7 +138,7 @@ var iface =
         p.innerText = mess;
         p.textContent = mess;
         this.gameover_div.style.display = 'block';
-        window.onkeypress = function(e){  if(e.keyCode == 13) gameExit();};
+        window.onkeypress = function(e){  if(e.keyCode == 13) this.reloadPage('/');};
     }  
 };
 
@@ -245,7 +245,7 @@ iface.button_exit.onclick = btnExitHandler;
 //iface.button_pause.onclick = function(){ btnPauseHandler(iface); };
 
 /*обработчик клика на метке "Дальше"*/
-iface.label_next.onclick = function(){ gameExit(); };
+iface.label_next.onclick = function(){ iface.reloadPage('/'); };
 
 /*показ описания миссии*/
 iface.label_mission.onmouseover = function(){ iface.showMission(); };
