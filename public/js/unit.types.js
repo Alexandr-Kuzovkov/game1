@@ -2,8 +2,9 @@
 * конструкторы объектов разного типа юнитов
 **/
 
-function Tank() 
-{
+var UnitTypes = {};
+
+UnitTypes.Tank = function(){
 	this.name =	'Танковый полк'; /*наименование*/
 	this.id = 'tank';            /*идентификатор*/
     this.VELOCITY = 40;         /*скорость движения юнита в км/ч*/
@@ -38,8 +39,7 @@ function Tank()
 
 };
 
-function Foot()
-{
+UnitTypes.Foot = function(){
 	this.name =	'Мотострелковый полк';
 	this.id = 'foot';
     this.VELOCITY = 40;
@@ -72,8 +72,7 @@ function Foot()
      };
 };
 
-function Base()
-{
+UnitTypes.Base = function(){
 	this.name =	'База снабжения';
 	this.id = 'base';
     this.VELOCITY = 20;
@@ -104,23 +103,25 @@ function Base()
      };
 };
 
+
+
 /**
 * получение объекта заданного типа
 * @param type тип нужного объекта
 **/
-function getType(type)
-{
+UnitTypes.getType = function(type){
     switch (type){
-        case 'tank': return new Tank(); break;
-        case 'foot': return new Foot(); break;
-        case 'base': return new Base(); break;
+        case 'tank': return new UnitTypes.Tank(); break;
+        case 'foot': return new UnitTypes.Foot(); break;
+        case 'base': return new UnitTypes.Base(); break;
+        default: return null;
     }
 };
 
 
-var Types = 
-{
-    tank: [ Tank, 'Танковый полк'],
-    foot: [ Foot, 'Мотострелковый полк'],
-    base: [ Base, 'База снабжения' ]  
+UnitTypes.names = {
+    tank: 'Танковый полк',
+    foot: 'Мотострелковый полк',
+    base: 'База снабжения'  
 };
+

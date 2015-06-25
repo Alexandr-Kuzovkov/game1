@@ -13,8 +13,9 @@ function showAvailUnits(location){
     for (var i = 0; i < location.countries.length; i++){
         var opt = document.createElement('option');
         opt.value = location.countries[i];
-        opt.innerText = Countries[location.countries[i]][1];
-        opt.textContent = Countries[location.countries[i]][1];
+        console.log(location.countries[i]);
+        opt.innerText = Countries[location.countries[i]].name;
+        opt.textContent = Countries[location.countries[i]].name;
         selectCountry.appendChild(opt);
     }
       
@@ -32,8 +33,8 @@ function showAvailUnits(location){
         img.src = '/img/type/'+key+'24.png';
         li.appendChild(img);
         var span = document.createElement('span');
-        span.innerText = Types[key][1]+' - ';
-        span.textContent = Types[key][1]+' - ';
+        span.innerText = UnitTypes.names[key]+' - ';
+        span.textContent = UnitTypes.names[key]+' - ';
         li.appendChild(span);
         
         var count = document.createElement('span');
@@ -62,27 +63,27 @@ function getRadio(){
 function makeUnit(e){
     var type = getRadio();
     var country = selectCountry.value;
-    var iconCountry = Countries[country][0].icon;
-    var typeObject = getType(type);
+    var iconCountry = Countries[country].icon;
+    var typeObject = UnitTypes.getType(type);
     var iconType = typeObject.icon;
     var latlng = [e.latlng.lat, e.latlng.lng];
     console.log(latlng);
     var unit = null; 
     if (type=='base'){
         unit = new SupplyBase(latlng, 0, user.id);
-        unit.type = getType(type);
-        unit.country = Countries[country][0];
+        unit.type = UnitTypes.getType(type);
+        unit.country = Countries[country];
         unit.init();
         units.bases.push(unit.toString());
     }else{
         unit = new RegimentBase(latlng, 0, user.id);
-        unit.type = getType(type);
-        unit.country = Countries[country][0];
+        unit.type = UnitTypes.getType(type);
+        unit.country = Countries[country];
         unit.init();
         units.regiments.push(unit.toString());
     }
     unitObject.push(unit);
-    units.country = Countries[selectCountry.value][0].toString();
+    units.country = Countries[selectCountry.value].toString();
     selectCountry.disabled = 'disabled'; 
 }
 
@@ -105,6 +106,7 @@ function begin(){
         alert('Установите юнитов');
         return;
     }
+       
     socket.emit('set_units', {units:units, location:game.location.id, user:user.toString()});
     
 }

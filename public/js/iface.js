@@ -28,6 +28,7 @@ var iface =
     label_mission: document.getElementById('mission-label'),
     missioninfo_div: document.getElementById('mission-info'),
     missiondesc_p: document.getElementById('mission-desc'),
+    button_menu: document.getElementById('btn-menu'),
     /*перезагрузка страницы*/
     reloadPage: function(url){ window.location.replace(url); },
     
@@ -140,118 +141,29 @@ var iface =
         this.gameover_div.style.display = 'block';
         window.onkeypress = function(e){  if(e.keyCode == 13) this.reloadPage('/');};
     }  
+
+    
+
 };
 
-/*
-if ( !isGameInit )
-{
-        
-        iface.wrap_start_div.style.display='block';
-        iface.map_div.style.opacity = 0;
-        
-        
-        iface.mission_select = document.createElement('select');
-        iface.parent_mission_select.appendChild(iface.mission_select);
-        for ( key in Missions ){
-            var opt = document.createElement('option');
-            opt.setAttribute('value',key);
-            opt.innerText = Missions[key].name;
-            opt.textContent = Missions[key].name;
-            iface.mission_select.appendChild(opt);
-        }
-        
-        iface.setMissionDecs(Missions[iface.mission_select.value].object.desc.all);
-        
-        iface.country_select = document.createElement('select');
-        iface.parent_country_select.appendChild(iface.country_select);
-        
-        if ( Missions[iface.mission_select.value]['country1']['selected'] == false ){
-            var opt = document.createElement('option');
-            opt.setAttribute('value',Missions[iface.mission_select.value]['country1']['id']);
-            opt.innerText = Missions[iface.mission_select.value]['country1']['name'];
-            opt.textContent = Missions[iface.mission_select.value]['country1']['name'];
-            iface.country_select.appendChild(opt);  
-        }
-        
-        if ( Missions[iface.mission_select.value]['country2']['selected'] == false ){
-            var opt = document.createElement('option');
-            opt.setAttribute('value',Missions[iface.mission_select.value]['country2']['id']);
-            opt.innerText = Missions[iface.mission_select.value]['country2']['name'];
-            opt.textContent = Missions[iface.mission_select.value]['country2']['name'];
-            iface.country_select.appendChild(opt);  
-        }
-        
-        
-        iface.mission_select.onchange = updateCountry;
-        
-       
-        iface.button_start.onclick = function(){ begin_init(iface);};
-        window.onkeypress = function(e){ if(e.keyCode == 13) begin_init(iface);};
-}
-else
-{       
-    
-    //console.log(JSON.stringify(remoteGame.users) +':'+JSON.stringify(user));
-    if ( Helper.isUserNew() || !Helper.isUserIdPresent(remoteGame, user.id) ){
-         
-        iface.wrap_start_div.style.display='block';
-        iface.map_div.style.opacity = 0;
-        
-        
-        iface.mission_select = document.createElement('select');
-        iface.parent_mission_select.appendChild(iface.mission_select);
-        
-        var opt = document.createElement('option');
-        opt.setAttribute('value',Missions.object.id);
-        opt.innerText = Missions.name;
-        opt.textContent = Missions.name;
-        iface.mission_select.appendChild(opt);
-        
-       
-        iface.country_select = document.createElement('select');
-        iface.parent_country_select.appendChild(iface.country_select);
-        
-        var opt = document.createElement('option');
-        opt.setAttribute('value',Missions.country.id);
-        opt.innerText = Missions.country.name;
-        opt.textContent = Missions.country.name;
-        iface.country_select.appendChild(opt);  
-        
-        iface.setMissionDecs(Missions.object.desc.all);
-        
-        
-        iface.button_start.onclick = function(){ begin_join(iface);};
-        window.onkeypress = function(e){  if(e.keyCode == 13) begin_join(iface);};
-    
-    }else{
-        
-       
-        iface.wrap_start_div.style.display='none';
-        iface.map_div.style.opacity = 1;
-        showControlBlocks();
-        user.name = Helper.getCookie('user');
-        game = new Game( user );
-        restoreGame();
-    }
 
-}
-*/
 
 /*обработка кнопки меню*/
-iface.button_exit.onclick = btnExitHandler;
+if (iface.button_exit) iface.button_exit.onclick = btnExitHandler;
 
 
 /*обработка кнопки паузы*/
 //iface.button_pause.onclick = function(){ btnPauseHandler(iface); };
 
 /*обработчик клика на метке "Дальше"*/
-iface.label_next.onclick = function(){ iface.reloadPage('/'); };
+if (iface.label_next) iface.label_next.onclick = function(){ iface.reloadPage('/'); };
+if (iface.button_menu) iface.button_menu.onclick = function(){ iface.reloadPage('/');};
 
 /*показ описания миссии*/
-iface.label_mission.onmouseover = function(){ iface.showMission(); };
+if (iface.label_mission) iface.label_mission.onmouseover = function(){ iface.showMission(); };
 
 /*скрытие описания миссии*/
-iface.label_mission.onmouseout = function(){ iface.hideMission(); }; 
+if (iface.label_mission) iface.label_mission.onmouseout = function(){ iface.hideMission(); }; 
 
 /*включение скрытия/показа блоков*/
 hideShowElement( document.getElementById('label-btn-block'), 'Скрыть кнопки', 'Показать кнопки', 'btn-block control-block grad2 font-response hide', 'btn-block control-block grad2 font-response' );

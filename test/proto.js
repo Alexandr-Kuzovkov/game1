@@ -1,3 +1,4 @@
+//конструктор 1
 function MyObj(){
 	this.prop1 = 5;
 	this.prop2 = 'string1';
@@ -19,7 +20,7 @@ function MyObj(){
 	*/
 }
 
-
+//конструктор 2
 function ShObj(){
 	this.x = 100;
 	this.y = 200;
@@ -33,6 +34,7 @@ function ShObj(){
 	this.getY = function(){ return this.y };
 }
 
+//добавление функций к прототипу конструктора
 MyObj.prototype.setProp1 = function(x){
 								this.prop1 = x;
 							};
@@ -41,6 +43,7 @@ MyObj.prototype.getProp1 = function(){
 		return this.prop1;
 };							
 
+//наследование конструктора
 MyObj.prototype = new ShObj();
 
 var obj1 = new MyObj();

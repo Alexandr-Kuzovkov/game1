@@ -1,10 +1,11 @@
 /**
 * объекты описывающие страны, за которые можно играть
 **/
-var Russia = 
-{
+var Countries = {};
+
+Countries.Russia = {
 	name:	'Российская Федерация', /*имя*/
-	id:	    'russia',               /*идентификатор*/
+	id:	    'Russia',               /*идентификатор*/
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Russia.png',  /*объект иконки*/
 			iconSize: [24, 24], 
@@ -18,10 +19,9 @@ var Russia =
 
 };
 
-var Ukraine = 
-{
+Countries.Ukraine = {
 	name:	'Украина',
-	id:	    'ukraine',
+	id:	    'Ukraine',
 	
 	icon:	L.icon({ iconUrl: '/img/country/Ukraine.png',
 			iconSize: [24, 24], 
@@ -34,10 +34,9 @@ var Ukraine =
     }
 };
 
-var USA = 
-{
+Countries.USA = {
 	name:	'США',
-	id:	    'us',
+	id:	    'USA',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/United-States.png',
 			iconSize: [24, 24], 
@@ -51,10 +50,9 @@ var USA =
 
 };
 
-var UK = 
-{
+Countries.UK = {
 	name:	'Великобритания',
-	id:	    'uk',
+	id:	    'UK',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/United-Kingdom.png',
 			iconSize: [24, 24], 
@@ -68,10 +66,9 @@ var UK =
 
 };
 
-var Germany = 
-{
+Countries.Germany = {
 	name:	'Германия',
-	id:	    'germany',
+	id:	    'Germany',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Germany.png',
 			iconSize: [24, 24], 
@@ -85,10 +82,9 @@ var Germany =
 
 };
 
-var Iraq = 
-{
+Countries.Iraq = {
 	name:	'Ирак',
-	id:	    'iraq',
+	id:	    'Iraq',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Iraq.png',
 			iconSize: [24, 24], 
@@ -102,10 +98,9 @@ var Iraq =
 
 };
 
-var NorthKorea = 
-{
+Countries.NorthKorea = {
 	name:	'Северная Корея',
-	id:	    'northkorea',
+	id:	    'NorthKorea',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/North-Korea.png',
 			iconSize: [24, 24], 
@@ -118,10 +113,9 @@ var NorthKorea =
     }
 };
 
-var USSR = 
-{
+Countries.USSR = {
 	name:	'СССР',
-	id:	    'ussr',
+	id:	    'USSR',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Ussr.png',
 			iconSize: [24, 24], 
@@ -134,10 +128,9 @@ var USSR =
     }
 };
 
-var Syria = 
-{
+Countries.Syria = {
 	name:	'Сирия',
-	id:	    'syria',
+	id:	    'Syria',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Syria.png',
 			iconSize: [24, 24], 
@@ -150,10 +143,9 @@ var Syria =
     }
 };
 
-var Tajikistan = 
-{
+Countries.Tajikistan = {
 	name:	'Таджикистан',
-	id:	    'tajikistan',
+	id:	    'Tajikistan',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Tajikistan.png',
 			iconSize: [24, 24], 
@@ -166,10 +158,9 @@ var Tajikistan =
     }
 };
 
-var Vietnam = 
-{
+Countries.Vietnam = {
 	name:	'Вьетнам',
-	id:	    'vietnam',
+	id:	    'Vietnam',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Vietnam.png',
 			iconSize: [24, 24], 
@@ -182,10 +173,9 @@ var Vietnam =
     }
 };
 
-var Azerbaijan = 
-{
+Countries.Azerbaijan = {
 	name:	'Азербайджан',
-	id:	    'azerbaijan',
+	id:	    'Azerbaijan',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Azerbaijan.png',
 			iconSize: [24, 24], 
@@ -198,10 +188,9 @@ var Azerbaijan =
     }
 };
 
-var Israel = 
-{
+Countries.Israel = {
 	name:	'Израиль',
-	id:	    'israel',
+	id:	    'Israel',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Israel.png',
 			iconSize: [24, 24], 
@@ -214,10 +203,9 @@ var Israel =
     }
 };
 
-var Palestine = 
-{
+Countries.Palestine = {
 	name:	'Палестина',
-	id:	    'palestine',
+	id:	    'Palestine',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Palestine.png',
 			iconSize: [24, 24], 
@@ -230,10 +218,9 @@ var Palestine =
     }
 };
 
-var Mongolia = 
-{
+Countries.Mongolia = {
 	name:	'Монголия',
-	id:	    'mongolia',
+	id:	    'Mongolia',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Mongolia.png',
 			iconSize: [24, 24], 
@@ -246,10 +233,9 @@ var Mongolia =
     }
 };
 
-var Pakistan = 
-{
+Countries.Pakistan = {
 	name:	'Пакистан',
-	id:	    'pakistan',
+	id:	    'Pakistan',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Pakistan.png',
 			iconSize: [24, 24], 
@@ -262,10 +248,9 @@ var Pakistan =
     }
 };
 
-var Turkmenistan = 
-{
+Countries.Turkmenistan = {
 	name:	'Туркменистан',
-	id:	    'turkmenistan',
+	id:	    'Turkmenistan',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Turkmenistan.png',
 			iconSize: [24, 24], 
@@ -278,10 +263,9 @@ var Turkmenistan =
     }
 };
 
-var Uzbekistan = 
-{
+Countries.Uzbekistan = {
 	name:	'Узбекистан',
-	id:	    'uzbekistan',
+	id:	    'Uzbekistan',
 					
 	icon: 	L.icon({ iconUrl: '/img/country/Uzbekistan.png',
 			iconSize: [24, 24], 
@@ -292,30 +276,4 @@ var Uzbekistan =
 	toString: function(){
         return {name: this.name, id: this.id};
     }
-};
-
-/**
-* объект перечисляющий все страны в данном файле
-**/
-var Countries = 
-{
-    russia: [Russia, 'Россия'],
-    ukraine: [Ukraine, 'Украина'],
-    us: [USA, 'США'],
-    uk: [UK, 'Великобритания'],
-    germany: [Germany, 'Германия'],
-    iraq: [Iraq, 'Ирак'],
-    northkorea: [NorthKorea, 'Северная Корея'],
-    ussr: [USSR, 'СССР'],
-    syria: [Syria, 'Сирия'],
-    tajikistan: [Tajikistan, 'Таджикистан'],
-    vietnam: [Vietnam, 'Вьетнам'],
-	azerbaijan: [Azerbaijan, 'Азербайджан'],
-	israel: [Israel, 'Израиль'],
-	palestine: [Palestine,'Палестина'],
-	mongolia: [Mongolia,'Монголия'],
-	pakistan: [Pakistan, 'Пакистан'],
-	turkmenistan: [Turkmenistan, 'Туркменистан'],
-	uzbekistan: [Uzbekistan, 'Узбекистан']
-    
 };

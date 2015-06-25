@@ -9,6 +9,7 @@
 * @param classShow класс присваиваемый для разворачивания
 **/
 function hideShowElement(el, textHide, textShow, classHide, classShow){
+    if (!el) return;
     var parent = el.parentNode;
     el.onclick = function(){
         if ( el.innerText == textHide || el.textContent == textHide ){
@@ -28,14 +29,14 @@ function hideShowElement(el, textHide, textShow, classHide, classShow){
 * @param el объект элемента
 **/
 function showElem(el){
-	el.style.display = 'inline-block';
+	if (el) el.style.display = 'inline-block';
 }
 /**
 * скрытие элемента
 * @param el объект элемента
 **/
 function hideElem(el){
-	el.style.display = 'none';
+	if (el) el.style.display = 'none';
 }
 
 /**
@@ -152,6 +153,7 @@ function btnPauseHandler(iface){
 **/
 function destroyChildren(node)
 {
+  if (!node) return;
   node.innerHTML = '';
   while (node.firstChild)
       node.removeChild(node.firstChild);

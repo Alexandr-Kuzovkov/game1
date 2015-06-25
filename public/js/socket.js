@@ -1,17 +1,13 @@
 /*клиентский модуль обработчиков событий при взаимодействии клиента и сервера*/
-var url = window.location.host;
-var pathname = window.location.pathname;
-var socket = io.connect(url+pathname);
-var hostname = window.location.hostname;
-var user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/
-var game = null; /*переменная для хранения клиентского объекта game*/
-var interval = null; /*интервал обновления клиента и сервера*/
-var LIVE_INTERVAL = 4000; /*интервал генерации события об активности клиента*/ 
-var AROUND_TIMEOUT = 4000; /*интервал генерации событий запроса проверки окружения*/
 
-var ELEVATION_TIMEOUT = 2000; /*интервал генерации событий запроса высотных данных*/
-var WEATHER_TIMEOUT = 300000; /*интервал генерации событий запроса погодных данных*/
-var TIME_SCALE = 20;/*масштаб времени*/
+url = window.location.host;
+pathname = window.location.pathname;
+socket = io.connect(url+pathname);
+hostname = window.location.hostname;
+user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/
+game = null; /*переменная для хранения клиентского объекта game*/
+interval = null; /*интервал обновления клиента и сервера*/
+
 
 /**
 * обработчик события connect
@@ -137,7 +133,7 @@ function userLive(){
 
 function beginUserLive(){
     if ( interval == null ){
-        interval = setInterval( userLive, LIVE_INTERVAL );
+        interval = setInterval( userLive, 4000 );
     }
     //updateElevation();
     //updateWeather();

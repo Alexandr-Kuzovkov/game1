@@ -9,6 +9,8 @@ var Move =
     PAUSE: false,
     /*длительность такта анимации в мс*/
     DELTA_TIME: 100,
+    /*масштаб времени*/
+    TIME_SCALE: 20,
     /**
     * преобразование массива точек в массив объектов latlng
     * @param dots массив точек вида [[lat1,lng1],[lat2,lng2],...]
@@ -75,7 +77,7 @@ var Move =
 		var pos = L.latLng( start.lat, start.lng );
         var newpos = null;
 		var interval = setInterval( function(){   
-            var rastTact = Move.DELTA_TIME * TIME_SCALE /3600 * regiment.getVelocity();
+            var rastTact = Move.DELTA_TIME * Move.TIME_SCALE /3600 * regiment.getVelocity();
             if ( (Helper.rast([pos.lat,pos.lng],[end.lat,end.lng]) >= rastTact) && Move.ENABLED && !regiment.STOP )
 			{
                 if ( !Move.PAUSE ){

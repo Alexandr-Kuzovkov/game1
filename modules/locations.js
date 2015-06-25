@@ -5,7 +5,7 @@ var Locations = {
         id: 'iraq',
         name: 'Ирак',
         bounds: {SW: [32.5, 43.5], NE: [33.9, 45]},
-        countries: ['russia', 'us', 'uk', 'germany', 'iraq'],
+        countries: ['Russia', 'USA', 'UK', 'Germany', 'Iraq'],
         units: {tank: 4, foot: 5, base: 2}
     },
     
@@ -13,7 +13,7 @@ var Locations = {
         id: 'sirya',
         name: 'Сирия',
         bounds: {SW: [33.189267, 36.000493], NE: [33.659194, 36.593755]},
-        countries: ['russia', 'us', 'uk', 'germany','syria'],
+        countries: ['Russia', 'USA', 'UK', 'Germany','Syria'],
         units: {tank: 4, foot: 5, base: 2}
     },
     
@@ -21,7 +21,7 @@ var Locations = {
         id: 'ukraine',
         name: 'Украина',
         bounds: {SW: [47.718398, 37.421492], NE: [48.088488, 37.948836]},
-        countries: ['russia', 'ukraine', 'us', 'uk', 'germany'],
+        countries: ['Russia', 'Ukraine', 'USA', 'UK', 'Germany'],
         units: {tank: 4, foot: 5, base: 2}
     }
 

@@ -67,11 +67,11 @@ function Game( user )
 	this.createRegiment = function( latlng, country, type, id, userId ){
 		regiment = new RegimentBase(  latlng, id, userId ); 
         for ( key in Countries ){
-            if ( key == country ) regiment.country =  Countries[key][0];   
+            if ( key == country ) regiment.country =  Countries[key];   
         }
         regiment.OWN = ( this.user.id == regiment.userId )? true:false;
         if ( this.user.id != regiment.userId ) regiment.userId = 0;
-        regiment.type = getType(type);
+        regiment.type = UnitTypes.getType(type);
         this.regiments.push(regiment);
 		delete regiment;
 		this.initRegiments();
@@ -86,11 +86,11 @@ function Game( user )
 	this.createSupplyBase = function( latlng, country, type, id, userId ){
 		base = new SupplyBase( latlng, id, userId ); 
         for ( key in Countries ){
-            if ( key == country ) base.country =  Countries[key][0];   
+            if ( key == country ) base.country =  Countries[key];   
         }
         base.OWN = ( this.user.id == base.userId )? true:false;
         if ( this.user.id != base.userId ) base.userId = 0;
-        base.type = getType('base');
+        base.type = UnitTypes.getType('base');
 		this.bases.push(base);
 		delete base;
 		this.initBases();	
