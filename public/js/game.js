@@ -7,8 +7,6 @@ function Game( user )
 	this.id = 0; /*идентификатор*/
     this.user = user; /*поле для хранения объекта user*/
     this.country = null; /*выбранная страна за которую играет игрок*/
-    this.regimentId = 0; 
-	this.baseId = 0;
     this.location = null;
 	this.regiments = []; /**массив полков*/
 	this.bases = [];     /*массив баз*/
@@ -65,16 +63,12 @@ function Game( user )
     * @type строка указывающая тип объекта
     **/
 	this.createRegiment = function( latlng, country, type, id, userId ){
-		regiment = new RegimentBase(  latlng, id, userId ); 
-        for ( key in Countries ){
-            if ( key == country ) regiment.country =  Countries[key];   
-        }
+		var regiment = UnitFactory.createUnit( latlng, type, country, id, userId ); 
         regiment.OWN = ( this.user.id == regiment.userId )? true:false;
         if ( this.user.id != regiment.userId ) regiment.userId = 0;
-        regiment.type = UnitTypes.getType(type);
+        regiment.init();
         this.regiments.push(regiment);
 		delete regiment;
-		this.initRegiments();
 	};
 	
     /**
@@ -84,16 +78,12 @@ function Game( user )
     * @type строка указывающая тип объекта
     **/
 	this.createSupplyBase = function( latlng, country, type, id, userId ){
-		base = new SupplyBase( latlng, id, userId ); 
-        for ( key in Countries ){
-            if ( key == country ) base.country =  Countries[key];   
-        }
+		var base = UnitFactory.createUnit( latlng, type, country, id, userId ); 
         base.OWN = ( this.user.id == base.userId )? true:false;
         if ( this.user.id != base.userId ) base.userId = 0;
-        base.type = UnitTypes.getType('base');
+        base.init();
 		this.bases.push(base);
 		delete base;
-		this.initBases();	
 	};
     
     /**
@@ -117,27 +107,24 @@ function Game( user )
     };
 	
     /**
-    * уничтожение полка
+    * уничтожение юнита
     * @param id полка
     **/
-	this.deleteRegiment = function(id){
-		for ( var i = 0; i < this.regiments.length; i++ ) if ( this.regiments[i].id == id ){
-			this.regiments[i].destroy();
-			delete this.regiments[i];
-			this.regiments.splice(i,1);
-		}
-	};
-	
-    /**
-    * уничтожение базы снабжения
-    * @param id базы снабжения
-    **/
-	this.deleteBase = function(id){
-		for ( var i = 0; i < this.bases.length; i++ ) if ( this.bases[i].id == id ){
-			this.bases[i].destroy();
-			delete this.bases[i];
-			this.bases.splice(i,1);
-		}
+	this.deleteUnit = function(id){
+		for ( var i = 0; i < this.regiments.length; i++ ) {
+            if ( this.regiments[i].id == id ){
+    			this.regiments[i].destroy();
+    			delete this.regiments[i];
+    			this.regiments.splice(i,1);
+    		}
+        }
+        for ( var i = 0; i < this.bases.length; i++ ) {
+            if ( this.bases[i].id == id ){
+    			this.bases[i].destroy();
+    			delete this.bases[i];
+    			this.bases.splice(i,1);
+    		}
+        }  
 	};
 	
     /**
@@ -192,8 +179,6 @@ function Game( user )
         for ( var i =0; i < bases.length; i++ ) 
             this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id ); 
         this.id = remoteGame.id;
-        this.regimentId = remoteGame.regimentId;
-        this.baseId = remoteGame.baseId;
         this.start = false;
         Move.ENABLED = false;
         callback();
@@ -205,6 +190,7 @@ function Game( user )
     * @param callback функция обратного вызова, вызываемая по завершении операции
     **/
     this.restore = function(remoteGame,callback){
+        UnitFactory.init(Unit, UnitTypes, Countries);
         console.log(JSON.stringify(remoteGame));
         this.destroyAll();
         var regiments = remoteGame.regiments;

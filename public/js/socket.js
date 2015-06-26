@@ -193,7 +193,7 @@ socket.on('new_game', function(data){
         game.restore(data.game, function(){});
         user.gameId = data.game.id;
         setMapOptions(game);
-        showAvailUnits(data.location);
+        JoinUser.showAvailUnits(data.location);
    } 
 }); 
 

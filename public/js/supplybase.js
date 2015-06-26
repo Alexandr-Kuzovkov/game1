@@ -274,9 +274,9 @@ function SupplyBase( latlng, id, userId )
 	
 	/*Обработчики событий*/
 	
-    this.marker.selected.on('click', function(){Handler.click(this)},this);
-	this.marker.selected.on('contextmenu',function(){Handler.contextmenu(this)},this);
-	this.marker.selected.on('mouseover', function(){Handler.mouseover(this)},this);
-    this.marker.selected.on('mouseout', function(){Handler.mouseout(this)},this);
+    this.marker.selected.on('click', function(){UnitEvent.click(this)},this);
+	this.marker.selected.on('contextmenu',function(){UnitEvent.contextmenu(this)},this);
+	this.marker.selected.on('mouseover', function(){UnitEvent.mouseover(this)},this);
+    this.marker.selected.on('mouseout', function(){UnitEvent.mouseout(this)},this);
     
 }//end func

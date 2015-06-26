@@ -127,8 +127,11 @@ var iface =
     * @param unit объект юнита
     **/
     showMenu: function(unit){
-        if ( unit instanceof RegimentBase ) return getRegimentMenu(unit);
-        if ( unit instanceof SupplyBase ) return getBaseMenu(unit);
+        if ( unit.type.id == 'base' ) {
+            return getBaseMenu(unit);
+        }else{
+            return getRegimentMenu(unit);
+        }
     },
     
     /**

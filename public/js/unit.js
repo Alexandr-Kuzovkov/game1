@@ -193,28 +193,6 @@ function Unit( latlng, id, userId )
         this.marker.area.setRadius(this.type.radius * 111300);
 	};
 	
-	/**
-    * выдача данных о ресурсах юнита
-    * @return объект с информацией
-    **/
-    this.getInfo = function(){
-		var info = {
-    		          id: this.id, 
-                      country: this.country.name, 
-                      type: this.type.name,
-                      people: this.type.resources.men,
-                      ammo: this.type.resources.ammo,
-                      food:  this.type.resources.food,
-                      discipline: this.type.resources.discipline,
-		              experience: this.type.resources.experience,
-                      elevation:  this.elevation,
-                      around: this.around,
-                      battle: this.battle,
-                      status: this.status.kind,
-                      weather: this.weather
-                  };
-		return info;
-	};
 	
     /**
     * здесь может быть реализовано обновление состояния юнита
@@ -225,7 +203,7 @@ function Unit( latlng, id, userId )
         if ( this.type.resources.food <= 0 || this.type.resources.men <= 0 ){
             this.marker.explosion.setIcon(this.iconExplosion);
             var self = this;
-            setTimeout( function(){game.deleteRegiment(self.id);}, 3000);
+            setTimeout( function(){game.deleteUnit(self.id);}, 3000);
 		} 
 	};
     
@@ -264,9 +242,9 @@ function Unit( latlng, id, userId )
 	
 	/*Обработчики событий*/
 	
-    this.marker.selected.on('click', function(){Handler.click(this)},this);
-	this.marker.selected.on('contextmenu',function(){Handler.contextmenu(this)},this);
-    this.marker.selected.on('mouseover', function(){Handler.mouseover(this)},this);
-    this.marker.selected.on('mouseout', function(){Handler.mouseout(this)},this);
+    this.marker.selected.on('click', function(){UnitEvent.click(this)},this);
+	this.marker.selected.on('contextmenu',function(){UnitEvent.contextmenu(this)},this);
+    this.marker.selected.on('mouseover', function(){UnitEvent.mouseover(this)},this);
+    this.marker.selected.on('mouseout', function(){UnitEvent.mouseout(this)},this);
 	
 }//end func

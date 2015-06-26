@@ -3,7 +3,7 @@
 * для юнитов
 **/
 
-var Handler = 
+var UnitEvent = 
 {
     /**
     * обработчик события  click на юните
@@ -21,12 +21,12 @@ var Handler =
 			object.select();
 			if ( object.OWN ){
 			     map.once('dblclick', function(e){
-    				Handler.dblclick(e,object);
+    				UnitEvent.dblclick(e,object);
     			},object);
 			}
             else{
                 object.marker.selected.once('dblclick',function(){
-                    Handler.attack(object.id);
+                    UnitEvent.attack(object.id);
                 },object);
             }       
 		}

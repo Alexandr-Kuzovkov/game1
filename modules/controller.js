@@ -23,9 +23,9 @@ function location(req, res){
     setCookie(req,res);
     var user_id = req.cookies.user_id;
     if ( global.sdata.games[location].users[user_id] == undefined ){
-        res.render('new',{title:global.locations[location]['name']});
+        res.render('join',{title:global.locations[location]['name']});
     }else{
-        res.render('game',{title:global.locations[location]['name'], countries:global.locations[location]['countries'] });
+        res.render('play',{title:global.locations[location]['name'], countries:global.locations[location]['countries'] });
     }
     
 }

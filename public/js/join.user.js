@@ -1,25 +1,27 @@
-var units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
-var selectCountry = null;
-var unitObject = [];
-var unitsList = null;
+var JoinUser = {};
+JoinUser.units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
+JoinUser.selectCountry = null;
+JoinUser.unitObject = [];
+JoinUser.unitsList = null;
 
 window.onload = function(){  
-    document.getElementById('btn-clear-all').onclick = clear;
-    document.getElementById('btn-begin-game').onclick = begin;
+    document.getElementById('btn-clear-all').onclick = JoinUser.clear;
+    document.getElementById('btn-begin-game').onclick = JoinUser.begin;
 }
 
-function showAvailUnits(location){
-    selectCountry = document.getElementById('set-country');
+JoinUser.showAvailUnits = function(location){
+    UnitFactory.init(Unit, UnitTypes, Countries);
+    JoinUser.selectCountry = document.getElementById('set-country');
     for (var i = 0; i < location.countries.length; i++){
         var opt = document.createElement('option');
         opt.value = location.countries[i];
         console.log(location.countries[i]);
         opt.innerText = Countries[location.countries[i]].name;
         opt.textContent = Countries[location.countries[i]].name;
-        selectCountry.appendChild(opt);
+        JoinUser.selectCountry.appendChild(opt);
     }
       
-    unitsList = document.getElementById('units-list');
+    JoinUser.unitsList = document.getElementById('units-list');
     for ( var key in location.units ){
         var li = document.createElement('li');
         var input = document.createElement('input');
@@ -42,14 +44,13 @@ function showAvailUnits(location){
         count.textContent = location.units[key];
         count.className ='units-avail';
         li.appendChild(count);
-        unitsList.appendChild(li);
-    }
-    
-    map.on('click',makeUnit);   
-}
+        JoinUser.unitsList.appendChild(li);
+    }   
+    map.on('click',JoinUser.makeUnit);   
+};
 
 /*получаем выбранный вариант юнита*/
-function getRadio(){
+JoinUser.getRadio = function(){
     var inputs = document.getElementsByTagName('input');
     for ( var i = 0; i < inputs.length; i++ ){
         if ( inputs[i].attributes.name.value == 'type' )
@@ -57,56 +58,50 @@ function getRadio(){
                 if( inputs[i].checked ) return inputs[i].value;
     }
     return null;
-}
+};
 
 /*ставим юнита на карту*/
-function makeUnit(e){
-    var type = getRadio();
-    var country = selectCountry.value;
+JoinUser.makeUnit = function(e){
+    var type = JoinUser.getRadio();
+    var country = JoinUser.selectCountry.value;
     var iconCountry = Countries[country].icon;
     var typeObject = UnitTypes.getType(type);
     var iconType = typeObject.icon;
     var latlng = [e.latlng.lat, e.latlng.lng];
     console.log(latlng);
     var unit = null; 
-    if (type=='base'){
-        unit = new SupplyBase(latlng, 0, user.id);
-        unit.type = UnitTypes.getType(type);
-        unit.country = Countries[country];
-        unit.init();
-        units.bases.push(unit.toString());
+    var unit = UnitFactory.createUnit(latlng, type, country, 0, user.id);
+    unit.init();
+    if ( unit.type.id == 'base'){
+        JoinUser.units.bases.push(unit.toString());
     }else{
-        unit = new RegimentBase(latlng, 0, user.id);
-        unit.type = UnitTypes.getType(type);
-        unit.country = Countries[country];
-        unit.init();
-        units.regiments.push(unit.toString());
+        JoinUser.units.regiments.push(unit.toString());
     }
-    unitObject.push(unit);
-    units.country = Countries[selectCountry.value].toString();
-    selectCountry.disabled = 'disabled'; 
-}
+    JoinUser.unitObject.push(unit);
+    JoinUser.units.country = Countries[JoinUser.selectCountry.value].toString();
+    JoinUser.selectCountry.disabled = 'disabled'; 
+};
 
 /*очищаем данные по редактируемой миссии*/
-function clear(){
+JoinUser.clear = function(){
     for ( var key in units ){
         units[key] = [];
     }
-    for (var i = 0; i < unitObject.length; i++){
-         unitObject[i].destroy();
+    for (var i = 0; i < JoinUser.unitObject.length; i++){
+         JoinUser.unitObject[i].destroy();
     }
-    selectCountry.removeAttribute('disabled'); 
-}
+    JoinUser.selectCountry.removeAttribute('disabled'); 
+};
 
 //посылаем данные по юнитам на сервер
-function begin(){
-    console.log(JSON.stringify(units));
+JoinUser.begin = function(){
+    console.log(JSON.stringify(JoinUser.units));
     
-    if (units.regiments.length == 0 || units.bases.length == 0){
+    if (JoinUser.units.regiments.length == 0 || JoinUser.units.bases.length == 0){
         alert('Установите юнитов');
         return;
     }
        
-    socket.emit('set_units', {units:units, location:game.location.id, user:user.toString()});
+    socket.emit('set_units', {units:JoinUser.units, location:game.location.id, user:user.toString()});
     
 }
