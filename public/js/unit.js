@@ -214,7 +214,7 @@ function Unit( latlng, id, userId )
 		map.removeLayer(this.path);
 		delete this.type;
 		this.marker.selected.clearAllEventListeners();
-		if ( this.selected ) Handler.removeDblclick(this);
+		if ( this.selected ) UnitEvent.removeDblclick(this);
 		for ( marker in this.marker ) map.removeLayer(this.marker[marker]);
 	};
     

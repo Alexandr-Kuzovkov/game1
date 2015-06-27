@@ -1,42 +1,46 @@
-    /**
-    * создание объекта карты и слоев с тайлами
-    * используя библиотеку leaflet http://leafletjs.com/
-    **/
-	var mapCenter = [56.605, 47.9]; /*центр карты*/
-	var zoom = 13;                  /*масштаб*/
-	var maxZoom = 14;               /*максимальный масштаб*/
-    var minZoom = 12                /*минимальный масштаб*/
-	var id = 'examples.map-zr0njcqy'; /*ключ*/
-	var map = null;
+/**
+* создание объекта карты и слоев с тайлами
+* используя библиотеку leaflet http://leafletjs.com/
+**/
+var Map = {};
 
+Map.center = [56.605, 47.9]; /*центр карты*/
+Map.zoom = 13;                  /*масштаб*/
+Map.maxZoom = 14;               /*максимальный масштаб*/
+Map.minZoom = 12                /*минимальный масштаб*/
+Map.id = 'examples.map-zr0njcqy'; /*ключ*/
+Map.map = null;
+Map.lib = null;
+Map.baseLayers = null;
 
-	map = L.map('map').setView( mapCenter, zoom );
-
-	/*создаем tile-слой*/ 
-	var mapbox = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-		maxZoom: maxZoom,
-        minZoom: minZoom,
+Map.init = function(lib){
+    Map.lib = lib;
+    Map.map = Map.lib.map('map').setView( Map.center, Map.zoom );
+    /*создаем tile-слой*/ 
+	var mapbox = Map.lib.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+		maxZoom: Map.maxZoom,
+        minZoom: Map.minZoom,
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-		id: id
+		id: Map.id
 	});
 	/*создаем tile-слой*/ 
-    var Thunderforest_Landscape = L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
+    var Thunderforest_Landscape = Map.lib.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
    
    /*создаем tile-слои Google*/ 
-   var ggl = new L.Google('SATELLITE',{maxZoom: maxZoom, minZoom: minZoom});
-   var ggl2 = new L.Google('TERRAIN',{maxZoom: maxZoom, minZoom: minZoom});
+   var ggl = new Map.lib.Google('SATELLITE',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+   var ggl2 = new Map.lib.Google('TERRAIN',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
     
 	/*создаем другие базовые слои от других провайдеров*/     
-	var osmde = L.tileLayer.provider('OpenStreetMap.DE',{maxZoom: maxZoom, minZoom: minZoom});
-	var osmBW = L.tileLayer.provider('OpenStreetMap.BlackAndWhite',{maxZoom: maxZoom, minZoom: minZoom});
-	var ersiwi = L.tileLayer.provider('Esri.WorldImagery',{maxZoom: maxZoom, minZoom: minZoom});
-	map.addLayer(ggl2);
+	var osmde = Map.lib.tileLayer.provider('OpenStreetMap.DE',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+	var osmBW = Map.lib.tileLayer.provider('OpenStreetMap.BlackAndWhite',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+	var ersiwi = Map.lib.tileLayer.provider('Esri.WorldImagery',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+	Map.map.addLayer(ggl2);
     /*создаем контрол для переключения слоев*/
-	var baseLayers = 	{
+	Map.baseLayers = 	{
 							"OpenStreetMap": osmde,
                             "Mapbox": mapbox,
 							"OpenStreetMap Black and White": osmBW,
@@ -46,4 +50,53 @@
                             "Google Terrain": ggl2
 						};
 
-	L.control.layers(baseLayers).addTo(map);
+	Map.lib.control.layers(Map.baseLayers).addTo(Map.map);
+};
+
+Map.setView = function(center, zoom){
+    Map.map.setView(center, zoom);
+};
+
+Map.setBoundary = function(SW_lat, SW_lng, NE_lat, NE_lng){
+    Map.map.setMaxBounds(Map.lib.latLngBounds(Map.lib.latLng(SW_lat, SW_lng),Map.lib.latLng(NE_lat, NE_lng)));
+};
+
+
+Map.marker = function(latlng, iconUrl){
+    this.icon = Map.lib.icon({  iconUrl: iconUrl,
+                                iconSize: [24, 24], 
+                                iconAnchor: [12, 12], 
+                                shadowAnchor: [4, 23], 
+                                popupAnchor: [-3, -23]});
+    this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
+    this.marker = Map.lib.marker(this.latLng, {icon: this.icon}).addTo(Map.map);
+    
+    this.setIcon = function(iconUrl){
+        this.icon = Map.lib.icon({  iconUrl: iconUrl,
+                                iconSize: [24, 24], 
+                                iconAnchor: [12, 12], 
+                                shadowAnchor: [4, 23], 
+                                popupAnchor: [-3, -23]});
+        this.marker.setIcon(this.icon);
+    };
+    
+    this.setLatLng = function(latlng){
+        this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
+        this.marker.setLatLng(this.latLng);   
+    };
+    
+    this.destroy = function(){
+         Map.map.removeLayer(this.marker); 
+    };
+    
+    this.setOpacity = function(opacity){
+        this.marker.setOpacity(opacity);
+    };
+    
+    this.addEventHandler = function(event, handler, context){
+        this.marker.on(event, handler, context);   
+    };
+};
+
+
+

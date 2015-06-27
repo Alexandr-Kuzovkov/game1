@@ -1,79 +1,14 @@
 /*клиентский модуль обработчиков событий при взаимодействии клиента и сервера*/
 
-var Socket = {};
-
-Socket.url = null;
-Socket.pathname = null;
-Socket.socket = null;
-Socket.hostname = null;
-Socket.app = null;
-
-Socket.init = function(app){
-    Socket.app = app;
-    Socket.url = window.location.host;
-    Socket.pathname = window.location.pathname;
-    Socket.socket = app.io.connect(url+pathname);
-    Socket.hostname = window.location.hostname;
-};
+url = window.location.host;
+pathname = window.location.pathname;
+socket = io.connect(url+pathname);
+hostname = window.location.hostname;
+user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/
+game = null; /*переменная для хранения клиентского объекта game*/
+interval = null; /*интервал обновления клиента и сервера*/
 
 
-Socket.handlers = {
-    'connect': Socket.connect,
-    'disconnect': Socket.disconnect,
-    'resume_game': Socket.resumeGame,
-    'new_game': Socket.newGame,
-    'data_from_server': Socket.dataFromServer,
-    'client_refresh_by_server', Socket.clientRefreshByServer,
-    'game_over', Socket.gameOver,
-    'to_user_live', Socket.toUserLive
-};
-
-Socket.connect = function(){
-    Socket.socket.emit('get_game', {user:Socket.app.user, location:Socket.pathname});
-};
-
-Socket.disconnect = function(){
-    //window.location.replace('/');
-};
-
-Socket.resumeGame = function(data){
-    if ( data.game ) {
-        Socket.app.game = new Game(user);
-        Socket.app.game.restore(data.game, Socket.beginUserLive);
-        Socket.app.user.gameId = data.game.id;
-        Socket.setMapOptions(game);
-        Socket.app.game.startGame();       
-   }
-};
-
-Socket.newGame = function(data){
-    if ( data.game ) {
-        Socket.app.game = new Game(user);
-        Socket.app.game.restore(data.game, function(){});
-        Socket.app.user.gameId = data.game.id;
-        Socket.setMapOptions(Socket.app.game);
-        JoinUser.showAvailUnits(data.location);
-   } 
-};
-
-Socket.dataFromServer = function(data){
-    Socket.app.game.sync(data.game);
-    Socket.app.updateInfoUnit();
-    iface.addLog( data.game.logMessages );
-    iface.addInfo( data.game.gameMessages );
-};
-
-Socket.clientRefreshByServer = function(){
-    
-};
-
-Socket.gameOver = function(){
-    
-};
-
-Socket.toUserLive = function(){
-    
-};
 
 /**
 * обработчик события connect
