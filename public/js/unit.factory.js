@@ -5,17 +5,19 @@
 var UnitFactory = {};
 
 UnitFactory.unitConstruct = null; /*конструктор юнита*/
-UnitFactory.types = null; /*объект описывающий типы юниитов*/
+UnitFactory.types = null; /*объект описывающий типы юнитов*/
 UnitFactory.countries = null; /*объект описывающий страны*/
+UnitFactory.map = null;/*объект карты*/
 
-UnitFactory.init = function(unitConstruct, types, countries){
+UnitFactory.init = function(map, unitConstruct, types, countries){
     UnitFactory.unitConstruct = unitConstruct;
     UnitFactory.types = types;
     UnitFactory.countries = countries;
+    UnitFactory.map = map;
 };
 
 UnitFactory.createUnit = function(latlng, type, country, id, userId){
-    var unit = new UnitFactory.unitConstruct(latlng, id, userId);
+    var unit = new UnitFactory.unitConstruct(latlng, id, userId, map);
     unit.type = UnitFactory.types.getType(type);
     unit.country = UnitFactory.countries[country];
     if ( type == 'base' ){

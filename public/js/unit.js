@@ -3,7 +3,7 @@
 * param latlng координаты [lat,lng]
 * param id идентификатор
 **/
-function Unit( latlng, id, userId )
+function Unit( latlng, id, userId, map )
 {
 	/*Свойства*/
 	this.userId = userId; /*id игрока*/
@@ -20,7 +20,7 @@ function Unit( latlng, id, userId )
     this.lastbattle = false; /*предыдущее значение флага боя*/
     this.enemyCount = 0; /*количество противников*/
     this.weather = null; /*погодные данные*/
-    this.latlng = L.latLng(latlng[0], latlng[1]);
+    //this.latlng = L.latLng(latlng[0], latlng[1]);
     this.status = 
     {
         kind: 'march', /*статус юнита; может быть march, attack, defense*/
@@ -28,52 +28,22 @@ function Unit( latlng, id, userId )
         attack_coff: 0.5, /*степень ослабления ударной мощи на марше*/
         speed_coff: 0.5  /*степень замедления скорости в атаке*/
     };
-    this.popup = L.popup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
-	this.path = L.polyline([],{color:this.colorPath}).addTo(map); /*объект полилинии пути движения*/
-	this.country =   /*объект иконки страны принадлежности*/
-	{ 
-		icon: 	L.icon({ iconUrl: '/img/default.png',
-		iconSize: [24, 24], 
-		iconAnchor: [12, 12], 
-		shadowAnchor: [4, 23], 
-		popupAnchor: [-3, -23]})
-	};
-	this.type =  /*объект иконки типа юнита*/     
-	{
-		icon: L.icon({ iconUrl: '/img/default.png',
-		iconSize: [24, 24], 
-		iconAnchor: [12, 12], 
-		shadowAnchor: [4, 23], 
-		popupAnchor: [-3, -23]})
-	};
+    this.popup = map.createPopup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
+	this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
+	this.country =  map.createIcon('/img/default.png'); /*объект иконки страны принадлежности*/
+	this.type =  map.createIcon('/img/default.png'); /*объект иконки типа юнита*/     
     
     /*объект иконки выделенного юнита*/ 
-	 this.iconSelected = L.icon({ iconUrl: '/img/unselected.png',
-					iconSize: [50, 50], 
-					iconAnchor: [25, 25], 
-					shadowAnchor: [4, 23], 
-					popupAnchor: [-3, -23]});
+	 this.iconSelected = map.createIcon('/img/unselected.png');
     
     /*объект иконки невыделенного юнита*/
-    this.iconUnselected = L.icon({ iconUrl: '/img/unselected.png',
-					iconSize: [50, 50], 
-					iconAnchor: [25, 25], 
-					shadowAnchor: [4, 23], 
-					popupAnchor: [-3, -23]});
+    this.iconUnselected = map.createIcon('/img/unselected.png');
 	
     /*объект иконки изображения боя*/
-    this.iconBattle = L.icon({ iconUrl: '/img/battle.gif',
-					iconSize: [60, 60], 
-					iconAnchor: [30, 30], 
-					shadowAnchor: [4, 23], 
-					popupAnchor: [-3, -23]});
+    this.iconBattle = map.createIcon('/img/battle.gif');
                     
     /*объект иконки изображения взрыва*/
-    this.iconExplosion = L.icon({ iconUrl: '/img/explosion.gif',
-					iconSize: [50, 60], 
-					iconAnchor: [25, 30], 
-					shadowAnchor: [4, 23], 
-					popupAnchor: [-3, -23]});
+    this.iconExplosion = map.createIcon('/img/explosion.gif');
     
     /*объект маркера юнита, с помощью которого он отображается на карте */
 	this.marker = 

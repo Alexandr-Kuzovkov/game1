@@ -98,5 +98,47 @@ Map.marker = function(latlng, iconUrl){
     };
 };
 
+Map.popup = function(){
+    this.popup = Map.lib.popup();
+    this.show = function(latlng, content){
+        this.popup.setLatLng(Map.lib.latLng(latlng[0], latlng[1])).setContent(content).openOn(Map.map);
+    };    
+};
+
+Map.polyline = function(dots, color){
+    this.polyline = Map.lib.polyline(dots,{color:color}).addTo(Map.map);
+    this.setDots = function(dots){
+        var latlngs = [];
+		for ( var i = 0, len = dots.length; i < len; i++ ) latlngs.push(Map.lib.latLng(dots[i][0],dots[i][1]));
+        this.polyline.setLatLngs(latlngs);
+    };    
+};
+
+Map.icon = function(iconUrl){
+    this.icon = Map.lib.icon({  iconUrl: iconUrl,
+                                iconSize: [24, 24], 
+                                iconAnchor: [12, 12], 
+                                shadowAnchor: [4, 23], 
+                                popupAnchor: [-3, -23]});
+};
+
+Map.createMarker = function(latlng, iconUrl){
+    return new Map.marker(latlng, iconUrl);
+};
+
+Map.createPopup = function(){
+    return new Map.popup();
+};
+
+Map.createPolyline = function(dots, color){
+    return new Map.polyline(dots,color);
+};
+
+Map.createIcon = function(iconUrl){
+    return new Map.icon(iconUrl);
+};
+
+
+
 
 
