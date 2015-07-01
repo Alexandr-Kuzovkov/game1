@@ -19,11 +19,8 @@ UnitTypes.Tank = function(){
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
      
-	this.icon =	L.icon({ iconUrl: '/img/type/tank24.png', /*объект иконки*/
-			iconSize: [24, 24], 
-			iconAnchor: [12, 12], 
-			shadowAnchor: [4, 23], 
-			popupAnchor: [-3, -23]});
+	this.icon =	'/img/type/tank24.png'; /*картинка иконки*/
+			
 					
 	this.resources = {                        /*ресурсы*/
 						men: 100, /*личный состав %*/
@@ -53,11 +50,7 @@ UnitTypes.Foot = function(){
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-	this.icon = 	L.icon({ iconUrl: '/img/type/foot24.png',
-			iconSize: [24, 24], 
-			iconAnchor: [12, 12], 
-			shadowAnchor: [4, 23], 
-			popupAnchor: [-3, -23]});
+	this.icon = '/img/type/foot24.png';
 					
 	this.resources =	{
 					men: 100, /*личный состав %*/
@@ -86,11 +79,7 @@ UnitTypes.Base = function(){
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-    this.icon = 	L.icon({ iconUrl: '/img/type/base24.png',
-			iconSize: [24, 24], 
-			iconAnchor: [12, 12], 
-			shadowAnchor: [4, 23], 
-			popupAnchor: [-3, -23]});
+    this.icon = '/img/type/base24.png';
 					
 	this.resources =	{
 					men: 100,

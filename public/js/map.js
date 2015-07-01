@@ -80,7 +80,7 @@ Map.marker = function(latlng, iconUrl){
         this.marker.setIcon(this.icon);
     };
     
-    this.setLatLng = function(latlng){
+    this.setPosition = function(latlng){
         this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
         this.marker.setLatLng(this.latLng);   
     };
@@ -93,13 +93,18 @@ Map.marker = function(latlng, iconUrl){
         this.marker.setOpacity(opacity);
     };
     
-    this.addEventHandler = function(event, handler, context){
+    this.addEventListener = function(event, handler, context){
         this.marker.on(event, handler, context);   
+    };
+    
+    this.clearAllEventListeners = function(){
+        this.marker.clearAllEventListeners();
     };
 };
 
 Map.popup = function(){
     this.popup = Map.lib.popup();
+    
     this.show = function(latlng, content){
         this.popup.setLatLng(Map.lib.latLng(latlng[0], latlng[1])).setContent(content).openOn(Map.map);
     };    
@@ -107,10 +112,21 @@ Map.popup = function(){
 
 Map.polyline = function(dots, color){
     this.polyline = Map.lib.polyline(dots,{color:color}).addTo(Map.map);
+    this.dots = [];
+    
     this.setDots = function(dots){
         var latlngs = [];
-		for ( var i = 0, len = dots.length; i < len; i++ ) latlngs.push(Map.lib.latLng(dots[i][0],dots[i][1]));
+        this.dots = dots;
+		for ( var i = 0, len = this.dots.length; i < len; i++ ) latlngs.push(Map.lib.latLng(this.dots[i][0],this.dots[i][1]));
         this.polyline.setLatLngs(latlngs);
+    };
+    
+    this.getDots = function(){
+        return this.dots;
+    };
+    
+    this.destroy = function(){
+        Map.map.removeLayer(this.polyline);
     };    
 };
 
@@ -120,6 +136,29 @@ Map.icon = function(iconUrl){
                                 iconAnchor: [12, 12], 
                                 shadowAnchor: [4, 23], 
                                 popupAnchor: [-3, -23]});
+};
+
+Map.circle = function(latlng, color, fillColor, opacity, fillOpacity){
+    this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
+    
+    this.circle = Map.lib.circle(this.latLng, 1, {color: color, fillColor: fillColor, opacity: opacity,fillOpacity:fillOpacity }).addTo(Map.map);
+    
+    this.setPosition = function(latlng){
+        this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
+        this.marker.setLatLng(this.latLng);   
+    };
+    
+    this.setRadius = function(radius){
+        this.circle.setRadius(radius);
+    };
+    
+    this.destroy = function(){
+         Map.map.removeLayer(this.circle); 
+    };
+    
+    this.addEventHandler = function(event, handler, context){
+        this.circle.on(event, handler, context);   
+    };
 };
 
 Map.createMarker = function(latlng, iconUrl){
@@ -136,6 +175,10 @@ Map.createPolyline = function(dots, color){
 
 Map.createIcon = function(iconUrl){
     return new Map.icon(iconUrl);
+};
+
+Map.createCircle = function(latlng, color, fillColor, opacity, fillOpacity){
+    return new Map.circle(latlng, color, fillColor, opacity, fillOpacity);
 };
 
 

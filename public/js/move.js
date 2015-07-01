@@ -15,46 +15,46 @@ var Move =
     * преобразование массива точек в массив объектов latlng
     * @param dots массив точек вида [[lat1,lng1],[lat2,lng2],...]
     * @return latlngs массив объектов latLng библиотеки leaflet 
-    **/
+    **
 	dots2latlngs: 	function (dots){
 		latlngs = new Array();
 		for ( var i = 0; i < dots.length; i++ ) latlngs.push(L.latLng(dots[i][0],dots[i][1]));
 		return latlngs;
 	},//end func
-
+    */
 	
 	/**
     * перемещение маркера по пути с анимацией
-    * @param regiment объект юнита (полка)
+    * @param unit объект юнита (полка)
     * @param route путь, представленный в виде массива точек вида [[lat1,lng1],[lat2,lng2],...]
     * @param i номер отрезка пути 
     **/
-    moveMarkerRouteAnimation:	function (regiment,route,i){
+    moveMarkerRouteAnimation:	function (unit,route,i){
         if (!Move.ENABLED) return false;
         if (route.length == 0) return false;
-        if ( regiment.STOP ){
-		    regiment.STOP = false;
-            regiment.MOVE = false;
-            regiment.path.setLatLngs([]);
+        if ( unit.STOP ){
+		    unit.STOP = false;
+            unit.MOVE = false;
+            unit.path.setDots([]);
             return false;
 		}
-        if ( regiment.status.kind == 'defense' ){
+        if ( unit.status.kind == 'defense' ){
             return false; /*при обороне не можем двигаться*/
         }
 		
 		if ( i == undefined ) {
 			i = 0;
-			if ( regiment.path.getLatLngs().length == 0 )
-				regiment.path.setLatLngs(Move.dots2latlngs(route)); //отрисовка пути движения полилинией
+			if ( unit.path.getDots().length == 0 )
+				unit.path.setDots(route); //отрисовка пути движения полилинией
 		}
 		
-		Move.moveMarkerLineAnimation({lat: route[i][0],lng: route[i][1]}, regiment, function(){
+		Move.moveMarkerLineAnimation({lat: route[i][0],lng: route[i][1]}, unit, function(){
 			if ( ++i < route.length ){
-				Move.moveMarkerRouteAnimation(regiment,route,i);
+				Move.moveMarkerRouteAnimation(unit,route,i);
 			}
 			else
 			{
-				regiment.path.setLatLngs([]); //удаление линии пути
+				unit.path.setDots([]); //удаление линии пути
 			}
 		
 		});	
@@ -65,31 +65,31 @@ var Move =
     * перемещение маркера в заданную точку по прямой с анимацией
     * с учетом сферичности используя решение прямой о обратной геодезических задач 
     * @param latlng точка назначения в виде оъекта {lat:lat,lng:lng} 
-    * @param regiment объект юнита (полка)
+    * @param unit объект юнита (полка)
     * @param callback функция обратного вызова вызываемая после завершения движения 
     **/
-	moveMarkerLineAnimation:	function ( latlng, regiment, callback ){
-        if ( regiment.MOVE ) return false;
-		regiment.MOVE = true;
-		var start = regiment.marker.type.getLatLng();
+	moveMarkerLineAnimation:	function ( latlng, unit, callback ){
+        if ( unit.MOVE ) return false;
+		unit.MOVE = true;
+		var start = {lat:unit.latlng[0], lng:unit.latlng[1]};
 		var end = latlng;
 		var ogz = Helper.ogz([start.lat,start.lng], [end.lat, end.lng]);
-		var pos = L.latLng( start.lat, start.lng );
+		var pos = {lat:start.lat, lng:start.lng};
         var newpos = null;
 		var interval = setInterval( function(){   
-            var rastTact = Move.DELTA_TIME * Move.TIME_SCALE /3600 * regiment.getVelocity();
-            if ( (Helper.rast([pos.lat,pos.lng],[end.lat,end.lng]) >= rastTact) && Move.ENABLED && !regiment.STOP )
+            var rastTact = Move.DELTA_TIME * Move.TIME_SCALE /3600 * unit.getVelocity();
+            if ( (Helper.rast([pos.lat,pos.lng],[end.lat,end.lng]) >= rastTact) && Move.ENABLED && !unit.STOP )
 			{
                 if ( !Move.PAUSE ){
-                    for ( marker in regiment.marker ) regiment.marker[marker].setLatLng( pos );
+                    unit.replace([pos.lat, pos.lng]);
                     newpos = Helper.pgz([pos.lat,pos.lng], rastTact, ogz.azimut);
-                    pos = L.latLng( newpos[0], newpos[1] );
+                    pos = {lat: newpos[0], lng: newpos[1]};
 				}               
 			}
 			else
 			{
 				clearInterval( interval );
-				regiment.MOVE = false;
+				unit.MOVE = false;
 				callback();
 			}
 		
@@ -131,7 +131,7 @@ var Move =
 			}
 		
 		}, Move.DELTA_TIME );
-	},//end func
+	}//end func
                             
     
     
@@ -140,10 +140,10 @@ var Move =
     * перемещение маркера в заданную точку по прямой без анимации
     * @param latlng координаты заданной точки в виде массива [lat,lng]
     * @param regiment объект юнита (полка)
-    **/
+    **
     replaceMarker:    function(latlng,regiment){
         var pos = L.latLng(latlng[0],latlng[1]);
         for ( marker in regiment.marker ) regiment.marker[marker].setLatLng( pos );
     }//end func
-							
+	*/						
 }

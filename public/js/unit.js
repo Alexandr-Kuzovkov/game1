@@ -20,6 +20,7 @@ function Unit( latlng, id, userId, map )
     this.lastbattle = false; /*предыдущее значение флага боя*/
     this.enemyCount = 0; /*количество противников*/
     this.weather = null; /*погодные данные*/
+    this.latlng = latlng;/*позиция юнита*/
     //this.latlng = L.latLng(latlng[0], latlng[1]);
     this.status = 
     {
@@ -30,30 +31,30 @@ function Unit( latlng, id, userId, map )
     };
     this.popup = map.createPopup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
 	this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
-	this.country =  map.createIcon('/img/default.png'); /*объект иконки страны принадлежности*/
-	this.type =  map.createIcon('/img/default.png'); /*объект иконки типа юнита*/     
+	this.country = '/img/default.png'; /*объект иконки страны принадлежности*/
+	this.type = '/img/default.png'; /*объект иконки типа юнита*/     
     
     /*объект иконки выделенного юнита*/ 
-	 this.iconSelected = map.createIcon('/img/unselected.png');
+    this.iconSelected = '/img/unselected.png';
     
     /*объект иконки невыделенного юнита*/
-    this.iconUnselected = map.createIcon('/img/unselected.png');
+    this.iconUnselected = '/img/unselected.png';
 	
     /*объект иконки изображения боя*/
-    this.iconBattle = map.createIcon('/img/battle.gif');
+    this.iconBattle = '/img/battle.gif';
                     
     /*объект иконки изображения взрыва*/
-    this.iconExplosion = map.createIcon('/img/explosion.gif');
+    this.iconExplosion = '/img/explosion.gif';
     
     /*объект маркера юнита, с помощью которого он отображается на карте */
 	this.marker = 
 	{
-		area: L.circle(this.latlng, 1, {color: '#f03', fillColor: '#f03', opacity: 0.1,fillOpacity:0.1 }).addTo(map),
-        battle: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
-        type: L.marker(this.latlng,{icon:this.type.icon}).addTo(map),
-		country: L.marker(this.latlng,{icon:this.country.icon}).addTo(map),
-		explosion: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map),
-        selected: L.marker(this.latlng,{icon:this.iconUnselected}).addTo(map)
+		area: map.createCircle(latlng, '#f03', '#f03', 0.1, 0.1 ),
+        battle: map.createMarker(latlng, this.iconBattle),
+        type: map.createMarker(latlng, this.iconType),
+		country: map.createMarker(latlng, this.iconCountry ),
+		explosion: map.createMarker(latlng, this.iconExplosion),
+        selected: map.createMarker(latlng, this.iconSelected)
     };
     
     /**
@@ -61,7 +62,10 @@ function Unit( latlng, id, userId, map )
     * @param latlng координаты точки [lat, lng]
     **/
 	this.replace = function(latlng){
-	   Move.replaceMarker( latlng, this );
+	   this.latlng = latlng;
+       for ( key in this.marker ){
+            this.marker[key].setPosition(latlng); 
+       }
 	};
     
     
@@ -96,7 +100,7 @@ function Unit( latlng, id, userId, map )
     **/
 	this.goRoute = function(latlng){
         var object = this;
-        var source = {lat: this.marker.type.getLatLng().lat, lng: this.marker.type.getLatLng().lng};
+        var source = {lat:this.latlng[0], lng: this.latlng[1]};
         Route.getRoute(latlng,source,function(route){    
             Move.moveMarkerRouteAnimation( object, route );
 		});	
@@ -154,12 +158,7 @@ function Unit( latlng, id, userId, map )
     this.init = function(){
 		this.marker.type.setIcon(this.type.icon);
 		this.marker.country.setIcon(this.country.icon);
-        iconSelectedUrl = ( this.OWN )? '/img/selected.png' : '/img/enemy.selected.png';
-        this.iconSelected = L.icon({ iconUrl: iconSelectedUrl,
-					iconSize: [50, 50], 
-					iconAnchor: [25, 25], 
-					shadowAnchor: [4, 23], 
-					popupAnchor: [-3, -23]});
+        this.iconSelected = ( this.OWN )? '/img/selected.png' : '/img/enemy.selected.png';
         this.marker.area.setRadius(this.type.radius * 111300);
 	};
 	
@@ -181,11 +180,11 @@ function Unit( latlng, id, userId, map )
     * уничтожение объекта юнита
     **/
     this.destroy = function(){
-		map.removeLayer(this.path);
+		this.path.destroy();
 		delete this.type;
 		this.marker.selected.clearAllEventListeners();
 		if ( this.selected ) UnitEvent.removeDblclick(this);
-		for ( marker in this.marker ) map.removeLayer(this.marker[marker]);
+		for ( key in this.marker ) this.marker[key].destroy();
 	};
     
     /*преобразование в строку*/
@@ -197,7 +196,7 @@ function Unit( latlng, id, userId, map )
         unit.userId = this.userId;
         unit.MOVE = this.MOVE;
         unit.OWN = this.OWN;
-        unit.latlng = [this.marker.selected.getLatLng().lat, this.marker.selected.getLatLng().lng];
+        unit.latlng = this.latlng;
         unit.selected = this.selected;
         unit.colorPath = this.colorPath;
         unit.around = this.around;
@@ -212,9 +211,9 @@ function Unit( latlng, id, userId, map )
 	
 	/*Обработчики событий*/
 	
-    this.marker.selected.on('click', function(){UnitEvent.click(this)},this);
-	this.marker.selected.on('contextmenu',function(){UnitEvent.contextmenu(this)},this);
-    this.marker.selected.on('mouseover', function(){UnitEvent.mouseover(this)},this);
-    this.marker.selected.on('mouseout', function(){UnitEvent.mouseout(this)},this);
+    this.marker.selected.addEventListener('click', function(){UnitEvent.click(this)},this);
+	this.marker.selected.addEventListener('contextmenu',function(){UnitEvent.contextmenu(this)},this);
+    this.marker.selected.addEventListener('mouseover', function(){UnitEvent.mouseover(this)},this);
+    this.marker.selected.addEventListener('mouseout', function(){UnitEvent.mouseout(this)},this);
 	
 }//end func

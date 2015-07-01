@@ -11,8 +11,11 @@ App.init = function(){
     App.map = Map;
     App.io = io;
     App.user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/      
+    App.game = new Game(App.user);
     App.map.init(App.lib);
     App.socket.init(App);
+    App.iface = Interface;
+    App.iface.init();
     UnitFactory.init(App.map, Unit, UnitTypes, Countries);
     
 };

@@ -5,6 +5,16 @@
 
 var UnitEvent = 
 {
+    map: null,
+    game: null,
+    iface: null,
+     
+    init: function(map, game, iface){
+        UnitEvent.map = map;/*объект карты*/
+        UnitEvent.game = game;/*объект игры*/
+        UnitEvent.iface = iface; /*объект интерфейса*/
+    },
+    
     /**
     * обработчик события  click на юните
     * @param object объект юнита Regiment или Base
@@ -17,10 +27,10 @@ var UnitEvent =
 			object.unselect();
 		}
 		else{
-			if ( !object.OWN ) game.unselectNotOwn();
+			if ( !object.OWN ) UnitEvent.game.unselectNotOwn();
 			object.select();
 			if ( object.OWN ){
-			     map.once('dblclick', function(e){
+			     UnitEvent.map.once('dblclick', function(e){
     				UnitEvent.dblclick(e,object);
     			},object);
 			}
@@ -34,7 +44,7 @@ var UnitEvent =
     
     /**
     * обработчик события  doubleclick на юните
-    * @param object объект юнита Regiment или Base
+    * @param object объект юнита 
     * @param e объект события
     **/
     dblclick: function(e, object){
@@ -50,7 +60,7 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     contextmenu: function(object){
-   	    object.popup.setLatLng(object.marker.selected.getLatLng()).setContent(iface.showMenu(object)).openOn(map);   
+   	    object.popup.show(object.latlng, UnitEvent.iface.showMenu(object));   
     },
     
     /**
@@ -59,14 +69,14 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     removeDblclick: function(object){
-        map.off('dblclick',null,object);
+        UnitEvent.map.off('dblclick',null,object);
     },
     
     mouseover: function(object){
          for ( marker in object.marker ) {
             if ( marker != 'area' )object.marker[marker].setOpacity(0.7);
          }
-         iface.showUnit(object.getInfo());
+         UnitEvent.iface.showUnit(object.getInfo());
          this.overUnit = object;      
     },
     
@@ -74,7 +84,7 @@ var UnitEvent =
          for ( marker in object.marker ) {
             if ( marker != 'area') object.marker[marker].setOpacity(1.0);
          }
-         iface.hideUnit();
+         UnitEvent.iface.hideUnit();
          this.overUnit = null;
     },
     
