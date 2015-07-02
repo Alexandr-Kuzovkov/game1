@@ -3,8 +3,7 @@
 * @param id игрока
 * @param name имя игрока 
 **/
-function User(id,name)
-{
+function User(id,name){
     /*свойства*/
     this.id = id;
     this.name = name; /*имя*/

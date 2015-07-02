@@ -5,14 +5,14 @@
 
 var UnitEvent = 
 {
-    map: null,
-    game: null,
-    iface: null,
+    map: null,/*объект карты*/
+    game: null,/*объект игры*/
+    iface: null,/*объект интерфейса*/
      
-    init: function(map, game, iface){
-        UnitEvent.map = map;/*объект карты*/
-        UnitEvent.game = game;/*объект игры*/
-        UnitEvent.iface = iface; /*объект интерфейса*/
+    init: function(app){
+        UnitEvent.map = app.map;
+        UnitEvent.game = app.game;
+        UnitEvent.iface = app.iface; 
     },
     
     /**
@@ -30,12 +30,12 @@ var UnitEvent =
 			if ( !object.OWN ) UnitEvent.game.unselectNotOwn();
 			object.select();
 			if ( object.OWN ){
-			     UnitEvent.map.once('dblclick', function(e){
+			     UnitEvent.map.addOneTimeEventListener('dblclick', function(e){
     				UnitEvent.dblclick(e,object);
     			},object);
 			}
             else{
-                object.marker.selected.once('dblclick',function(){
+                object.marker.selected.addOneTimeEventListener('dblclick',function(){
                     UnitEvent.attack(object.id);
                 },object);
             }       
@@ -69,7 +69,7 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     removeDblclick: function(object){
-        UnitEvent.map.off('dblclick',null,object);
+        UnitEvent.map.removeEventListener('dblclick',null,object);
     },
     
     mouseover: function(object){

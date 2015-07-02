@@ -3,25 +3,23 @@ JoinUser.units = {regiments: [], bases: [], country: null}; /*установле
 JoinUser.selectCountry = null;
 JoinUser.unitObject = [];
 JoinUser.unitsList = null;
+JoinUser.app = null; 
 
-window.onload = function(){  
-    document.getElementById('btn-clear-all').onclick = JoinUser.clear;
-    document.getElementById('btn-begin-game').onclick = JoinUser.begin;
-}
+JoinUser.init = function(app){
+    JoinUser.app = app;
+};
 
+/*показ меню установки юниов на карту*/
 JoinUser.showAvailUnits = function(location){
-    UnitFactory.init(Unit, UnitTypes, Countries);
-    JoinUser.selectCountry = document.getElementById('set-country');
     for (var i = 0; i < location.countries.length; i++){
         var opt = document.createElement('option');
         opt.value = location.countries[i];
         console.log(location.countries[i]);
         opt.innerText = Countries[location.countries[i]].name;
         opt.textContent = Countries[location.countries[i]].name;
-        JoinUser.selectCountry.appendChild(opt);
+        JoinUser.app.iface.selectCountry.appendChild(opt);
     }
       
-    JoinUser.unitsList = document.getElementById('units-list');
     for ( var key in location.units ){
         var li = document.createElement('li');
         var input = document.createElement('input');
@@ -44,9 +42,9 @@ JoinUser.showAvailUnits = function(location){
         count.textContent = location.units[key];
         count.className ='units-avail';
         li.appendChild(count);
-        JoinUser.unitsList.appendChild(li);
+        JoinUser.app.iface.unitsList.appendChild(li);
     }   
-    map.on('click',JoinUser.makeUnit);   
+    JoinUser.app.map.addEventListener('click',JoinUser.makeUnit);   
 };
 
 /*получаем выбранный вариант юнита*/
@@ -102,6 +100,6 @@ JoinUser.begin = function(){
         return;
     }
        
-    socket.emit('set_units', {units:JoinUser.units, location:game.location.id, user:user.toString()});
+    JoinUser.app.socket.send('set_units', {units:JoinUser.units, location:game.location.id, user:user.toString()});
     
 }

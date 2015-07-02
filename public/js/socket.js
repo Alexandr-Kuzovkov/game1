@@ -141,6 +141,9 @@ Socket.userLive = function(){
 }
 
 
+Socket.send = function(event, object){
+    Socket.socket.emit(event, object);
+};
 
 
 //#####################################################

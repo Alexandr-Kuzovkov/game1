@@ -5,10 +5,16 @@ var Route =
     
     OSRM_PORT: 8003,
     SPATIALITE_PORT: 8001,
+    app: null, /*объект приложения*/
     
     /*объект directionsService*/
     directionsService: new google.maps.DirectionsService(),
 	
+    init: function(app){
+        Route.app = app;
+        Route.service = app.iface.selectService.value;    
+    },
+    
     getRoute: function(latlng,source,callback){
         if ( Route.service == 'google' ){
             Route.getRouteGoogle(latlng,source,callback);

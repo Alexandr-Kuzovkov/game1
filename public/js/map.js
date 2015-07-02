@@ -9,12 +9,12 @@ Map.zoom = 13;                  /*масштаб*/
 Map.maxZoom = 14;               /*максимальный масштаб*/
 Map.minZoom = 12                /*минимальный масштаб*/
 Map.id = 'examples.map-zr0njcqy'; /*ключ*/
-Map.map = null;
-Map.lib = null;
-Map.baseLayers = null;
+Map.map = null; /*объект карты*/
+Map.lib = null; /*библиотека для работы с картами*/
+Map.baseLayers = null; /*объект базовых слоев*/
 
-Map.init = function(lib){
-    Map.lib = lib;
+Map.init = function(app){
+    Map.lib = app.maplib;
     Map.map = Map.lib.map('map').setView( Map.center, Map.zoom );
     /*создаем tile-слой*/ 
 	var mapbox = Map.lib.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -59,6 +59,18 @@ Map.setView = function(center, zoom){
 
 Map.setBoundary = function(SW_lat, SW_lng, NE_lat, NE_lng){
     Map.map.setMaxBounds(Map.lib.latLngBounds(Map.lib.latLng(SW_lat, SW_lng),Map.lib.latLng(NE_lat, NE_lng)));
+};
+
+Map.addEventListener = function(event, handler, context){
+    Map.map.addEventListener(event, handler, context);
+};
+
+Map.removeEventListener = function(event, handler, context){
+    Map.map.removeEventListener(event, handler, context);
+};
+
+Map.addOneTimeEventListener = function(event, handler, context){
+    Map.map.addOneTimeEventListener(event, handler, context);
 };
 
 
