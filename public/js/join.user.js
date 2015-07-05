@@ -14,7 +14,7 @@ JoinUser.showAvailUnits = function(location){
     for (var i = 0; i < location.countries.length; i++){
         var opt = document.createElement('option');
         opt.value = location.countries[i];
-        console.log(location.countries[i]);
+       
         opt.innerText = Countries[location.countries[i]].name;
         opt.textContent = Countries[location.countries[i]].name;
         JoinUser.app.iface.selectCountry.appendChild(opt);
@@ -61,14 +61,14 @@ JoinUser.getRadio = function(){
 /*ставим юнита на карту*/
 JoinUser.makeUnit = function(e){
     var type = JoinUser.getRadio();
-    var country = JoinUser.selectCountry.value;
+    var country = JoinUser.app.iface.selectCountry.value;
     var iconCountry = Countries[country].icon;
     var typeObject = UnitTypes.getType(type);
     var iconType = typeObject.icon;
     var latlng = [e.latlng.lat, e.latlng.lng];
     console.log(latlng);
     var unit = null; 
-    var unit = UnitFactory.createUnit(latlng, type, country, 0, user.id);
+    var unit = UnitFactory.createUnit(latlng, type, country, 0, JoinUser.app.user.id);
     unit.init();
     if ( unit.type.id == 'base'){
         JoinUser.units.bases.push(unit.toString());
@@ -76,8 +76,8 @@ JoinUser.makeUnit = function(e){
         JoinUser.units.regiments.push(unit.toString());
     }
     JoinUser.unitObject.push(unit);
-    JoinUser.units.country = Countries[JoinUser.selectCountry.value].toString();
-    JoinUser.selectCountry.disabled = 'disabled'; 
+    JoinUser.units.country = Countries[JoinUser.app.iface.selectCountry.value].toString();
+    JoinUser.app.iface.selectCountry.disabled = 'disabled'; 
 };
 
 /*очищаем данные по редактируемой миссии*/
@@ -88,7 +88,7 @@ JoinUser.clear = function(){
     for (var i = 0; i < JoinUser.unitObject.length; i++){
          JoinUser.unitObject[i].destroy();
     }
-    JoinUser.selectCountry.removeAttribute('disabled'); 
+    JoinUser.app.iface.selectCountry.removeAttribute('disabled'); 
 };
 
 //посылаем данные по юнитам на сервер

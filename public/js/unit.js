@@ -31,8 +31,8 @@ function Unit( latlng, id, userId, map )
     };
     this.popup = map.createPopup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
 	this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
-	this.country = '/img/default.png'; /*объект иконки страны принадлежности*/
-	this.type = '/img/default.png'; /*объект иконки типа юнита*/     
+	this.iconCountry = '/img/default.png'; /*объект иконки страны принадлежности*/
+	this.iconType = '/img/default.png'; /*объект иконки типа юнита*/     
     
     /*объект иконки выделенного юнита*/ 
     this.iconSelected = '/img/unselected.png';

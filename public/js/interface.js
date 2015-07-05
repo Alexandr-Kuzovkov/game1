@@ -4,7 +4,7 @@
 var Interface = {};
 
 
-Interface.init = function(App) {
+Interface.init = function(app) {
     Interface.wrap_start_div = document.getElementById('wrap-start');
     Interface.map_div = document.getElementById('map');
     Interface.mission_select = null;
@@ -27,7 +27,7 @@ Interface.init = function(App) {
     Interface.missioninfo_div = document.getElementById('mission-info');
     Interface.missiondesc_p = document.getElementById('mission-desc');
     Interface.button_menu = document.getElementById('btn-menu');
-    Interface.button_clear_all = document.getElementById('btn-clear-all');.
+    Interface.button_clear_all = document.getElementById('btn-clear-all');
     Interface.button_begin_game = document.getElementById('btn-begin-game');
     Interface.selectCountry = document.getElementById('set-country');
     Interface.unitsList = document.getElementById('units-list');
@@ -98,6 +98,40 @@ Interface.addInfo = function(mess){
 };
 
 /**
+* объект для перевода представления данных об юните
+**/
+
+Interface.translate = {
+    id: 'Идентификатор',
+    country: 'Страна',
+    type: 'Тип',
+    people: 'Личный состав',
+    ammo: 'Боеприпасы',
+    food: 'Обеспечение',
+    discipline: 'Организованность',
+    experience: 'Опыт',
+    elevation: 'Высота',
+    around: 'Окружение',
+    battle: 'Бой',
+    status: 'Состояние',
+    attack: 'Атака',
+    defense: 'Оборона',
+    march: 'Марш',
+    weather: 'Погода'  
+};
+
+/**
+* удаление дочерних узлов у DOM элемента
+* @param node DOM элемент
+**/
+Interface.destroyChildren = function(node){
+  if (!node) return;
+  node.innerHTML = '';
+  while (node.firstChild)
+      node.removeChild(node.firstChild);
+}
+
+/**
 * показ информации о юните
 * @param unit объект содержащий данные об юните
 **/
@@ -109,16 +143,16 @@ Interface.showUnit = function(unit){
         var value = unit[item];
         if ( typeof(value) == 'boolean' && value == false ) value = 'Нет';
         if ( typeof(value) == 'boolean' && value == true ) value = 'Да';
-        if ( typeof(value) == 'string' && translate[value] != undefined ) value = translate[value];
-        var text = translate[item] + ': ' + value;
+        if ( typeof(value) == 'string' && this.translate[value] != undefined ) value = this.translate[value];
+        var text = this.translate[item] + ': ' + value;
         li.innerText = text;
         li.textContent = text;
         ul.appendChild(li);
     }
-    destroyChildren(this.unitinfo_div);
-    destroyChildren(this.weatherinfo_div);
+    this.destroyChildren(this.unitinfo_div);
+    this.destroyChildren(this.weatherinfo_div);
     this.weatherinfo_div.style.display = 'block';
-    this.weatherinfo_div.innerHTML = formatWeatherData(unit.weather);
+    this.weatherinfo_div.innerHTML = this.formatWeatherData(unit.weather);
     this.unitinfo_div.style.display = 'block';
     this.unitinfo_div.appendChild(ul);
 };
@@ -128,9 +162,9 @@ Interface.showUnit = function(unit){
 **/
 Interface.hideUnit = function(){
     
-    destroyChildren(this.unitinfo_div);
+    this.destroyChildren(this.unitinfo_div);
     this.unitinfo_div.style.display = 'none';
-    destroyChildren(this.weatherinfo_div);
+    this.destroyChildren(this.weatherinfo_div);
     this.weatherinfo_div.style.display = 'none';
 };
 
@@ -222,39 +256,7 @@ Interface.hideElem = function(el){
 }
 
 
-/**
-* удаление дочерних узлов у DOM элемента
-* @param node DOM элемент
-**/
-Interface.destroyChildren = function(node){
-  if (!node) return;
-  node.innerHTML = '';
-  while (node.firstChild)
-      node.removeChild(node.firstChild);
-}
 
-/**
-* объект для перевода представления данных об юните
-**/
-
-Interface.translate = {
-    id: 'Идентификатор',
-    country: 'Страна',
-    type: 'Тип',
-    people: 'Личный состав',
-    ammo: 'Боеприпасы',
-    food: 'Обеспечение',
-    discipline: 'Организованность',
-    experience: 'Опыт',
-    elevation: 'Высота',
-    around: 'Окружение',
-    battle: 'Бой',
-    status: 'Состояние',
-    attack: 'Атака',
-    defense: 'Оборона',
-    march: 'Марш',
-    weather: 'Погода'  
-};
 
 /**
 * обновление информации об юните во всплывающем блоке

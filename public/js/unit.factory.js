@@ -4,16 +4,12 @@
 
 var UnitFactory = {};
 
-UnitFactory.unitConstruct = null; /*конструктор юнита*/
-UnitFactory.unitTypes = null; /*объект описывающий типы юнитов*/
-UnitFactory.countries = null; /*объект описывающий страны*/
-UnitFactory.map = null;/*объект карты*/
 
 UnitFactory.init = function(app){
-    UnitFactory.unitConstruct = app.unit;
-    UnitFactory.unitTypes = app.unitTypes;
-    UnitFactory.countries = app.countries;
-    UnitFactory.map = app.map;
+    UnitFactory.unitConstruct = app.unit;/*конструктор юнита*/
+    UnitFactory.unitTypes = app.unitTypes; /*объект описывающий типы юнитов*/
+    UnitFactory.countries = app.countries;/*объект описывающий страны*/
+    UnitFactory.map = app.map;/*объект карты*/
 };
 
 UnitFactory.createUnit = function(latlng, type, country, id, userId){

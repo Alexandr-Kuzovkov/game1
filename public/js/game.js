@@ -190,7 +190,6 @@ function Game( user )
     * @param callback функция обратного вызова, вызываемая по завершении операции
     **/
     this.restore = function(remoteGame,callback){
-        UnitFactory.init(Unit, UnitTypes, Countries);
         console.log(JSON.stringify(remoteGame));
         this.destroyAll();
         var regiments = remoteGame.regiments;

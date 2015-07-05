@@ -11,8 +11,7 @@ var Route =
     directionsService: new google.maps.DirectionsService(),
 	
     init: function(app){
-        Route.app = app;
-        Route.service = app.iface.selectService.value;    
+        Route.app = app;    
     },
     
     getRoute: function(latlng,source,callback){

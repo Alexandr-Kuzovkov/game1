@@ -13,12 +13,18 @@ Socket.init = function(app){
     Socket.app = app;
     Socket.url = window.location.host;
     Socket.pathname = window.location.pathname;
-    Socket.socket = app.io.connect(url+pathname);
+    Socket.socket = Socket.app.io.connect(Socket.url+Socket.pathname);
     Socket.hostname = window.location.hostname;
+    Socket.socket.on('connect', Socket.connect);
+    Socket.socket.on('new_game',  Socket.newGame);
+    /*
     for (key in Socket.handlers){
         Socket.socket.on(key, Socket.handlers[key]);
     }
+    */
 };
+
+
 
 
 Socket.handlers = {
@@ -27,9 +33,9 @@ Socket.handlers = {
     'resume_game': Socket.resumeGame,
     'new_game': Socket.newGame,
     'data_from_server': Socket.dataFromServer,
-    'client_refresh_by_server', Socket.clientRefreshByServer,
-    'game_over', Socket.gameOver,
-    'to_user_live', Socket.toUserLive
+    'client_refresh_by_server': Socket.clientRefreshByServer,
+    'game_over': Socket.gameOver,
+    'to_user_live': Socket.toUserLive
 };
 
 /**
@@ -69,7 +75,7 @@ Socket.resumeGame = function(data){
 **/
 Socket.newGame = function(data){
     if ( data.game ) {
-        Socket.app.game = new Game(user);
+        Socket.app.game = new Game(Socket.app.user);
         Socket.app.game.restore(data.game, function(){});
         Socket.app.user.gameId = data.game.id;
         Socket.setMapOptions(Socket.app.game);
@@ -137,7 +143,7 @@ Socket.setMapOptions = function(game){
 **/
 
 Socket.userLive = function(){
-    Socket.socket.emit('user_live',{Socket.app.user:user.toString(), location:Socket.app.game.location.id});
+    Socket.socket.emit('user_live',{user:Socket.app.user.toString(), location:Socket.app.game.location.id});
 }
 
 
@@ -422,23 +428,24 @@ socket.on('server_game_msg', function(data){
 });
 */
 
-/**
+/*
 * обработчик сообщения события окончания игры 
-**
+**/
 
+/*
 socket.on('game_over', function(data){
     iface.showGameOver(getGameOverMess());
 });
-
+*/
 /*
 socket.on('around_ready', function(data){
     checkAround();
 });
 
-*
-
+*/
+/*
 socket.on('to_user_live', function(data){
     console.log(data.location);
 });    
-
+*/
     
