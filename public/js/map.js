@@ -74,21 +74,13 @@ Map.addOneTimeEventListener = function(event, handler, context){
 };
 
 
-Map.marker = function(latlng, iconUrl){
-    this.icon = Map.lib.icon({  iconUrl: iconUrl,
-                                iconSize: [24, 24], 
-                                iconAnchor: [12, 12], 
-                                shadowAnchor: [4, 23], 
-                                popupAnchor: [-3, -23]});
+Map.marker = function(latlng, iconka){
+    this.icon = Map.createIcon(iconka);
     this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
     this.marker = Map.lib.marker(this.latLng, {icon: this.icon}).addTo(Map.map);
     
-    this.setIcon = function(iconUrl){
-        this.icon = Map.lib.icon({  iconUrl: iconUrl,
-                                iconSize: [24, 24], 
-                                iconAnchor: [12, 12], 
-                                shadowAnchor: [4, 23], 
-                                popupAnchor: [-3, -23]});
+    this.setIcon = function(icon){
+        this.icon = Map.createIcon(icon);
         this.marker.setIcon(this.icon);
     };
     
@@ -142,12 +134,12 @@ Map.polyline = function(dots, color){
     };    
 };
 
-Map.icon = function(iconUrl){
-    this.icon = Map.lib.icon({  iconUrl: iconUrl,
-                                iconSize: [24, 24], 
-                                iconAnchor: [12, 12], 
-                                shadowAnchor: [4, 23], 
-                                popupAnchor: [-3, -23]});
+Map.icon = function(iconka){
+    this.icon = Map.lib.icon({  iconUrl: iconka.url,
+                                iconSize: iconka.size, 
+                                iconAnchor: iconka.anchor, 
+                                shadowAnchor: iconka.shadowanchor, 
+                                popupAnchor: iconka.popupanchor});
 };
 
 Map.circle = function(latlng, color, fillColor, opacity, fillOpacity){
@@ -157,7 +149,7 @@ Map.circle = function(latlng, color, fillColor, opacity, fillOpacity){
     
     this.setPosition = function(latlng){
         this.latLng = Map.lib.latLng(latlng[0], latlng[1]);
-        this.marker.setLatLng(this.latLng);   
+        this.circle.setLatLng(this.latLng);   
     };
     
     this.setRadius = function(radius){
@@ -173,8 +165,8 @@ Map.circle = function(latlng, color, fillColor, opacity, fillOpacity){
     };
 };
 
-Map.createMarker = function(latlng, iconUrl){
-    return new Map.marker(latlng, iconUrl);
+Map.createMarker = function(latlng, icon){
+    return new Map.marker(latlng, icon);
 };
 
 Map.createPopup = function(){
@@ -185,8 +177,9 @@ Map.createPolyline = function(dots, color){
     return new Map.polyline(dots,color);
 };
 
-Map.createIcon = function(iconUrl){
-    return new Map.icon(iconUrl);
+Map.createIcon = function(iconka){
+    var icon = new Map.icon(iconka);
+    return icon.icon;
 };
 
 Map.createCircle = function(latlng, color, fillColor, opacity, fillOpacity){

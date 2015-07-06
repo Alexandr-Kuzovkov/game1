@@ -18,8 +18,13 @@ UnitTypes.Tank = function(){
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-     
-	this.icon =	'/img/type/tank24.png'; /*картинка иконки*/
+    /*картинка иконки*/ 
+	this.icon =	{   url: '/img/type/tank24.png',
+                    size: [24,24],
+                    anchor: [12,12],
+                    shadowanchor: [4,23],
+                    popupanchor: [-3,-23]
+    }; 
 			
 					
 	this.resources = {                        /*ресурсы*/
@@ -50,7 +55,12 @@ UnitTypes.Foot = function(){
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-	this.icon = '/img/type/foot24.png';
+	this.icon =	{   url: '/img/type/foot24.png',
+                    size: [24,24],
+                    anchor: [12,12],
+                    shadowanchor: [4,23],
+                    popupanchor: [-3,-23]
+    }; 
 					
 	this.resources =	{
 					men: 100, /*личный состав %*/
@@ -79,7 +89,12 @@ UnitTypes.Base = function(){
         foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
         menInGo: 1             /*пополнение людьми за 1 цикл игры*/
     };
-    this.icon = '/img/type/base24.png';
+    this.icon =	{   url: '/img/type/base24.png',
+                    size: [24,24],
+                    anchor: [12,12],
+                    shadowanchor: [4,23],
+                    popupanchor: [-3,-23]
+    }; 
 					
 	this.resources =	{
 					men: 100,

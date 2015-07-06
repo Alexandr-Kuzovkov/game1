@@ -142,7 +142,7 @@ function Game( user )
 	this.loop = function(object){
         for ( var i = 0; i < object.regiments.length; i++ ) object.regiments[i].update();
 		for ( var i = 0; i < object.bases.length; i++ ) object.bases[i].update();
-        sendDataToServer();
+        App.sendDataToServer();
 	};
     
     /**

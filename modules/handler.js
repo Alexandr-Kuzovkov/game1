@@ -168,7 +168,7 @@ function get_missions(socket,sdata){
 function get_game( socket, sdata ){
    socket.on('get_game', function(data){
        var location = data.location.slice(10);
-       //console.log('location='+location);
+       console.log('get_game:location='+location);
        if (sdata.games[location].users[data.user.id] == undefined){
             socket.emit('new_game', {game:sdata.games[location].toString(), location:locations[location]}); 
        }else{

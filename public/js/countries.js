@@ -6,8 +6,14 @@ var Countries = {};
 Countries.Russia = {
 	name:	'Российская Федерация', /*имя*/
 	id:	    'Russia',               /*идентификатор*/
-					
-	icon: 	'/img/country/Russia.png',  /*картинка иконки*/
+	/*картинка иконки*/				
+	icon: 	{   url: '/img/country/Russia.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    },  
 			
 					
     toString: function(){                             /*метод для преобразования в строку*/
@@ -20,7 +26,13 @@ Countries.Ukraine = {
 	name:	'Украина',
 	id:	    'Ukraine',
 	
-	icon:	'/img/country/Ukraine.png',	
+    icon: 	{   url: '/img/country/Ukraine.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 	
 
     toString: function(){
         return {name: this.name, id: this.id};
@@ -31,7 +43,13 @@ Countries.USA = {
 	name:	'США',
 	id:	    'USA',
 					
-	icon: 	'/img/country/United-States.png',
+    icon: 	{   url: '/img/country/United-States.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 					
 	toString: function(){
         return {name: this.name, id: this.id};
@@ -43,7 +61,13 @@ Countries.UK = {
 	name:	'Великобритания',
 	id:	    'UK',
 					
-	icon: 	'/img/country/United-Kingdom.png',
+    icon: 	{   url: '/img/country/United-Kingdom.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 	toString: function(){
         return {name: this.name, id: this.id};
@@ -55,7 +79,13 @@ Countries.Germany = {
 	name:	'Германия',
 	id:	    'Germany',
 					
-	icon: 	'/img/country/Germany.png',
+    icon: 	{   url: '/img/country/Germany.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -68,7 +98,13 @@ Countries.Iraq = {
 	name:	'Ирак',
 	id:	    'Iraq',
 					
-	icon: 	'/img/country/Iraq.png',
+    icon: 	{   url: '/img/country/Iraq.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 					
 	toString: function(){
         return {name: this.name, id: this.id};
@@ -80,7 +116,13 @@ Countries.NorthKorea = {
 	name:	'Северная Корея',
 	id:	    'NorthKorea',
 					
-	icon: 	'/img/country/North-Korea.png',
+    icon: 	{   url: '/img/country/North-Korea.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 			
 					
 	toString: function(){
@@ -92,7 +134,13 @@ Countries.USSR = {
 	name:	'СССР',
 	id:	    'USSR',
 					
-	icon: 	'/img/country/Ussr.png',
+    icon: 	{   url: '/img/country/Ussr.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -104,7 +152,13 @@ Countries.Syria = {
 	name:	'Сирия',
 	id:	    'Syria',
 					
-	icon: 	'/img/country/Syria.png',
+    icon: 	{   url: '/img/country/Syria.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -116,7 +170,13 @@ Countries.Tajikistan = {
 	name:	'Таджикистан',
 	id:	    'Tajikistan',
 					
-	icon: 	'/img/country/Tajikistan.png',
+    icon: 	{   url: '/img/country/Tajikistan.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -128,7 +188,13 @@ Countries.Vietnam = {
 	name:	'Вьетнам',
 	id:	    'Vietnam',
 					
-	icon: 	'/img/country/Vietnam.png',
+    icon: 	{   url: '/img/country/Vietnam.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -140,7 +206,13 @@ Countries.Azerbaijan = {
 	name:	'Азербайджан',
 	id:	    'Azerbaijan',
 					
-	icon: 	'/img/country/Azerbaijan.png',
+    icon: 	{   url: '/img/country/Azerbaijan.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -152,7 +224,13 @@ Countries.Israel = {
 	name:	'Израиль',
 	id:	    'Israel',
 					
-	icon: 	'/img/country/Israel.png',
+    icon: 	{   url: '/img/country/Israel.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 			
 					
 	toString: function(){
@@ -164,7 +242,13 @@ Countries.Palestine = {
 	name:	'Палестина',
 	id:	    'Palestine',
 					
-	icon: 	'/img/country/Palestine.png',
+    icon: 	{   url: '/img/country/Palestine.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 			
 					
 	toString: function(){
@@ -176,7 +260,13 @@ Countries.Mongolia = {
 	name:	'Монголия',
 	id:	    'Mongolia',
 					
-	icon: 	'/img/country/Mongolia.png',
+    icon: 	{   url: '/img/country/Mongolia.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -188,7 +278,13 @@ Countries.Pakistan = {
 	name:	'Пакистан',
 	id:	    'Pakistan',
 					
-	icon: 	'/img/country/Pakistan.png',
+    icon: 	{   url: '/img/country/Pakistan.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -200,7 +296,13 @@ Countries.Turkmenistan = {
 	name:	'Туркменистан',
 	id:	    'Turkmenistan',
 					
-	icon: 	'/img/country/Turkmenistan.png',
+    icon: 	{   url: '/img/country/Turkmenistan.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 		
 					
 	toString: function(){
@@ -212,7 +314,13 @@ Countries.Uzbekistan = {
 	name:	'Узбекистан',
 	id:	    'Uzbekistan',
 					
-	icon: 	'/img/country/Uzbekistan.png',
+    icon: 	{   url: '/img/country/Uzbekistan.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
 			
 					
 	toString: function(){

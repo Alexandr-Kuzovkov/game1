@@ -112,21 +112,21 @@ var UnitEvent =
     
     /*отмена марша своего полка*/
     ownRegStop: function(id){  
-        var object = game.getRegiment(id);
+        var object = UnitEvent.game.getRegiment(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния полка марш*/
     ownRegMarch: function(id){
-        var object = game.getRegiment(id);
+        var object = UnitEvent.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния полка оборона*/
     ownRegDefense: function(id){
-        var object = game.getRegiment(id);
+        var object = UnitEvent.game.getRegiment(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense')
@@ -134,41 +134,41 @@ var UnitEvent =
     
     /*включение состояния атаки*/
     ownRegAttack: function(id){
-        var object = game.getRegiment(id);
+        var object = UnitEvent.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('attack')
     },
     
     /*команда на атаку вражеского полка*/
     attack: function(id){
-        var object = game.getRegiment(id);
+        var object = UnitEvent.game.getRegiment(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < game.regiments.length; i++ ){
-            if ( game.regiments[i].OWN && game.regiments[i].selected ){
-                game.regiments[i].setStatus('attack');
-                game.regiments[i].goRoute(latlng);
+        for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
+            if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
+                UnitEvent.game.regiments[i].setStatus('attack');
+                UnitEvent.game.regiments[i].goRoute(latlng);
             }
         }
     },
     
     /*отмена марша своей базы*/
     ownBaseStop: function(id){
-        var object = game.getBase(id);
+        var object = UnitEvent.game.getBase(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния базы марш*/
     ownBaseMarch: function(id){
-        var object = game.getBase(id);
+        var object = UnitEvent.game.getBase(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния базы оборона*/
     ownBaseDefense: function(id){
-        var object = game.getBase(id);
+        var object = UnitEvent.game.getBase(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense');
@@ -176,7 +176,7 @@ var UnitEvent =
     
     /*команда на захват вражеской базы*/
     baseCapture: function(id){
-        var object = game.getBase(id);
+        var object = UnitEvent.game.getBase(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
         for ( var i = 0; i < game.regiments.length; i++ ){

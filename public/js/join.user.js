@@ -82,8 +82,8 @@ JoinUser.makeUnit = function(e){
 
 /*очищаем данные по редактируемой миссии*/
 JoinUser.clear = function(){
-    for ( var key in units ){
-        units[key] = [];
+    for ( var key in JoinUser.units ){
+        JoinUser.units[key] = [];
     }
     for (var i = 0; i < JoinUser.unitObject.length; i++){
          JoinUser.unitObject[i].destroy();
@@ -100,6 +100,6 @@ JoinUser.begin = function(){
         return;
     }
        
-    JoinUser.app.socket.send('set_units', {units:JoinUser.units, location:game.location.id, user:user.toString()});
+    JoinUser.app.socket.send('set_units', {units:JoinUser.units, location:JoinUser.app.game.location.id, user:JoinUser.app.user.toString()});
     
 }

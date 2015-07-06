@@ -15,139 +15,17 @@ Socket.init = function(app){
     Socket.pathname = window.location.pathname;
     Socket.socket = Socket.app.io.connect(Socket.url+Socket.pathname);
     Socket.hostname = window.location.hostname;
-    Socket.socket.on('connect', Socket.connect);
-    Socket.socket.on('new_game',  Socket.newGame);
-    /*
-    for (key in Socket.handlers){
-        Socket.socket.on(key, Socket.handlers[key]);
-    }
-    */
+    
+   
 };
 
-
-
-
-Socket.handlers = {
-    'connect': Socket.connect,
-    'disconnect': Socket.disconnect,
-    'resume_game': Socket.resumeGame,
-    'new_game': Socket.newGame,
-    'data_from_server': Socket.dataFromServer,
-    'client_refresh_by_server': Socket.clientRefreshByServer,
-    'game_over': Socket.gameOver,
-    'to_user_live': Socket.toUserLive
+Socket.setEventHandler = function(event, handler){ /*установка обработчиков*/  
+    Socket.socket.on(event, handler);
 };
-
-/**
-* обработчик события connect
-* генерация события get_game
-**/
-Socket.connect = function(){
-    Socket.socket.emit('get_game', {user:Socket.app.user, location:Socket.pathname});
-};
-
-/**
-* обработчик события disconnect
-* перезагрузка страницы
-**/
-Socket.disconnect = function(){
-    //window.location.replace('/');
-};
-
-/**
-* обработчик события получения игры от сервера
-* инициализация объекта remoteGame
-**/
-Socket.resumeGame = function(data){
-    if ( data.game ) {
-        Socket.app.game = new Game(user);
-        Socket.app.game.restore(data.game, Socket.beginUserLive);
-        Socket.app.user.gameId = data.game.id;
-        Socket.setMapOptions(game);
-        Socket.app.game.startGame();       
-   }
-};
-
-/**
-* обработчик события получения игры от сервера
-* инициализация объекта remoteGame
-* присоединение к игре
-**/
-Socket.newGame = function(data){
-    if ( data.game ) {
-        Socket.app.game = new Game(Socket.app.user);
-        Socket.app.game.restore(data.game, function(){});
-        Socket.app.user.gameId = data.game.id;
-        Socket.setMapOptions(Socket.app.game);
-        JoinUser.showAvailUnits(data.location);
-   } 
-};
-
-/**
-* обработчик события получения данных от сервера для синхронизации
-**/
-Socket.dataFromServer = function(data){
-    Socket.app.game.sync(data.game);
-    Socket.app.iface.updateInfoUnit();
-    Socket.app.iface.addLog( data.game.logMessages );
-    Socket.app.iface.addInfo( data.game.gameMessages );
-};
-
-/**
-* обработчик события от сервера о перезагрузке страницы
-**/
-Socket.clientRefreshByServer = function(data){
-    window.location.assign(data.url);
-};
-
-/**
-* обработчик сообщения события окончания игры 
-**/
-Socket.gameOver = function(){
-    Socket.app.iface.showGameOver(Socket.app.iface.getGameOverMess());
-};
-
-
-Socket.toUserLive = function(data){
-    console.log(data.location);
-};
-
-
-/**
-* посылка данных на сервер для синхронизации
-* и генерация события game_from_client
-* с посылкой данных объекта game
-**/
-Socket.sendDataToServer = function(){
-    Socket.socket.emit('data_from_client', {game: Socket.app.game.toString(), user: Socket.app.user.toString(), location:Socket.pathname.slice(Socket.prefix.length)});
-}
-
-/**
-* позиционирование карты и установка границ
-* @param game объект игры
-**/
-Socket.setMapOptions = function(game){
-    var SW_lat = game.location.bounds.SW[0];
-    var SW_lng = game.location.bounds.SW[1];
-    var NE_lat = game.location.bounds.NE[0];
-    var NE_lng = game.location.bounds.NE[1];
-    var center = [(SW_lat + NE_lat)/2, (SW_lng + NE_lng)/2];
-    Socket.app.map.setView(center,13);
-    Socket.app.map.setBoundary(SW_lat, SW_lng, NE_lat, NE_lng);
-}
-
-/**
-* посылка события означающего активность клиента
-* и генерация события user_live
-* с посылкой данных объекта user
-**/
-
-Socket.userLive = function(){
-    Socket.socket.emit('user_live',{user:Socket.app.user.toString(), location:Socket.app.game.location.id});
-}
 
 
 Socket.send = function(event, object){
+    console.log(event+':'+object);
     Socket.socket.emit(event, object);
 };
 

@@ -74,7 +74,7 @@ Interface.reloadPage = function(url){ window.location.replace(url); };
 * @param mess массив строк сообщения
 **/
 Interface.addLog = function(mess){
-    destroyChildren(this.log_div);
+    this.destroyChildren(this.log_div);
     for ( var i = 0; i < mess.length; i++ ){
         var p = document.createElement('p');
         p.innerText = mess[i];
@@ -88,7 +88,7 @@ Interface.addLog = function(mess){
 * @param mess массив строк сообщения
 **/
 Interface.addInfo = function(mess){
-    destroyChildren(this.info_div);
+    this.destroyChildren(this.info_div);
     for ( var i = 0; i < mess.length; i++ ){
         var p = document.createElement('p');
         p.innerText = mess[i];
@@ -199,9 +199,9 @@ Interface.setMissionDecs = function(text){
 **/
 Interface.showMenu = function(unit){
     if ( unit.type.id == 'base' ) {
-        return getBaseMenu(unit);
+        return this.getBaseMenu(unit);
     }else{
-        return getRegimentMenu(unit);
+        return this.getRegimentMenu(unit);
     }
 };
 

@@ -31,30 +31,61 @@ function Unit( latlng, id, userId, map )
     };
     this.popup = map.createPopup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
 	this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
-	this.iconCountry = '/img/default.png'; /*объект иконки страны принадлежности*/
-	this.iconType = '/img/default.png'; /*объект иконки типа юнита*/     
+	this.iconCountry = {    url:'/img/default.png', /*объект иконки страны принадлежности*/
+                            size: [24,24],
+                            anchor: [12,12],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    }; 
+                            
+	this.iconType = {  url:'/img/default.png', /*объект иконки типа юнита*/ 
+                            size: [24,24],
+                            anchor: [12,12],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    };     
     
     /*объект иконки выделенного юнита*/ 
-    this.iconSelected = '/img/unselected.png';
+    this.iconSelected = {   url:'/img/unselected.png',
+                            size: [50,50],
+                            anchor: [25,25],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    };
     
     /*объект иконки невыделенного юнита*/
-    this.iconUnselected = '/img/unselected.png';
+    this.iconUnselected = { url:'/img/unselected.png',
+                            size: [50,50],
+                            anchor: [25,25],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    };
 	
     /*объект иконки изображения боя*/
-    this.iconBattle = '/img/battle.gif';
+    this.iconBattle = { url:'/img/battle.gif',
+                            size: [60,60],
+                            anchor: [30,30],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    };
                     
     /*объект иконки изображения взрыва*/
-    this.iconExplosion = '/img/explosion.gif';
+    this.iconExplosion = { url:'/img/explosion.gif',
+                            size: [50,60],
+                            anchor: [25,30],
+                            shadowanchor: [4,23],
+                            popupanchor: [-3,-23]
+    };
     
     /*объект маркера юнита, с помощью которого он отображается на карте */
 	this.marker = 
 	{
 		area: map.createCircle(latlng, '#f03', '#f03', 0.1, 0.1 ),
-        battle: map.createMarker(latlng, this.iconBattle),
+        battle: map.createMarker(latlng, this.iconUnselected),
         type: map.createMarker(latlng, this.iconType),
 		country: map.createMarker(latlng, this.iconCountry ),
-		explosion: map.createMarker(latlng, this.iconExplosion),
-        selected: map.createMarker(latlng, this.iconSelected)
+		explosion: map.createMarker(latlng, this.iconUnselected),
+        selected: map.createMarker(latlng, this.iconUnselected)
     };
     
     /**
@@ -120,7 +151,7 @@ function Unit( latlng, id, userId, map )
     this.unselect = function(){
 		this.selected = false;
 		this.marker.selected.setIcon(this.iconUnselected);
-        map.off('dblclick',null,this);	
+        map.removeEventListener('dblclick',null,this);	
 	};
     
     /**
@@ -158,7 +189,7 @@ function Unit( latlng, id, userId, map )
     this.init = function(){
 		this.marker.type.setIcon(this.type.icon);
 		this.marker.country.setIcon(this.country.icon);
-        this.iconSelected = ( this.OWN )? '/img/selected.png' : '/img/enemy.selected.png';
+        this.iconSelected.url = ( this.OWN )? '/img/selected.png' : '/img/enemy.selected.png';
         this.marker.area.setRadius(this.type.radius * 111300);
 	};
 	
