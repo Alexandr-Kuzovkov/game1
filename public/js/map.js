@@ -101,6 +101,10 @@ Map.marker = function(latlng, iconka){
         this.marker.on(event, handler, context);   
     };
     
+    this.addOneTimeEventListener = function(event, handler, context){
+        this.marker.once(event, handler, context);
+    };
+    
     this.clearAllEventListeners = function(){
         this.marker.clearAllEventListeners();
     };

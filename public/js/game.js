@@ -337,7 +337,7 @@ function Game( user )
             
             /*синхронизация  баз*/
             for ( var i = 0; i < this.bases.length; i++ ){
-                if (game.regiments[i] == undefined) continue;
+                if (game.bases[i] == undefined) continue;
                 var corresponding = this.bases[i].id == game.bases[i].id;
                 if (corresponding){
                     /*база стала окружена*/

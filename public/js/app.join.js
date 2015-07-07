@@ -49,7 +49,7 @@ App.connect = function(){
 * перезагрузка страницы
 **/
 App.disconnect = function(){
-    window.location.replace('/');
+    window.location.reload(true);
 };
 
 /**

@@ -179,10 +179,10 @@ var UnitEvent =
         var object = UnitEvent.game.getBase(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < game.regiments.length; i++ ){
-            if ( game.regiments[i].OWN && game.regiments[i].selected ){
-                game.regiments[i].setStatus('attack');
-                game.regiments[i].goRoute(latlng);
+        for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
+            if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
+                UnitEvent.game.regiments[i].setStatus('attack');
+                UnitEvent.game.regiments[i].goRoute(latlng);
             }
         }
     }

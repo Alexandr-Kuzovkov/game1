@@ -173,7 +173,7 @@ Interface.hideUnit = function(){
 **/
 Interface.showMission = function(){
     var p = document.createElement('p');
-    var text = game.mission.desc[game.country.id];
+    var text = App.game.location.mission;
     p.innerText = text;
     p.textContent = text;
     this.missioninfo_div.style.display = 'block';
@@ -184,7 +184,7 @@ Interface.showMission = function(){
 * скрытие описания миссии
 **/
 Interface.hideMission = function(){
-    destroyChildren(this.missioninfo_div);
+    this.destroyChildren(this.missioninfo_div);
     this.unitinfo_div.style.display = 'none';
 };
 
@@ -263,7 +263,7 @@ Interface.hideElem = function(el){
 **/
 Interface.updateInfoUnit = function(){
     if ( Interface.unitinfo_div.style.display == 'block' && UnitEvent.overUnit != null){
-        iface.showUnit(UnitEvent.overUnit.getInfo());
+        this.showUnit(UnitEvent.overUnit.getInfo());
     }  
 };
 

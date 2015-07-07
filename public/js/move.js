@@ -11,25 +11,14 @@ var Move =
     DELTA_TIME: 100,
     /*масштаб времени*/
     TIME_SCALE: 20,
-    /**
-    * преобразование массива точек в массив объектов latlng
-    * @param dots массив точек вида [[lat1,lng1],[lat2,lng2],...]
-    * @return latlngs массив объектов latLng библиотеки leaflet 
-    **
-	dots2latlngs: 	function (dots){
-		latlngs = new Array();
-		for ( var i = 0; i < dots.length; i++ ) latlngs.push(L.latLng(dots[i][0],dots[i][1]));
-		return latlngs;
-	},//end func
-    */
 	
 	/**
-    * перемещение маркера по пути с анимацией
+    * перемещение юнита по пути с анимацией
     * @param unit объект юнита (полка)
     * @param route путь, представленный в виде массива точек вида [[lat1,lng1],[lat2,lng2],...]
     * @param i номер отрезка пути 
     **/
-    moveMarkerRouteAnimation:	function (unit,route,i){
+    moveUnitRouteAnimation:	function (unit,route,i){
         if (!Move.ENABLED) return false;
         if (route.length == 0) return false;
         if ( unit.STOP ){
@@ -48,9 +37,9 @@ var Move =
 				unit.path.setDots(route); //отрисовка пути движения полилинией
 		}
 		
-		Move.moveMarkerLineAnimation({lat: route[i][0],lng: route[i][1]}, unit, function(){
+		Move.moveUnitLineAnimation({lat: route[i][0],lng: route[i][1]}, unit, function(){
 			if ( ++i < route.length ){
-				Move.moveMarkerRouteAnimation(unit,route,i);
+				Move.moveUnitRouteAnimation(unit,route,i);
 			}
 			else
 			{
@@ -62,13 +51,13 @@ var Move =
 							
 			
     /**
-    * перемещение маркера в заданную точку по прямой с анимацией
+    * перемещение юнита в заданную точку по прямой с анимацией
     * с учетом сферичности используя решение прямой о обратной геодезических задач 
     * @param latlng точка назначения в виде оъекта {lat:lat,lng:lng} 
     * @param unit объект юнита (полка)
     * @param callback функция обратного вызова вызываемая после завершения движения 
     **/
-	moveMarkerLineAnimation:	function ( latlng, unit, callback ){
+	moveUnitLineAnimation:	function ( latlng, unit, callback ){
         if ( unit.MOVE ) return false;
 		unit.MOVE = true;
 		var start = {lat:unit.latlng[0], lng:unit.latlng[1]};
@@ -97,12 +86,12 @@ var Move =
 	},//end func
     
     /**
-    * перемещение маркера в заданную точку по прямой с анимацией
+    * перемещение юнита в заданную точку по прямой с анимацией
     * @param latlng точка назначения в виде оъекта {lat:lat,lng:lng} 
     * @param regiment объект юнита (полка)
     * @param callback функция обратного вызова вызываемая после завершения движения 
     **/
-	moveMarkerLineAnimation_Old:	function ( latlng, regiment, callback ){
+	moveUnitLineAnimation_Old:	function ( latlng, regiment, callback ){
         if ( regiment.MOVE ) return false;
 		regiment.MOVE = true;
 		var start = regiment.marker.type.getLatLng();
@@ -134,16 +123,5 @@ var Move =
 	}//end func
                             
     
-    
-                            
-    /**
-    * перемещение маркера в заданную точку по прямой без анимации
-    * @param latlng координаты заданной точки в виде массива [lat,lng]
-    * @param regiment объект юнита (полка)
-    **
-    replaceMarker:    function(latlng,regiment){
-        var pos = L.latLng(latlng[0],latlng[1]);
-        for ( marker in regiment.marker ) regiment.marker[marker].setLatLng( pos );
-    }//end func
-	*/						
+    						
 }

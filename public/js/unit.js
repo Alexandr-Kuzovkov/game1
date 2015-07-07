@@ -122,7 +122,7 @@ function Unit( latlng, id, userId, map )
     * @param latlng объект {lat:lat,lng:lng}
     **/
     this.goTo = function(latlng){
-		Move.moveMarkerLineAnimation( latlng, this, function(){} );
+		Move.moveUnitLineAnimation( latlng, this, function(){} );
 	};
 	
     /**
@@ -133,7 +133,7 @@ function Unit( latlng, id, userId, map )
         var object = this;
         var source = {lat:this.latlng[0], lng: this.latlng[1]};
         Route.getRoute(latlng,source,function(route){    
-            Move.moveMarkerRouteAnimation( object, route );
+            Move.moveUnitRouteAnimation( object, route );
 		});	
 	};
 	
@@ -203,7 +203,7 @@ function Unit( latlng, id, userId, map )
         if ( this.type.resources.food <= 0 || this.type.resources.men <= 0 ){
             this.marker.explosion.setIcon(this.iconExplosion);
             var self = this;
-            setTimeout( function(){game.deleteUnit(self.id);}, 3000);
+            setTimeout( function(){App.game.deleteUnit(self.id);}, 3000);
 		} 
 	};
     
@@ -212,10 +212,10 @@ function Unit( latlng, id, userId, map )
     **/
     this.destroy = function(){
 		this.path.destroy();
-		delete this.type;
 		this.marker.selected.clearAllEventListeners();
 		if ( this.selected ) UnitEvent.removeDblclick(this);
 		for ( key in this.marker ) this.marker[key].destroy();
+        delete this.type;
 	};
     
     /*преобразование в строку*/
