@@ -215,7 +215,6 @@ function Unit( latlng, id, userId, map )
 		this.marker.selected.clearAllEventListeners();
 		if ( this.selected ) UnitEvent.removeDblclick(this);
 		for ( key in this.marker ) this.marker[key].destroy();
-        delete this.type;
 	};
     
     /*преобразование в строку*/
