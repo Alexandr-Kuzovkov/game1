@@ -36,10 +36,10 @@ Interface.init = function(app) {
     Interface.selectService = document.getElementById('service');
     
      /*обработка кнопки удалить всех установленных юнитов*/
-    if ( Interface.button_clear_all ) Interface.button_clear_all.onclick = app.joinUser.clear;
+    if ( Interface.button_clear_all ) Interface.button_clear_all.onclick = app.clear;
     
     /*обработка кнопки начала игры*/
-    if ( Interface.button_begin_game ) Interface.button_begin_game.onclick = app.joinUser.begin;   
+    if ( Interface.button_begin_game ) Interface.button_begin_game.onclick = app.begin;   
     
     /*обработка кнопки меню*/
     if (Interface.button_exit) Interface.button_exit.onclick = function(){ Interface.reloadPage('/'); };
