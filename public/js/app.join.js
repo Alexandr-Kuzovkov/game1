@@ -248,7 +248,7 @@ App.clear = function(){
 App.begin = function(){
     //console.log(JSON.stringify(App.units));
     if (!App.allUnitsLocated()){
-        alert('Нужно расставить всех юнитов');
+        App.iface.showAlert('Нужно расставить всех юнитов');
         return;
     }
        

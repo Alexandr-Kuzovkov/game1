@@ -31,9 +31,13 @@ Interface.init = function(app) {
     Interface.button_begin_game = document.getElementById('btn-begin-game');
     Interface.selectCountry = document.getElementById('set-country');
     Interface.unitsList = document.getElementById('units-list');
-    
+    Interface.alert = document.getElementById('alert');
+    Interface.alert_button = document.getElementById('alert-button');
+    Interface.alert_text = document.getElementById('alert-text');    
     /*установка сервиса маршрутов*/
     Interface.selectService = document.getElementById('service');
+    
+    if ( Interface.alert_button ) Interface.alert_button.onclick = Interface.closeAlert;
     
      /*обработка кнопки удалить всех установленных юнитов*/
     if ( Interface.button_clear_all ) Interface.button_clear_all.onclick = app.clear;
@@ -365,6 +369,16 @@ Interface.formatWeatherData = function(weather){
     
     content += '</div>';
     return content;
+};
+
+Interface.showAlert = function(msg){
+    this.alert.style.display = 'block';
+    this.alert_text.innerText = msg;
+    this.alert_text.textContent = msg;
+};
+
+Interface.closeAlert = function(){
+    Interface.alert.style.display = 'none';
 };  
 
     

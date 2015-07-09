@@ -611,4 +611,36 @@ hr
     color: #ff0;
     font-weight: bold;
 }
+
+.alert
+{
+    display: none;
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -100px;
+    background-color: #eee;
+    color: #900;
+    font-family: Verdana;
+    border-radius: 3px;
+    text-align:center;
+}
+
+#alert-text
+{
+    margin: 50px auto 50px auto;
+        
+}
+
+#alert-button
+{
+   margin: 30px auto 0 auto;
+   font-size: 20px;
+   padding: 5px 15px 5px 15px;
+}
+
+
  
