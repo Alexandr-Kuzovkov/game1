@@ -24,9 +24,10 @@ App.init = function(){
 };
 
 App.units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
-App.selectCountry = null;
-App.unitObject = [];
-App.unitsList = null;
+App.unitObject = []; //массив объектов юнитов
+App.location = null;
+App.location_units = {};
+App.currentType = null;
 
 /**
 * Установка обработчиков на события рассылаемые сервером
@@ -66,7 +67,11 @@ App.join = function(data){
         App.game.restore(data.game, function(){});
         App.user.gameId = data.game.id;
         App.setMapOptions(App.game);
-        App.showAvailUnits(data.location);
+        App.location = data.location;
+        for(key in App.location.units){ //сохраняем тип и количество доступных юнитов 
+            App.location_units[key] = App.location.units[key];
+        }
+        App.showUnitMenu();
         App.game.startGame();
    } 
 };
@@ -115,30 +120,57 @@ App.setMapOptions = function(game){
 
 
 /*показ меню установки юниов на карту*/
-App.showAvailUnits = function(location){
+App.showUnitMenu = function(){
+    var type = null;
+    for (key in App.location.units){
+        if ( type == null ) type = key;
+    }
+    App.updateUnitList(type);
+    App.map.addEventListener('click',App.makeUnit);   
+};
+
+/*обновление списка юнитов*/
+App.updateUnitList = function(type){
     App.iface.destroyChildren(App.iface.selectCountry);//очищаем список стран
     App.iface.destroyChildren(App.iface.unitsList);//очищаем список юнитов
     var presentCountries = App.getPresentCountries();
-    for (var i = 0; i < location.countries.length; i++){
-        if ( presentCountries[location.countries[i]] !== undefined ) continue;//удаляем из списка страну которая уже выбрана
+    //формируем список стран
+    for (var i = 0; i < App.location.countries.length; i++){
+        if ( presentCountries[App.location.countries[i]] !== undefined ) continue;//удаляем из списка страну которая уже выбрана
         var opt = document.createElement('option');
-        opt.value = location.countries[i];
+        opt.value = App.location.countries[i];
        
-        opt.innerText = Countries[location.countries[i]].name;
-        opt.textContent = Countries[location.countries[i]].name;
+        opt.innerText = Countries[App.location.countries[i]].name;
+        opt.textContent = Countries[App.location.countries[i]].name;
         App.iface.selectCountry.appendChild(opt);
     }
-      
-    for ( var key in location.units ){
+    //формируем список юнитов  
+    var checked = false;
+    for ( var key in App.location.units ){
+        if (App.allUnitsLocated()){ //если все юниты кончились показываем это
+            var p = document.createElement('p');
+            p.innerText = 'Нет доступных юнитов';
+            p.textContent = 'Нет доступных юнитов';
+            App.iface.unitsList.appendChild(p);
+            return;
+        }
+        if ( App.location.units[key] <= 0 ) continue; //если юниты кончились не показываем
         var li = document.createElement('li');
         var input = document.createElement('input');
         input.type = 'radio';
         input.value = key;
         input.name = 'type';
-        input.checked = true;
+        if (!checked){
+            input.checked = true;
+            checked = true;
+        } 
+        if ( key == type ){
+            checked = true;
+            input.checked = true;
+        } 
         li.appendChild(input);
         
-        var img = document.createElement('img')
+        var img = document.createElement('img');
         img.src = '/img/type/'+key+'24.png';
         li.appendChild(img);
         var span = document.createElement('span');
@@ -147,13 +179,12 @@ App.showAvailUnits = function(location){
         li.appendChild(span);
         
         var count = document.createElement('span');
-        count.innerText = location.units[key];
-        count.textContent = location.units[key];
+        count.innerText = App.location.units[key];
+        count.textContent = App.location.units[key];
         count.className ='units-avail';
         li.appendChild(count);
         App.iface.unitsList.appendChild(li);
     }   
-    App.map.addEventListener('click',App.makeUnit);   
 };
 
 /*получаем выбранный вариант юнита*/
@@ -165,6 +196,15 @@ App.getRadio = function(){
                 if( inputs[i].checked ) return inputs[i].value;
     }
     return null;
+};
+
+/*все ли юниты установлены*/
+App.allUnitsLocated = function(){
+    var result = true;
+    for (key in App.location.units){
+        if ( App.location.units[key] > 0 ) result = false;
+    }
+    return result;
 };
 
 /*ставим юнита на карту*/
@@ -186,7 +226,9 @@ App.makeUnit = function(e){
     }
     App.unitObject.push(unit);
     App.units.country = Countries[App.iface.selectCountry.value].toString();
-    App.iface.selectCountry.disabled = 'disabled'; 
+    App.iface.selectCountry.disabled = 'disabled';
+    App.location.units[type] -= 1;
+    App.updateUnitList(type); 
 };
 
 /*очищаем данные по редактируемой миссии*/
@@ -197,15 +239,16 @@ App.clear = function(){
     for (var i = 0; i < App.unitObject.length; i++){
          App.unitObject[i].destroy();
     }
-    App.iface.selectCountry.removeAttribute('disabled'); 
+    App.iface.selectCountry.removeAttribute('disabled');
+    App.location.units = App.location_units;
+    App.updateUnitList(); 
 };
 
 /*посылаем данные по юнитам на сервер*/
 App.begin = function(){
-    console.log(JSON.stringify(App.units));
-    
-    if (App.units.regiments.length == 0 || App.units.bases.length == 0){
-        alert('Установите юнитов');
+    //console.log(JSON.stringify(App.units));
+    if (!App.allUnitsLocated()){
+        alert('Нужно расставить всех юнитов');
         return;
     }
        

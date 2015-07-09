@@ -1,24 +1,24 @@
 /**
-* модуль обработки взаимодействия юнитов
+* РјРѕРґСѓР»СЊ РѕР±СЂР°Р±РѕС‚РєРё РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ СЋРЅРёС‚РѕРІ
 **/
 
 /**
-* обработка боя между юнитами
-* @param game объект игры
+* РѕР±СЂР°Р±РѕС‚РєР° Р±РѕСЏ РјРµР¶РґСѓ СЋРЅРёС‚Р°РјРё
+* @param game РѕР±СЉРµРєС‚ РёРіСЂС‹
 **/
 function perform(game){
-    /*бой полка*/
+    /*Р±РѕР№ РїРѕР»РєР°*/
     var battle = false;
     for ( var i = 0; i < game.regiments.length; i++ ){
         battle = false;
         var enemyCount = 0;
-        /*с полком*/
+        /*СЃ РїРѕР»РєРѕРј*/
         for ( var j = 0; j < game.regiments.length; j++ ){
             if ( i != j && game.regiments[i].country.id != game.regiments[j].country.id ){
                 if ( checkContact(game.regiments[i], game.regiments[j]) ){
                     battle = true;
                     enemyCount++;
-                    /*обсчитываем результаты боя для юнитов*/
+                    /*РѕР±СЃС‡РёС‚С‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ Р±РѕСЏ РґР»СЏ СЋРЅРёС‚РѕРІ*/
                     var powerBattle = getPowerBattle(game.regiments[i], game.regiments[j]);
                     var enemyPower = getPower(game.regiments[j], powerBattle);
                     makeDamage(game.regiments[i], enemyPower);
@@ -28,13 +28,13 @@ function perform(game){
                     
             }
         }
-        /*с базой*/
+        /*СЃ Р±Р°Р·РѕР№*/
         for ( var j = 0; j < game.bases.length; j++ ){
             if ( game.regiments[i].country.id != game.bases[j].country.id ){
                 if ( checkContact(game.regiments[i], game.bases[j]) ){
                     battle = true;
                     enemyCount++;
-                    /*обсчитываем результаты боя для своих юнитов*/
+                    /*РѕР±СЃС‡РёС‚С‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ Р±РѕСЏ РґР»СЏ СЃРІРѕРёС… СЋРЅРёС‚РѕРІ*/
                     var powerBattle = getPowerBattle(game.regiments[i], game.bases[j]);
                     var enemyPower = getPower(game.bases[j], powerBattle);
                     makeDamage(game.regiments[i], enemyPower);
@@ -43,7 +43,7 @@ function perform(game){
                 }     
             }
         }
-        /*создание игрового сообщения*/
+        /*СЃРѕР·РґР°РЅРёРµ РёРіСЂРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ*/
         if ( battle != game.regiments[i].battle ){
             if ( battle ){
                  game.addGameMessage(game.gameMsgText('beginBattle',game.regiments[i]));
@@ -53,26 +53,26 @@ function perform(game){
         }
             
         game.regiments[i].battle = battle;
-        game.regiments[i].enemyCount = enemyCount; /*обновляем количество противников у юнита*/
-        /*учитываем пополнение и расход ресурсов*/
+        game.regiments[i].enemyCount = enemyCount; /*РѕР±РЅРѕРІР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕС‚РёРІРЅРёРєРѕРІ Сѓ СЋРЅРёС‚Р°*/
+        /*СѓС‡РёС‚С‹РІР°РµРј РїРѕРїРѕР»РЅРµРЅРёРµ Рё СЂР°СЃС…РѕРґ СЂРµСЃСѓСЂСЃРѕРІ*/
         
         resourcesOutGo(game.regiments[i]);
         resourcesInGo(game.regiments[i]);
         
     }
     
-    /*бой базы*/
+    /*Р±РѕР№ Р±Р°Р·С‹*/
     for ( var i = 0; i < game.bases.length; i++ ){
         battle = false;
         var enemyCount = 0;
         var country = game.bases[i].country;
-        /*с базой*/
+        /*СЃ Р±Р°Р·РѕР№*/
         for ( var j = 0; j < game.bases.length; j++ ){
             if ( i != j && game.bases[i].country.id != game.bases[j].country.id ){
                 if ( checkContact(game.bases[i], game.bases[j]) ){
                     battle = true;
                     enemyCount++;
-                    /*обсчитываем результаты боя для юнитов*/
+                    /*РѕР±СЃС‡РёС‚С‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ Р±РѕСЏ РґР»СЏ СЋРЅРёС‚РѕРІ*/
                     var powerBattle = getPowerBattle(game.bases[i], game.bases[j]);
                     var enemyPower = getPower(game.bases[j], powerBattle);
                     makeDamage(game.bases[i], enemyPower);
@@ -80,13 +80,13 @@ function perform(game){
                 }     
             }
         }
-        /*с полком*/
+        /*СЃ РїРѕР»РєРѕРј*/
         for ( var j = 0; j < game.regiments.length; j++ ){
             if ( game.bases[i].country.id != game.regiments[j].country.id ){
                 if ( checkContact(game.bases[i], game.regiments[j]) ){
                     battle = true;
                     enemyCount++;
-                    /*обсчитываем результаты боя для  юнитов*/
+                    /*РѕР±СЃС‡РёС‚С‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚С‹ Р±РѕСЏ РґР»СЏ  СЋРЅРёС‚РѕРІ*/
                     var powerBattle = getPowerBattle(game.bases[i], game.regiments[j]);
                     var enemyPower = getPower(game.regiments[j], powerBattle);
                     makeDamage(game.bases[i], enemyPower);
@@ -95,7 +95,7 @@ function perform(game){
                 }
             }
         }
-        /*создание игрового сообщения*/
+        /*СЃРѕР·РґР°РЅРёРµ РёРіСЂРѕРІРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ*/
         if ( battle != game.bases[i].battle ){
             
             if ( battle ){
@@ -105,8 +105,8 @@ function perform(game){
             }
         }
         game.bases[i].battle = battle;
-        game.bases[i].enemyCount = enemyCount; /*обновляем количество противников у юнита*/
-        /*учитываем пополнение и расход ресурсов*/
+        game.bases[i].enemyCount = enemyCount; /*РѕР±РЅРѕРІР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕС‚РёРІРЅРёРєРѕРІ Сѓ СЋРЅРёС‚Р°*/
+        /*СѓС‡РёС‚С‹РІР°РµРј РїРѕРїРѕР»РЅРµРЅРёРµ Рё СЂР°СЃС…РѕРґ СЂРµСЃСѓСЂСЃРѕРІ*/
         
         resourcesOutGo(game.bases[i]);
         resourcesInGo(game.bases[i]);
@@ -114,10 +114,10 @@ function perform(game){
 };
 
 /**
-* возвращает интенсивность боя между двумя юнитами
-* в зависимости от сближения
-* @param unit1, unit2 объекты юнитов
-* @return число 0-1 интенсивность боя
+* РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РѕСЏ РјРµР¶РґСѓ РґРІСѓРјСЏ СЋРЅРёС‚Р°РјРё
+* РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃР±Р»РёР¶РµРЅРёСЏ
+* @param unit1, unit2 РѕР±СЉРµРєС‚С‹ СЋРЅРёС‚РѕРІ
+* @return С‡РёСЃР»Рѕ 0-1 РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РѕСЏ
 **/
 function getPowerBattle(unit1,unit2){
     var dot1 = unit1.latlng;
@@ -132,9 +132,9 @@ function getPowerBattle(unit1,unit2){
 
 
 /**
-* проверка что 2 юнита сблизились на расстояние контакта
-* @param unit1, unit2 объекты юнитов
-* @return true/false бой/не бой
+* РїСЂРѕРІРµСЂРєР° С‡С‚Рѕ 2 СЋРЅРёС‚Р° СЃР±Р»РёР·РёР»РёСЃСЊ РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРµ РєРѕРЅС‚Р°РєС‚Р°
+* @param unit1, unit2 РѕР±СЉРµРєС‚С‹ СЋРЅРёС‚РѕРІ
+* @return true/false Р±РѕР№/РЅРµ Р±РѕР№
 **/
 function checkContact(unit1,unit2){
     var dot1 = unit1.latlng;
@@ -146,9 +146,9 @@ function checkContact(unit1,unit2){
 };
 
 /**
-* расчет боевой мощи (урон наносимый противнику за 1 цикл)
-* @param unit объект юнита
-* @param powerBattle интенсивность боя
+* СЂР°СЃС‡РµС‚ Р±РѕРµРІРѕР№ РјРѕС‰Рё (СѓСЂРѕРЅ РЅР°РЅРѕСЃРёРјС‹Р№ РїСЂРѕС‚РёРІРЅРёРєСѓ Р·Р° 1 С†РёРєР»)
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
+* @param powerBattle РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РѕСЏ
 **/
 function getPower(unit, powerBattle){
     var enemyCountCoff = (unit.enemyCount == 0)? 1 : unit.enemyCount;
@@ -162,9 +162,9 @@ function getPower(unit, powerBattle){
 };
 
 /**
-* учитываем урон юниту наносимый противником 
-* @param unit объект юнита
-* @param power сила удара противника
+* СѓС‡РёС‚С‹РІР°РµРј СѓСЂРѕРЅ СЋРЅРёС‚Сѓ РЅР°РЅРѕСЃРёРјС‹Р№ РїСЂРѕС‚РёРІРЅРёРєРѕРј 
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
+* @param power СЃРёР»Р° СѓРґР°СЂР° РїСЂРѕС‚РёРІРЅРёРєР°
 **/
 function makeDamage(unit, power){
     var damage = ( unit.status.kind == 'defense' )? power * unit.status.defense_coff : power;
@@ -173,9 +173,9 @@ function makeDamage(unit, power){
 };
 
 /**
-* учитываем расход боеприпасов юнита за 1 цикл на одного противника
-* @param unit объект юнита
-* @param powerBattle интенсивность боя
+* СѓС‡РёС‚С‹РІР°РµРј СЂР°СЃС…РѕРґ Р±РѕРµРїСЂРёРїР°СЃРѕРІ СЋРЅРёС‚Р° Р·Р° 1 С†РёРєР» РЅР° РѕРґРЅРѕРіРѕ РїСЂРѕС‚РёРІРЅРёРєР°
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
+* @param powerBattle РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РѕСЏ
 **/
 function ammoGoOut(unit, powerBattle){
      var enemyCountCoff = (unit.enemyCount == 0)? 1 : unit.enemyCount;
@@ -186,8 +186,8 @@ function ammoGoOut(unit, powerBattle){
 };
 
 /**
-* учитываем пополнение ресурсов юнита за 1 цикл
-* @param unit объект юнита
+* СѓС‡РёС‚С‹РІР°РµРј РїРѕРїРѕР»РЅРµРЅРёРµ СЂРµСЃСѓСЂСЃРѕРІ СЋРЅРёС‚Р° Р·Р° 1 С†РёРєР»
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
 **/
 function resourcesInGo(unit){
     if ( !unit.around ){
@@ -209,13 +209,13 @@ function resourcesInGo(unit){
 };
 
 /**
-* учитываем расход ресурсов юнита за 1 цикл
-* @param unit объект юнита
+* СѓС‡РёС‚С‹РІР°РµРј СЂР°СЃС…РѕРґ СЂРµСЃСѓСЂСЃРѕРІ СЋРЅРёС‚Р° Р·Р° 1 С†РёРєР»
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
 **/
 function resourcesOutGo(unit){
     if ( unit.type.resources.food > 0 ){
         var weatherCoff = 1;
-        /*учет погодных условий*/
+        /*СѓС‡РµС‚ РїРѕРіРѕРґРЅС‹С… СѓСЃР»РѕРІРёР№*/
         if (unit.weather && unit.weather.temperature < -10 ){
             weatherCoff *= 1.5;
         }
@@ -225,9 +225,9 @@ function resourcesOutGo(unit){
 };
 
 /**
-* учитываем рост боевого опыта юнита за 1 цикл
-* @param unit объект юнита
-* @param powerBattle интенсивность боя 
+* СѓС‡РёС‚С‹РІР°РµРј СЂРѕСЃС‚ Р±РѕРµРІРѕРіРѕ РѕРїС‹С‚Р° СЋРЅРёС‚Р° Р·Р° 1 С†РёРєР»
+* @param unit РѕР±СЉРµРєС‚ СЋРЅРёС‚Р°
+* @param powerBattle РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ Р±РѕСЏ 
 **/
 function addExperience(unit, powerBattle){
     if ( unit.type.resources.experience < 1 ){
@@ -238,27 +238,27 @@ function addExperience(unit, powerBattle){
 
 
 /**
-* вычисление расстояния на сфере
-* @param do1,dot2 точки, заданные массивами кооординат [lat,lng]
+* РІС‹С‡РёСЃР»РµРЅРёРµ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РЅР° СЃС„РµСЂРµ
+* @param do1,dot2 С‚РѕС‡РєРё, Р·Р°РґР°РЅРЅС‹Рµ РјР°СЃСЃРёРІР°РјРё РєРѕРѕРѕСЂРґРёРЅР°С‚ [lat,lng]
 **/
 function rast(dot1,dot2){
-/**pi - число pi, rad - радиус сферы (Земли)**/
+/**pi - С‡РёСЃР»Рѕ pi, rad - СЂР°РґРёСѓСЃ СЃС„РµСЂС‹ (Р—РµРјР»Рё)**/
     var rad = 6372795;
 
-	/**координаты двух точек**/
+	/**РєРѕРѕСЂРґРёРЅР°С‚С‹ РґРІСѓС… С‚РѕС‡РµРє**/
 	var llat1 = dot1[0];
 	var llong1 = dot1[1];
 
 	var llat2 = dot2[0];
 	var llong2 = dot2[1];
 
-	/**в радианах**/
+	/**РІ СЂР°РґРёР°РЅР°С…**/
 	var lat1 = llat1*Math.PI/180;
 	var lat2 = llat2*Math.PI/180;
 	var long1 = llong1*Math.PI/180;
 	var long2 = llong2*Math.PI/180;
 
-	/**косинусы и синусы широт и разницы долгот**/
+	/**РєРѕСЃРёРЅСѓСЃС‹ Рё СЃРёРЅСѓСЃС‹ С€РёСЂРѕС‚ Рё СЂР°Р·РЅРёС†С‹ РґРѕР»РіРѕС‚**/
 	var cl1 = Math.cos(lat1)
 	var cl2 = Math.cos(lat2)
 	var sl1 = Math.sin(lat1)
@@ -267,7 +267,7 @@ function rast(dot1,dot2){
 	var cdelta = Math.cos(delta)
 	var sdelta = Math.sin(delta)
 
-	/**вычисления длины большого круга**/
+	/**РІС‹С‡РёСЃР»РµРЅРёСЏ РґР»РёРЅС‹ Р±РѕР»СЊС€РѕРіРѕ РєСЂСѓРіР°**/
 	var y = Math.sqrt(Math.pow(cl2*sdelta,2)+Math.pow(cl1*sl2-sl1*cl2*cdelta,2))
 	var x = sl1*sl2+cl1*cl2*cdelta
 	var ad = Math.atan2(y,x)
@@ -276,27 +276,27 @@ function rast(dot1,dot2){
 }
 
 /**
-* вычисление расстояния на сфере  в градусах
-* @param do1,dot2 точки, заданные массивами кооординат [lat,lng]
+* РІС‹С‡РёСЃР»РµРЅРёРµ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РЅР° СЃС„РµСЂРµ  РІ РіСЂР°РґСѓСЃР°С…
+* @param do1,dot2 С‚РѕС‡РєРё, Р·Р°РґР°РЅРЅС‹Рµ РјР°СЃСЃРёРІР°РјРё РєРѕРѕРѕСЂРґРёРЅР°С‚ [lat,lng]
 **/
 function rastGrad(dot1,dot2){
-/**pi - число pi, rad - радиус сферы (Земли)**/
+/**pi - С‡РёСЃР»Рѕ pi, rad - СЂР°РґРёСѓСЃ СЃС„РµСЂС‹ (Р—РµРјР»Рё)**/
     var rad = 6372795
 
-	/**координаты двух точек**/
+	/**РєРѕРѕСЂРґРёРЅР°С‚С‹ РґРІСѓС… С‚РѕС‡РµРє**/
 	var llat1 = dot1[0];
 	var llong1 = dot1[1];
 
 	var llat2 = dot2[0];
 	var llong2 = dot2[1];
 
-	/**в радианах**/
+	/**РІ СЂР°РґРёР°РЅР°С…**/
 	var lat1 = llat1*Math.PI/180;
 	var lat2 = llat2*Math.PI/180;
 	var long1 = llong1*Math.PI/180;
 	var long2 = llong2*Math.PI/180;
 
-	/**косинусы и синусы широт и разницы долгот**/
+	/**РєРѕСЃРёРЅСѓСЃС‹ Рё СЃРёРЅСѓСЃС‹ С€РёСЂРѕС‚ Рё СЂР°Р·РЅРёС†С‹ РґРѕР»РіРѕС‚**/
 	var cl1 = Math.cos(lat1)
 	var cl2 = Math.cos(lat2)
 	var sl1 = Math.sin(lat1)
@@ -305,7 +305,7 @@ function rastGrad(dot1,dot2){
 	var cdelta = Math.cos(delta)
 	var sdelta = Math.sin(delta)
 
-	/**вычисления длины большого круга**/
+	/**РІС‹С‡РёСЃР»РµРЅРёСЏ РґР»РёРЅС‹ Р±РѕР»СЊС€РѕРіРѕ РєСЂСѓРіР°**/
 	var y = Math.sqrt(Math.pow(cl2*sdelta,2)+Math.pow(cl1*sl2-sl1*cl2*cdelta,2))
 	var x = sl1*sl2+cl1*cl2*cdelta
 	var ad = Math.atan2(y,x)
