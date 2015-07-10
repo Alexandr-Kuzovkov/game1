@@ -612,12 +612,23 @@ hr
     font-weight: bold;
 }
 
-.alert
+#alert-wrap
 {
     display: none;
+    background: rgba(0, 0, 0, 0.9);
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+    top: 0;
+    left: 0;   
+}
+
+.alert
+{
     position: absolute;
     width: 300px;
-    height: 200px;
+    height: auto;
     top: 50%;
     left: 50%;
     margin-left: -150px;
@@ -637,7 +648,7 @@ hr
 
 #alert-button
 {
-   margin: 30px auto 0 auto;
+   margin: 30px auto 20px auto;
    font-size: 20px;
    padding: 5px 15px 5px 15px;
 }

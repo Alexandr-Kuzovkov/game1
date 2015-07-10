@@ -31,11 +31,12 @@ Interface.init = function(app) {
     Interface.button_begin_game = document.getElementById('btn-begin-game');
     Interface.selectCountry = document.getElementById('set-country');
     Interface.unitsList = document.getElementById('units-list');
-    Interface.alert = document.getElementById('alert');
+    Interface.alert = document.getElementById('alert-wrap');
     Interface.alert_button = document.getElementById('alert-button');
     Interface.alert_text = document.getElementById('alert-text');    
     /*установка сервиса маршрутов*/
     Interface.selectService = document.getElementById('service');
+    Interface.alert_callback = false;
     
     if ( Interface.alert_button ) Interface.alert_button.onclick = Interface.closeAlert;
     
@@ -371,14 +372,24 @@ Interface.formatWeatherData = function(weather){
     return content;
 };
 
-Interface.showAlert = function(msg){
+/**
+* Показ модального диалогового окна типа alert
+* @rapam msg текст сообщения
+* @param callback функция обратного вызова, после закрытия диалога
+**/
+Interface.showAlert = function(msg, callback){
     this.alert.style.display = 'block';
     this.alert_text.innerText = msg;
     this.alert_text.textContent = msg;
+    this.alert_callback = (callback)? callback : false;
 };
 
+/**
+* Закрытие модального диалогового окна типа alert
+**/
 Interface.closeAlert = function(){
     Interface.alert.style.display = 'none';
+    if (Interface.alert_callback) Interface.alert_callback();
 };  
 
     

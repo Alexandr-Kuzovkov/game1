@@ -119,7 +119,9 @@ App.setMapOptions = function(game){
 }
 
 
-/*показ меню установки юниов на карту*/
+/** 
+* показ меню установки юнитов на карту
+**/
 App.showUnitMenu = function(){
     var type = null;
     for (key in App.location.units){
@@ -129,14 +131,19 @@ App.showUnitMenu = function(){
     App.map.addEventListener('click',App.makeUnit);   
 };
 
-/*обновление списка юнитов*/
+/**
+* обновление списка юнитов
+* @param type тип юнита, радиокнопка которого будет выбрана 
+**/
 App.updateUnitList = function(type){
     App.iface.destroyChildren(App.iface.selectCountry);//очищаем список стран
     App.iface.destroyChildren(App.iface.unitsList);//очищаем список юнитов
     var presentCountries = App.getPresentCountries();
+    var listCountryIsEmpty = true;
     //формируем список стран
     for (var i = 0; i < App.location.countries.length; i++){
         if ( presentCountries[App.location.countries[i]] !== undefined ) continue;//удаляем из списка страну которая уже выбрана
+        listCountryIsEmpty = false;
         var opt = document.createElement('option');
         opt.value = App.location.countries[i];
        
@@ -144,6 +151,12 @@ App.updateUnitList = function(type){
         opt.textContent = Countries[App.location.countries[i]].name;
         App.iface.selectCountry.appendChild(opt);
     }
+    
+    if (listCountryIsEmpty){ //если список стран пуст, выводим сообщение и перекидываем на выбор локаций
+        App.iface.showAlert('К сожалению в этой локации все страны заняты, пожалуйста выберите другую', function(){ App.iface.reloadPage('/');});    
+        return;
+    }
+    
     //формируем список юнитов  
     var checked = false;
     for ( var key in App.location.units ){
@@ -187,7 +200,10 @@ App.updateUnitList = function(type){
     }   
 };
 
-/*получаем выбранный вариант юнита*/
+/**
+* получаем выбранный вариант юнита
+* @return строка задающая id типа юнита
+**/
 App.getRadio = function(){
     var inputs = document.getElementsByTagName('input');
     for ( var i = 0; i < inputs.length; i++ ){
@@ -198,7 +214,10 @@ App.getRadio = function(){
     return null;
 };
 
-/*все ли юниты установлены*/
+/**
+* все ли юниты установлены
+* @return true/false 
+**/
 App.allUnitsLocated = function(){
     var result = true;
     for (key in App.location.units){
@@ -207,15 +226,21 @@ App.allUnitsLocated = function(){
     return result;
 };
 
-/*ставим юнита на карту*/
+/**
+* ставим юнита на карту
+* @param e объект события клика на карте
+**/
 App.makeUnit = function(e){
+    var latlng = [e.latlng.lat, e.latlng.lng];
+    if (App.isPlaceBusy(latlng)){
+        App.iface.showAlert('Вы не можете ставить юнитов друг на друга');
+        return;
+    }
     var type = App.getRadio();
     var country = App.iface.selectCountry.value;
     var iconCountry = Countries[country].icon;
     var typeObject = UnitTypes.getType(type);
     var iconType = typeObject.icon;
-    var latlng = [e.latlng.lat, e.latlng.lng];
-    console.log(latlng);
     var unit = null; 
     var unit = App.unitFactory.createUnit(latlng, type, country, 0, App.user.id);
     unit.init();
@@ -231,7 +256,9 @@ App.makeUnit = function(e){
     App.updateUnitList(type); 
 };
 
-/*очищаем данные по редактируемой миссии*/
+/**
+* очищаем данные по редактируемой миссии
+**/
 App.clear = function(){
     for ( var key in App.units ){
         App.units[key] = [];
@@ -244,9 +271,10 @@ App.clear = function(){
     App.updateUnitList(); 
 };
 
-/*посылаем данные по юнитам на сервер*/
+/**
+* посылаем данные по юнитам на сервер
+**/
 App.begin = function(){
-    //console.log(JSON.stringify(App.units));
     if (!App.allUnitsLocated()){
         App.iface.showAlert('Нужно расставить всех юнитов');
         return;
@@ -256,11 +284,29 @@ App.begin = function(){
     
 };
 
-/*получаем страны которые уже есть*/
+/**
+* получаем id стран которые уже есть
+* @return объект вида {country1_Id: 1, country2_Id: 1}
+**/
 App.getPresentCountries = function(){
     var countriesId = {};
     for (var i = 0, len = App.game.regiments.length; i < len; i++){
         countriesId[App.game.regiments[i].country.id] = 1;
     }
     return countriesId;
+};
+
+/**
+* занято ли место куда ставим юнита другим юнитом
+* @param latlng массив координат места [lat,lng]
+* @return true/false занято/незанято
+**/
+App.isPlaceBusy = function(latlng){
+    for (var i = 0, len = App.game.regiments.length; i < len; i++){
+        if ( Helper.rastGrad(latlng, App.game.regiments[i].latlng) <= App.game.regiments[i].type.radius*2) return true;
+    }
+    for (var i = 0, len = App.game.bases.length; i < len; i++){
+        if ( Helper.rastGrad(latlng, App.game.bases[i].latlng) <= App.game.bases[i].type.radius*2) return true;
+    }
+    return false;
 };
