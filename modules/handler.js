@@ -75,9 +75,9 @@ function game_clone_client(socket, sdata){
 function data_from_client(socket,sdata){
     socket.on('data_from_client',function(data){
         if ( sdata.games[data.location] ){
+            sdata.games[data.location].updateUserTime(data.user);
             sdata.games[data.location].sync(data.game);
             sdata.games[data.location].battleLoop();
-            
             if ( !sdata.games[data.location].checkGameOver(data.user.id)){
                 socket.emit('data_from_server',{game:sdata.games[data.location].toString()}); 
             }else{
@@ -182,27 +182,12 @@ function get_game( socket, sdata ){
 function set_units( socket, sdata ){
     socket.on('set_units', function(data){
         sdata.games[data.location].joinUser(data.units, data.user, function(){
-            socket.emit('client_refresh_by_server',{url:'/location/'+data.location});
-            socket.broadcast.emit('client_refresh_by_server',{url:'/location/'+data.location});
+            socket.emit('client_refresh_by_server');
+            socket.broadcast.emit('client_refresh_by_server');
         });
     });
 }
 
-/**
-* обработчик события сигнала о активности, проверка что оба клиента игры
-* живы и если нет, то обнуление серверного объекта game, удаление
-* объктов user, и 
-* генерация событий game_exit_server
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
-function user_live( socket, sdata ){
-   socket.on('user_live', function(data){
-       //console.log('user_live_location='+data.location);
-       socket.emit('to_user_live',{location:data.location});
-       socket.broadcast.emit('to_user_live',{location:data.location});
-    });   
-}
 
 /**
 * обработчик события запроса клиента на запуск проверки факта окружения
@@ -354,7 +339,6 @@ exports.data_from_client = data_from_client;
 //exports.get_missions = get_missions;
 //exports.connect = connect;
 exports.get_game = get_game;
-exports.user_live = user_live;
 //exports.check_around = check_around;
 //exports.update_elevation = update_elevation;
 //exports.update_weather = update_weather;

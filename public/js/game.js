@@ -10,7 +10,6 @@ function Game( user )
     this.location = null;
 	this.regiments = []; /**массив полков*/
 	this.bases = [];     /*массив баз*/
-    this.interval = null; /*переменная для хранения интервала*/
     this.start = false;  /*флаг состояния игры*/
     
     /*запуск инициализации объектов полков*/
@@ -137,52 +136,11 @@ function Game( user )
     
     /**
     * игровой цикл в котором происходит отправка данных на сервер
-    * @param object объект игры
     **/
-	this.loop = function(object){
-        for ( var i = 0; i < object.regiments.length; i++ ) object.regiments[i].update();
-		for ( var i = 0; i < object.bases.length; i++ ) object.bases[i].update();
-        App.sendDataToServer();
+	this.loop = function(){
+        for ( var i = 0, len = this.regiments.length; i < len; i++ ) this.regiments[i].update();
+		for ( var i = 0, len = this.bases.length; i < len; i++ ) this.bases[i].update();
 	};
-    
-    /**
-    * инициализация клиентского объекта игры
-    * создание создание оюъектов игровых юнитов на основе
-    * данных миссии и страны
-    * @param callback функция обратного вызова, вызываемая по завершении операции
-    **/
-    this.init = function(units, callback){
-        
-        var regiments = units.regiments;
-        var bases = units.bases;
-        for ( var i =0; i < regiments.length; i++ ) 
-            this.createRegiment( regiments[i].latlng, regiments[i].country, regiments[i].type ); 
-        for ( var i =0; i < bases.length; i++ ) 
-            this.createSupplyBase( bases[i].latlng, bases[i].country, bases[i].type ); 
-        
-        this.start = false;
-        Move.ENABLED = false;
-        callback();
-    };
-    
-    /**
-    * клонирование клиентского объекта игры из принятого серверного объекта игры
-    * @param remoteGame принятый серверный объект игры
-    * @param callback функция обратного вызова, вызываемая по завершении операции
-    **/
-    this.clone = function(remoteGame,callback){
-        this.destroyAll();
-        var regiments = remoteGame.regiments;
-        var bases = remoteGame.bases;
-        for ( var i =0; i < regiments.length; i++ ) 
-            this.createRegiment( regiments[i].latlng, regiments[i].country.id, regiments[i].type.id ); 
-        for ( var i =0; i < bases.length; i++ ) 
-            this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id ); 
-        this.id = remoteGame.id;
-        this.start = false;
-        Move.ENABLED = false;
-        callback();
-    };
     
     /**
     * востановление клиентского объекта игры из принятого серверного объекта игры
@@ -199,36 +157,8 @@ function Game( user )
         for ( var i =0; i < bases.length; i++ ) 
             this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id, bases[i].id, bases[i].userId ); 
         this.id = remoteGame.id;
-        this.start = false;
         this.location = remoteGame.location;
-        Move.ENABLED = false;
-        //this.startGame();
         callback();
-    };
-    
-    /**
-    * установка игры на паузу
-    **/
-    this.pauseGame = function(){
-        
-        if ( this.interval != null && this.start ){
-            clearInterval(this.interval);
-            this.interval = null; 
-            this.start = false;
-            Move.PAUSE = true;  
-        }
-    };
-    
-    /**
-    * старт игры
-    **/
-    this.startGame = function(){
-        if ( this.interval == null && !this.start ){
-            this.start = true;
-            Move.ENABLED = true;
-            Move.PAUSE = false;
-            this.interval = setInterval( this.loop ,1000, this );
-        }
     };
     
     /**

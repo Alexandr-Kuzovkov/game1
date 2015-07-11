@@ -37,16 +37,13 @@ app.get('/', controller.index );
 for ( var key in locations){
     app.get('/location/:id', controller.location);
     var game = new sdata.Game(locations[key]);
-    game.setId();
     sdata.games[key] = game;
     
     /*обработчики событий модуля socket.io*/
     io.of('/location/'+key).on('connection',function(socket){
         Handler.get_game(socket, sdata);
-        Handler.user_live(socket, sdata);
         Handler.set_units(socket, sdata);
-        Handler.data_from_client(socket, sdata);
-          
+        Handler.data_from_client(socket, sdata);         
     });
 
 }

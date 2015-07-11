@@ -2,6 +2,7 @@ var App = {};
 
 App.init = function(){
     App.interval = null; /*интервал обновления клиента и сервера*/
+    App.UPDATE_INTERVAL = 1000; /*длина интервала обновления клиента и сервера в мс*/
     App.maplib = L;
     App.io = io;
     App.socket = Socket;
@@ -28,10 +29,10 @@ App.init = function(){
 App.setEventHandlers = function(){
     App.socket.setEventHandler('connect', App.connect);
     App.socket.setEventHandler('disconnect', App.disconnect);
-    App.socket.setEventHandler('new_game', App.join);
     App.socket.setEventHandler('resume_game', App.play);
     App.socket.setEventHandler('client_refresh_by_server', App.clientRefreshByServer);
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
+    App.socket.setEventHandler('game_over', App.gameOver);
 };
 /**
 * обработчик события connect
@@ -57,22 +58,18 @@ App.play = function(data){
         App.game.restore(data.game, function(){});
         App.user.gameId = data.game.id;
         App.setMapOptions(data.game);
-        App.game.startGame();       
+        App.interval = setInterval(App.sync, App.UPDATE_INTERVAL);       
    }
 };
 
 /**
-* обработчик события получения игры от сервера
-* присоединение к игре
+* Цикл синхронизации клиента и сервера
 **/
-App.join = function(data){
-    if ( data.game ) {
-        App.game.restore(data.game, function(){});
-        App.user.gameId = data.game.id;
-        App.setMapOptions(App.game);
-        JoinUser.showAvailUnits(data.location);
-   } 
+App.sync = function(){
+    App.game.loop();
+    App.sendDataToServer();
 };
+
 
 /**
 * обработчик события получения данных от сервера для синхронизации
@@ -95,12 +92,8 @@ App.clientRefreshByServer = function(data){
 * обработчик сообщения события окончания игры 
 **/
 App.gameOver = function(){
-    App.iface.showGameOver(App.iface.getGameOverMess());
-};
-
-
-App.toUserLive = function(data){
-    console.log(data.location);
+    console.log('game_over');
+    App.iface.showAlert('Ваша игра закончена', function(){ App.iface.reloadPage('/');});
 };
 
 
@@ -127,13 +120,4 @@ App.setMapOptions = function(game){
     App.map.setBoundary(SW_lat, SW_lng, NE_lat, NE_lng);
 }
 
-/**
-* посылка события означающего активность клиента
-* и генерация события user_live
-* с посылкой данных объекта user
-**/
-
-App.userLive = function(){
-    App.socket.send('user_live',{user:App.user.toString(), location:App.game.location.id});
-}
 

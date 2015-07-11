@@ -8,12 +8,13 @@ function User(id,name){
     this.id = id;
     this.name = name; /*имя*/
     this.gameId = 0; /* id игры*/
+    this.lastTime = 0; /*время поступления сигнала от аользователя*/
     
     /**
     * преобразование в объект, который можно преобразовать в строку
     **/
     this.toString = function(){
-        return { id: this.id, name: this.name, gameId: this.gameId };  
+        return { id: this.id, name: this.name, gameId: this.gameId, lastTime: this.lastTime };  
     };
     
 }

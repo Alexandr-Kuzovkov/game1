@@ -6,7 +6,7 @@ var Locations = {
         name: 'Ирак',
         bounds: {SW: [32.5, 43.5], NE: [33.9, 45]},
         countries: ['Russia', 'USA', 'UK', 'Germany', 'Iraq'],
-        units: {tank: 4, foot: 5, base: 2},
+        units: {tank: 1, foot: 0, base: 1},
         mission: 'Описание миссии в Ираке'
     },
     

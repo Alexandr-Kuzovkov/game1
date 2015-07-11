@@ -11,12 +11,9 @@ function Game(location)
     this.status = ''; /*состояние игры*/
     this.regiments = []; /*массив полков*/
     this.bases = []; /*массив баз*/
-    this.unitcnt = 0
-    this.MAX_LIVE_TIMEOUT = 13000; /*время в мс по истечении которого если от любого юзера нет события user_live игра прекращается*/
-    this.setId = function(){
-        this.id = Helper.getRandomInt(1000000,2000000);    
-    };
+    this.unitcnt = 0 /*счетчик для присвоения id юнитам*/
     this.logMessages = []; /*массив лог-сообщений*/
+    this.MAX_LIVE_TIMEOUT = 15; /*максимальное время непоступления событий от пользователя*/
     this.gameMessages = []; /*массив игровых сообщений*/
     this.MAX_LOG_MESSAGES = 10; /*максимальное количество лог-сообщений*/
     this.MAX_GAME_MESSAGES = 20;/*максимальное количество игровых сообщений*/
@@ -39,23 +36,9 @@ Game.prototype.setReady = function(ready){
 * @return id или undefined 
 **/
 Game.prototype.getUserName = function(userId){
-    for ( var i = 0; i < this.users.length; i++ ){
-        if ( this.users[i].id == userId ) return this.users[i].name;
-    }
-    return null;
+    return (this.users[userId])? this.users[userId].name : null;
 }
 
-/**
-* инициализация игры при начале игры первым клиентом
-* @param game объект Game принятый от клиента инициализировавшего игру
-* callback функция обратного вызова, вызываемая по завершении операции
-**/
-Game.prototype.init = function(game,callback){
-    this.regiments = game.regiments;
-    this.bases = game.bases;
-    this.mission = game.mission;
-    callback();
-};
 
 /**
 * клонирование игры при присоединении к игре второго игрока  
@@ -95,29 +78,6 @@ Game.prototype.start = function(user){
     this.setReady(true);
 }
 
-/**
-* завершение игры, уничтожение серверного объекта Game  
-* callback функция обратного вызова, вызываемая по завершении операции
-**/
-Game.prototype.exit = function(callback){
-    this.setReady(false);
-    while( this.regiments.length != 0 ){
-        delete this.regiments[0];
-        this.regiments.splice(0,1);
-    }
-    
-    while( this.bases.length != 0 ){
-        delete this.bases[0];
-        this.bases.splice(0,1);
-    }
-    
-     while( this.users.length != 0 ){
-        delete this.users[0];
-        this.users.splice(0,1);
-    }
-    delete this.mission;
-    callback();  
-};
 
 /**
 * синхронизировать ли заданный параметр юнита в серверном объекте game
@@ -206,31 +166,28 @@ Game.prototype.battleLoop = function(){
 };
 
 /**
-* обновление времени последнего поступления от клиента игрока сигнала об активности  
+* обновление времени последнего поступления событий от клиента игрока 
 * @param user объект user от клиента
 **/
-Game.prototype.userLive = function (user){
-    for ( var i = 0; i < this.users.length; i++ ){
-        if ( this.users[i].name == user.name && this.users[i].id == user.id ){
-            var now = new Date();
-            //console.log('name='+this.users[i].name+'; last='+this.users[i].lastTime+'; now='+now.getTime()+ '; deltatime='+(now.getTime()-this.users[i].lastTime));
-            this.users[i].lastTime = now.getTime();
-            
-        }
+Game.prototype.updateUserTime = function (user){
+    if ( this.users[user.id] ){
+       var now = new Date();
+        //console.log('name='+this.users[i].name+'; last='+this.users[i].lastTime+'; now='+now.getTime()+ '; deltatime='+(now.getTime()-this.users[i].lastTime));
+        this.users[user.id].lastTime = now.getTime();
     }
 };
 
 /**
-* проверка что время от последнего поступления от клиентов игроков 
+* проверка что время от последнего поступления от клиента игроков 
 * сигнала об активности не превышает заданного порога
+* @param user объект user
 * @return true если время не превышает порога или false в противном случае  
 **/
-Game.prototype.isUsersLive = function(){
+Game.prototype.isUserLive = function(user){
     var now = new Date();
     var nowTime = now.getTime();
-    for ( var i = 0; i < this.users.length; i++ ){
-        if ( (( nowTime - this.users[i].lastTime ) > this.MAX_LIVE_TIMEOUT) && (( nowTime - this.users[i].lastTime ) < this.MAX_LIVE_TIMEOUT * 10) ) return false;
-    }
+    if (!this.users[user.id]) return false;
+    if ( (( nowTime - this.users[user.id].lastTime ) > this.MAX_LIVE_TIMEOUT) && (( nowTime - this.users[user.id].lastTime ) < this.MAX_LIVE_TIMEOUT * 10) ) return false;
     return true;
 };
 

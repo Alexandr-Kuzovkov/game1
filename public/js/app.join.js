@@ -1,6 +1,11 @@
 var App = {};
 
+/**
+* инициализация приложения
+**/
 App.init = function(){
+    App.interval = null; /*интервал обновления клиента и сервера*/
+    App.UPDATE_INTERVAL = 1000; /*длина интервала обновления клиента и сервера в мс*/
     App.maplib = L;
     App.io = io;
     App.socket = Socket;
@@ -27,7 +32,6 @@ App.units = {regiments: [], bases: [], country: null}; /*установленн�
 App.unitObject = []; //массив объектов юнитов
 App.location = null;
 App.location_units = {};
-App.currentType = null;
 
 /**
 * Установка обработчиков на события рассылаемые сервером
@@ -72,8 +76,16 @@ App.join = function(data){
             App.location_units[key] = App.location.units[key];
         }
         App.showUnitMenu();
-        App.game.startGame();
+        App.interval = setInterval(App.sync, App.UPDATE_INTERVAL);
    } 
+};
+
+/**
+* Цикл синхронизации клиента и сервера
+**/
+App.sync = function(){
+    App.game.loop();
+    App.sendDataToServer();
 };
 
 /**
@@ -279,9 +291,9 @@ App.begin = function(){
         App.iface.showAlert('Нужно расставить всех юнитов');
         return;
     }
-       
-    App.socket.send('set_units', {units:App.units, location:App.game.location.id, user:App.user.toString()});
-    
+    var now = new Date();
+    App.user.lastTime = now.getTime();   
+    App.socket.send('set_units', {units:App.units, location:App.game.location.id, user:App.user.toString()});    
 };
 
 /**
@@ -292,6 +304,9 @@ App.getPresentCountries = function(){
     var countriesId = {};
     for (var i = 0, len = App.game.regiments.length; i < len; i++){
         countriesId[App.game.regiments[i].country.id] = 1;
+    }
+    for (var i = 0, len = App.game.bases.length; i < len; i++){
+        countriesId[App.game.bases[i].country.id] = 1;
     }
     return countriesId;
 };
