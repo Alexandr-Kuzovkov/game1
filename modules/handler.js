@@ -1,68 +1,5 @@
 /*серверный модуль обработчиков событий при взаимодействии клиентов и сервера*/
-var parameters = require('./parameters').parameters;
-//var missions = require(parameters.missions_module).missions;
-var around = require(parameters.services.around); /*подключение модуля окружения*/
-var elevation = require(parameters.services.elevation); /*подключение модуля высот*/
-var weather = require(parameters.services.weather); /*подключение модуля погоды*/
- 
 
-/**
-* обработчик события инициализации игры клиентом
-* создается и иниц. объект game, user
-* генерация событий game_init_server, client_refresh_by_server
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**/
-/*
-function game_init_client(socket, sdata){
-    socket.on('game_init_client',function(data){
-        if (sdata.game != null){
-            socket.emit('client_refresh_by_server');
-            return;
-        }
-        sdata.game = new sdata.Game();
-        sdata.game.setId();
-        console.log('Game create id: '+sdata.game.id);
-        sdata.game.joinUser(data.user);
-        sdata.game.init(data.game,function(){
-            sdata.addUser(data.user);
-            socket.broadcast.emit('client_refresh_by_server');
-            socket.emit('game_init_server',{gameId:sdata.game.id });
-            sdata.game.addLogMessage('user '+data.user.name + ' init game');
-            sendLogMessages(socket, sdata);
-            console.log('user '+data.user.name + ' init game');
-            around.init(data.game.mission.db_file, function(){
-                socket.emit('around_ready');
-                socket.broadcast.emit('around_ready');
-            });  
-        });  
-    });
-}
-
-/**
-* обработчик события клонирования игры присоединяющимся клиентом
-* генерация событий game_clone_server, game_ready
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**
-function game_clone_client(socket, sdata){
-    socket.on('game_clone_client',function(data){
-        if (sdata.game == null) return; 
-        sdata.game.joinUser(data.user);
-        sdata.game.clone(data.game,function(){
-            sdata.addUser(data.user);
-            socket.emit('game_clone_server',{gameId:sdata.game.id, msg:'user '+data.user.name + ' join to game'});
-            sdata.game.addLogMessage('user '+data.user.name + ' join to game');
-            sendLogMessages(socket, sdata);
-            console.log('user '+data.user.name + ' join to game');
-            if ( sdata.game.ready ){
-                socket.emit('game_ready',{gameId: sdata.game.id});
-                socket.broadcast.emit('game_ready',{gameId: sdata.game.id});
-            }  
-        });
-        sendLogMessages(socket, sdata);          
-    });
-}
 
 /**
 * обработчик события получения данных от клиента для синхронизации
@@ -86,6 +23,64 @@ function data_from_client(socket,sdata){
         }
     });
 }
+
+
+
+/**
+* обработчик события запроса серверного объекта game клиентом 
+* генерация событий send_game и посылка данных серверного объекта game
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
+**/
+function get_game( socket, sdata ){
+   socket.on('get_game', function(data){
+       var location = data.location.slice(10);
+       console.log('get_game:location='+location);
+       if (sdata.games[location].users[data.user.id] == undefined){
+            socket.emit('new_game', {game:sdata.games[location].toString(), location:locations[location]}); 
+       }else{
+            socket.emit('resume_game', {game:sdata.games[location].toString()}); 
+       }
+       
+    }); 
+}
+
+/**
+* обработчик события запроса клиента на добавление юнитов в игру
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+**/
+function set_units( socket, sdata ){
+    socket.on('set_units', function(data){
+        sdata.games[data.location].joinUser(data.units, data.user, function(){
+            socket.emit('client_refresh_by_server');
+            socket.broadcast.emit('client_refresh_by_server');
+        });
+    });
+}
+
+/**
+* отправка лог-сообщений по клиентам
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+* @param mess строка сообщения
+**/
+function sendLogMessages(socket, sdata, location ){
+    var messages = sdata.games[location].getLogMessages();
+    socket.emit('server_msg',{msg: messages});
+    socket.broadcast.emit('server_msg',{msg: messages});
+}
+
+/**
+* получение высотных данных для юнитов и обновление соответсвующего 
+* поля объектов полков в серверном объекте game 
+* @param game объект Game
+* @param callback функция обратного вызова, вызываемая после завершения
+**/
+function update_elevation(game,callback){
+   elevation.updateElevation(game, function(){});            
+}
+
 
 /**
 * обработчик события постановки игры на паузу одним из клиентов
@@ -160,34 +155,62 @@ function get_missions(socket,sdata){
 }
 
 /**
-* обработчик события запроса серверного объекта game клиентом 
-* генерация событий send_game и посылка данных серверного объекта game
+* обработчик события инициализации игры клиентом
+* создается и иниц. объект game, user
+* генерация событий game_init_server, client_refresh_by_server
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
 **/
-function get_game( socket, sdata ){
-   socket.on('get_game', function(data){
-       var location = data.location.slice(10);
-       console.log('get_game:location='+location);
-       if (sdata.games[location].users[data.user.id] == undefined){
-            socket.emit('new_game', {game:sdata.games[location].toString(), location:locations[location]}); 
-       }else{
-            socket.emit('resume_game', {game:sdata.games[location].toString()}); 
-       }
-       
-    }); 
-}
-
-
-function set_units( socket, sdata ){
-    socket.on('set_units', function(data){
-        sdata.games[data.location].joinUser(data.units, data.user, function(){
+/*
+function game_init_client(socket, sdata){
+    socket.on('game_init_client',function(data){
+        if (sdata.game != null){
             socket.emit('client_refresh_by_server');
+            return;
+        }
+        sdata.game = new sdata.Game();
+        sdata.game.setId();
+        console.log('Game create id: '+sdata.game.id);
+        sdata.game.joinUser(data.user);
+        sdata.game.init(data.game,function(){
+            sdata.addUser(data.user);
             socket.broadcast.emit('client_refresh_by_server');
-        });
+            socket.emit('game_init_server',{gameId:sdata.game.id });
+            sdata.game.addLogMessage('user '+data.user.name + ' init game');
+            sendLogMessages(socket, sdata);
+            console.log('user '+data.user.name + ' init game');
+            around.init(data.game.mission.db_file, function(){
+                socket.emit('around_ready');
+                socket.broadcast.emit('around_ready');
+            });  
+        });  
     });
 }
 
+/**
+* обработчик события клонирования игры присоединяющимся клиентом
+* генерация событий game_clone_server, game_ready
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
+**
+function game_clone_client(socket, sdata){
+    socket.on('game_clone_client',function(data){
+        if (sdata.game == null) return; 
+        sdata.game.joinUser(data.user);
+        sdata.game.clone(data.game,function(){
+            sdata.addUser(data.user);
+            socket.emit('game_clone_server',{gameId:sdata.game.id, msg:'user '+data.user.name + ' join to game'});
+            sdata.game.addLogMessage('user '+data.user.name + ' join to game');
+            sendLogMessages(socket, sdata);
+            console.log('user '+data.user.name + ' join to game');
+            if ( sdata.game.ready ){
+                socket.emit('game_ready',{gameId: sdata.game.id});
+                socket.broadcast.emit('game_ready',{gameId: sdata.game.id});
+            }  
+        });
+        sendLogMessages(socket, sdata);          
+    });
+}
 
 /**
 * обработчик события запроса клиента на запуск проверки факта окружения
@@ -211,27 +234,7 @@ function check_around(socket,sdata){
     });
 }
 
-/**
-* обработчик события запроса клиента на запуск 
-* получения высотных данных для юнитов и обновление соответсвующего 
-* поля объектов полков в серверном объекте game 
-* генерация события check_around_done после окончания цикла проверки
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
-**
-function update_elevation(socket,sdata){
-    socket.on('update_elevation', function(data){
-         if ( sdata.game == null ){
-            socket.emit('update_elevation_done');
-            return true;
-        }
-        if ( data.user.id == sdata.game.users[0].id ){
-            elevation.updateElevation(sdata.game, function(){
-                socket.emit('update_elevation_done');
-            });
-        }
-    });
-}
+
 
 /**
 * обработчик события запроса клиента на запуск 
@@ -291,17 +294,7 @@ function getUserCountry(regiments,user){
     return false;
 }
 
-/**
-* отправка лог-сообщений по клиентам
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user
-* @param mess строка сообщения
-**/
-function sendLogMessages(socket, sdata, location ){
-    var messages = sdata.games[location].getLogMessages();
-    socket.emit('server_msg',{msg: messages});
-    socket.broadcast.emit('server_msg',{msg: messages});
-}
+
 
 
 /**
@@ -330,17 +323,19 @@ function get_game_message_client(socket, sdata){
 
 */
 
+exports.data_from_client = data_from_client;
+exports.get_game = get_game;
+exports.set_units = set_units;
+
+
 //exports.game_init_client = game_init_client;
 //exports.game_clone_client = game_clone_client;
-exports.data_from_client = data_from_client;
 //exports.game_pause = game_pause;
 //exports.game_start = game_start;
 //exports.game_exit = game_exit;
 //exports.get_missions = get_missions;
 //exports.connect = connect;
-exports.get_game = get_game;
 //exports.check_around = check_around;
 //exports.update_elevation = update_elevation;
 //exports.update_weather = update_weather;
 //exports.get_game_message_client = get_game_message_client;
-exports.set_units = set_units;

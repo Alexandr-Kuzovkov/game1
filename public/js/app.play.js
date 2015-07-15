@@ -26,6 +26,9 @@ App.init = function(){
     App.setEventHandlers();
 };
 
+/**
+* Установка обработчиков на события рассылаемые сервером
+**/
 App.setEventHandlers = function(){
     App.socket.setEventHandler('connect', App.connect);
     App.socket.setEventHandler('disconnect', App.disconnect);
@@ -34,6 +37,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
     App.socket.setEventHandler('game_over', App.gameOver);
 };
+
 /**
 * обработчик события connect
 * генерация события get_game
@@ -92,7 +96,6 @@ App.clientRefreshByServer = function(data){
 * обработчик сообщения события окончания игры 
 **/
 App.gameOver = function(){
-    console.log('game_over');
     App.iface.showAlert('Ваша игра закончена', function(){ App.iface.reloadPage('/');});
 };
 

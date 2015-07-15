@@ -6,15 +6,44 @@ var googleElevationService = require('../google.el.srv/el.srv');
 var FAIL = -1000000;
 var service = 'sqlite';
 var unitsPositionsHash = 0; /*хеш позиций юнитов*/
+var queue = [];
+
+function startUpdateElevation(games, locations){
+    for (var loc in locations){
+        queue.push(loc);
+    }
+    console.log(queue);
+    begin(games, locations);
+}
+
+
+function begin(games, locations){
+    updateElevationRun(0, games, locations, function(){
+        setTimeout(begin, 1000, games, locations);
+    });
+}
+
+function updateElevationRun(index, games, locations, callback){
+    updateElevation(games[queue[index]], function(){
+        index++;
+        if ( index < queue.length ){
+            updateElevationRun(index, games, locations, callback);
+        }else{
+            callback();
+        }
+    });
+}
+
 
 /**
 * получение высот точек от севиса высотных данных
-* и обновление в соответсвиис ними объектов юнитов
+* и обновление в соответсвии с ними объектов юнитов
 * в объекте игры game
 * @param game объект игры
 * @callback функция обратного вызова, вызываемая по завершении операции
 **/
 function updateElevation(game, callback){
+    
      /*проверяем было ли изменение положения юнитов*/
     var hash = calcUnitsPositionsHash(game);
     if ( unitsPositionsHash == hash ){
@@ -24,6 +53,10 @@ function updateElevation(game, callback){
     unitsPositionsHash = hash;
     
     var dots = prepareDots(game);
+    if (dots.length == 0){
+        callback();
+        return;
+    }
     if ( service == 'google' ){
         googleElevationService.getElevations(dots, function(result){
             updateGameObject(game, result, callback);
@@ -174,4 +207,5 @@ function getElevations( dots, callback ){
     req.end();
 }
 
-exports.updateElevation = updateElevation;
+//exports.updateElevation = updateElevation;
+exports.startUpdateElevation = startUpdateElevation;

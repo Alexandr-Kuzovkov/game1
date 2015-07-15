@@ -5,7 +5,33 @@ var WEATHER_SERVICE_PORT = 8004; /*порт сервиса погоды*/
 var FAIL = -1000000;
 var date = null;
 var unitsPositionsHash = 0; /*хеш позиций юнитов*/
+var queue = [];
 
+function startUpdateWeather(games, locations){
+    for (var loc in locations){
+        queue.push(loc);
+    }
+    console.log(queue);
+    begin(games, locations);
+}
+
+
+function begin(games, locations){
+    updateWeatherRun(0, games, locations, function(){
+        setTimeout(begin, 1000, games, locations);
+    });
+}
+
+function updateWeatherRun(index, games, locations, callback){
+    updateWeather(games[queue[index]], function(){
+        index++;
+        if ( index < queue.length ){
+            updateWeatherRun(index, games, locations, callback);
+        }else{
+            callback();
+        }
+    });
+}
 /**
 * получение погодных данных
 * и обновление в соответствии с ними объектов юнитов
@@ -15,7 +41,7 @@ var unitsPositionsHash = 0; /*хеш позиций юнитов*/
 **/
 function updateWeather(game, callback){
     /*проверяем было ли изменение положения юнитов*/
-    var currDate = Helper.getDate(game.mission.year);
+    var currDate = Helper.getDate(2014);
     console.log('date='+currDate);
     var hash = calcUnitsPositionsHash(game);
     if ( unitsPositionsHash == hash && currDate == date){
@@ -25,6 +51,10 @@ function updateWeather(game, callback){
     unitsPositionsHash = hash;
     date = currDate;
     var dots = prepareDots(game);
+    if (dots.length == 0){
+        callback();
+        return;
+    }
     getWeather(date, dots, function(result){
         updateGameObject(game, result, callback);
     }); 
@@ -178,4 +208,5 @@ function getWeather( date, dots, callback ){
     req.end();
 }
 
-exports.updateWeather = updateWeather;
+//exports.updateWeather = updateWeather;
+exports.startUpdateWeather = startUpdateWeather;

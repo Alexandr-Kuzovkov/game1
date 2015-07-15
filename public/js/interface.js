@@ -315,15 +315,6 @@ Interface.getBaseMenu = function(object){
 
 
 /**
-* возвращает строку сообщения об окончании игры
-* @param объект user
-* @param won объект user победителя в игре, присланный с сервера
-**/
-Interface.getGameOverMess = function(){
-    return 'Вы проиграли!'; 
-};
-
-/**
 * показ блоков с кнопками и сообщениями
 **/
 Interface.showControlBlocks = function(){

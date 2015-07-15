@@ -15,6 +15,10 @@ var Handler = require('./modules/handler');
 var cons = require('consolidate');
 var locations  = require('./modules/locations').locations;
 global.locations = locations;
+//var around = require(parameters.services.around); /*подключение модуля окружения*/
+var elevation = require('./services/elevation/elevation'); /*подключение модуля высот*/
+var weather = require('./services/weather/weather'); /*подключение модуля погоды*/
+
 
 server.listen(port,function(){
     console.log('Game server start at port '+port+ ' ' + Helper.getTime());
@@ -45,8 +49,14 @@ for ( var key in locations){
         Handler.set_units(socket, sdata);
         Handler.data_from_client(socket, sdata);         
     });
-
 }
+
+elevation.startUpdateElevation(sdata.games, locations);
+weather.startUpdateWeather(sdata.games, locations);
+
+
+
+
 
 
 
