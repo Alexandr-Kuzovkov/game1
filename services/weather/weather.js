@@ -4,26 +4,42 @@ var WEATHER_SERVICE_HOSTNAME = '127.0.0.1'; /*хост сервиса погоды*/
 var WEATHER_SERVICE_PORT = 8004; /*порт сервиса погоды*/
 var FAIL = -1000000;
 var date = null;
-var unitsPositionsHash = 0; /*хеш позиций юнитов*/
-var queue = [];
+var unitsPositionsHash = []; /*массив хешей позиций юнитов*/
+var queue = []; /*массив ключей локаций в объекте локаций*/
 
+/**
+* старт процесса обновления погод юнитов
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+**/
 function startUpdateWeather(games, locations){
     for (var loc in locations){
         queue.push(loc);
+        unitsPositionsHash.push(0);
     }
-    console.log(queue);
     begin(games, locations);
 }
 
-
+/**
+* функция обновления погод, вызываемая через таймаут
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+**/
 function begin(games, locations){
     updateWeatherRun(0, games, locations, function(){
         setTimeout(begin, 1000, games, locations);
     });
 }
 
+/**
+* обновление погод юнитов в определенной локации
+* @param index локации в массиве ключей локаций
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+* @param callback функция обратного вызова, вызываемая по завершении операции
+**/
 function updateWeatherRun(index, games, locations, callback){
-    updateWeather(games[queue[index]], function(){
+    updateWeather(index, games[queue[index]], function(){
         index++;
         if ( index < queue.length ){
             updateWeatherRun(index, games, locations, callback);
@@ -36,21 +52,23 @@ function updateWeatherRun(index, games, locations, callback){
 * получение погодных данных
 * и обновление в соответствии с ними объектов юнитов
 * в объекте игры game
+* @param index индекс хеша в массиве хешей юнитов
 * @param game объект игры
 * @callback функция обратного вызова, вызываемая по завершении операции
 **/
-function updateWeather(game, callback){
+function updateWeather(index, game, callback){
+    
+    var currDate = Helper.getDate(2013);
     /*проверяем было ли изменение положения юнитов*/
-    var currDate = Helper.getDate(2014);
-    console.log('date='+currDate);
     var hash = calcUnitsPositionsHash(game);
-    if ( unitsPositionsHash == hash && currDate == date){
+    if ( unitsPositionsHash[index] == hash && currDate == date){
         callback();
         return;
     }
-    unitsPositionsHash = hash;
+    unitsPositionsHash[index] = hash;
     date = currDate;
     var dots = prepareDots(game);
+    
     if (dots.length == 0){
         callback();
         return;
@@ -117,10 +135,10 @@ function prepareDots(game){
         dots[i][0] = game.regiments[i].latlng[0];
         dots[i][1] = game.regiments[i].latlng[1];
     }
-    for ( var i = rNumber; i < rNumber + bNumber; i++ ){
+    for ( var i = 0; i < bNumber; i++ ){
         if ( game.bases[i] == undefined ) continue;
-        dots[i][0] = game.bases[i-rNumber].latlng[0];
-        dots[i][1] = game.bases[i-rNumber].latlng[1];
+        dots[i+rNumber][0] = game.bases[i].latlng[0];
+        dots[i+rNumber][1] = game.bases[i].latlng[1];
     }
     
     return dots;
@@ -167,6 +185,7 @@ function findNearest( dot, array ){
 * "wban":"99999","found_lat":56.09,"found_lng":47.347}]}
 **/
 function getWeather( date, dots, callback ){
+    //console.log(dots);
     var path = '/weather/multi';
     var params = 'date=' + date + '&dots=' + JSON.stringify(dots);
     var results = '';
@@ -208,5 +227,4 @@ function getWeather( date, dots, callback ){
     req.end();
 }
 
-//exports.updateWeather = updateWeather;
 exports.startUpdateWeather = startUpdateWeather;

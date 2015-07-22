@@ -333,13 +333,13 @@ Interface.formatWeatherData = function(weather){
     if (weather == null)return '';
     
     var content = '<div class="weather-img">';
-    content += (weather.frshht.slice(0,6) == '000000')? '<img class="weather-icon" src="img/weather/sun.png"/>' : '';
-    content += (weather.frshht.slice(0,1) == '1')? '<img class="weather-icon" src="img/weather/Fog.png"/>' : '';
-    content += (weather.frshht.slice(1,2) == '1')? '<img class="weather-icon" src="img/weather/Rain.png"/>' : '';
-    content += (weather.frshht.slice(2,3) == '1')? '<img class="weather-icon" src="img/weather/Snow.png"/>' : '';
-    content += (weather.frshht.slice(3,4) == '1')? '<img class="weather-icon" src="img/weather/Hail.png"/>' : '';
-    content += (weather.frshht.slice(4,5) == '1')? '<img class="weather-icon" src="img/weather/Thunder.png"/>' : '';
-    content += (weather.frshht.slice(5,6) == '1')? '<img class="weather-icon" src="img/weather/Tornado.png"/>' : '';
+    content += (weather.frshht.slice(0,6) == '000000')? '<img class="weather-icon" src="/img/weather/sun.png"/>' : '';
+    content += (weather.frshht.slice(0,1) == '1')? '<img class="weather-icon" src="/img/weather/Fog.png"/>' : '';
+    content += (weather.frshht.slice(1,2) == '1')? '<img class="weather-icon" src="/img/weather/Rain.png"/>' : '';
+    content += (weather.frshht.slice(2,3) == '1')? '<img class="weather-icon" src="/img/weather/Snow.png"/>' : '';
+    content += (weather.frshht.slice(3,4) == '1')? '<img class="weather-icon" src="/img/weather/Hail.png"/>' : '';
+    content += (weather.frshht.slice(4,5) == '1')? '<img class="weather-icon" src="/img/weather/Thunder.png"/>' : '';
+    content += (weather.frshht.slice(5,6) == '1')? '<img class="weather-icon" src="/img/weather/Tornado.png"/>' : '';
     content += '</div>';
     
     content += '<div class="weather-line">';

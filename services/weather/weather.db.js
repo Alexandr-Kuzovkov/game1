@@ -94,7 +94,8 @@ function getWeather(date, latitude, longitude, callback){
 * @param callback функция обратного вызова в которую передается результат в виде объекта
 **/
 function getWeatherMulti(date, dots, callback){
-	var year = date.slice(0, 4);
+	//console.log('getWeatherMulti dots:' + JSON.stringify(dots));
+    var year = date.slice(0, 4);
 	if (parseInt(year) < START_YEAR || parseInt(year) > END_YEAR){
 		callback(RESULT_FAIL);
 		return;
@@ -103,7 +104,7 @@ function getWeatherMulti(date, dots, callback){
 	var points = dots;
 	
 	queryStations(function(rows){
-		if (rows == null){
+        if (rows == null){
 			callback(RESULT_FAIL);
 			return;
 		}
@@ -121,18 +122,19 @@ function getWeatherMulti(date, dots, callback){
 			foundLat.push(0);
 			foundLng.push(0);
 		}
-		for ( var i = 0; i < rows.length; i++ ){
+		for ( var i = 0, len = rows.length; i < len; i++ ){
 			var datebegin = parseInt(rows[i].datebegin);
 			var dateend = parseInt(rows[i].dateend);
-				
 			if ( date < datebegin || date > dateend || isNaN(datebegin) || isNaN(dateend))  continue;
-			var currLat = parseFloat(rows[i].lat);
+            var currLat = parseFloat(rows[i].lat);
 			var currLng = parseFloat(rows[i].lng);			 
 			for ( var j = 0; j < points.length; j++ ){
 				rast = getRast(points[j][0], points[j][1], currLat, currLng);				
-				if ( rast < minRast[j] )
+				
+                if ( rast < minRast[j] )
 				{
-					minRast[j] = rast;
+					
+                    minRast[j] = rast;
 					stn[j] = rows[i].stn;
 					wban[j] = rows[i].wban;
 					foundLat[j] = currLat;
@@ -142,7 +144,7 @@ function getWeatherMulti(date, dots, callback){
 				}
 			}			
 		}
-		
+        
 		var sql = "SELECT * FROM meteo WHERE thedate='"+date+"' AND (";
 		for(var i = 0; i < points.length; i++){
 			if (!wban[i] || !stn[i]) continue;
@@ -200,7 +202,7 @@ function queryStations(callback){
 * получение метеоданных из базы (одна строка)
 **/
 function queryMeteo(year, sql, callback){
-	db = new sqlite3.Database(DB_DIR + 'weather.' + year + '.sqlite');
+	var db = new sqlite3.Database(DB_DIR + 'weather.' + year + '.sqlite');
 	db.get(sql, function(err, row){
 		if (!err){
 			callback(row);
@@ -215,7 +217,7 @@ function queryMeteo(year, sql, callback){
 * получение метеоданных из базы (много строк)
 **/
 function queryMeteoMulti(year, sql, callback){
-	db = new sqlite3.Database(DB_DIR + 'weather.' + year + '.sqlite');
+	var db = new sqlite3.Database(DB_DIR + 'weather.' + year + '.sqlite');
 	db.all(sql, function(err, rows){
 		if (!err){
 			callback(rows);

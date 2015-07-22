@@ -5,26 +5,42 @@ var delta = 0.01;
 var googleElevationService = require('../google.el.srv/el.srv');
 var FAIL = -1000000;
 var service = 'sqlite';
-var unitsPositionsHash = 0; /*хеш позиций юнитов*/
-var queue = [];
+var unitsPositionsHash = []; /*массив хешей позиций юнитов*/
+var queue = []; /*массив ключей локаций в объекте локаций*/
 
+/**
+* старт процесса обновления высот юнитов
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+**/
 function startUpdateElevation(games, locations){
     for (var loc in locations){
         queue.push(loc);
+        unitsPositionsHash.push(0);
     }
-    console.log(queue);
     begin(games, locations);
 }
 
-
+/**
+* функция обновления высот, вызываемая через таймаут
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+**/
 function begin(games, locations){
     updateElevationRun(0, games, locations, function(){
         setTimeout(begin, 1000, games, locations);
     });
 }
 
+/**
+* обновление высот юнитов в определенной локации
+* @param index локации в массиве ключей локаций
+* @param games объект содержащий объекты игр в локациях
+* @param locations объект описывающий локации
+* @param callback функция обратного вызова, вызываемая по завершении операции
+**/
 function updateElevationRun(index, games, locations, callback){
-    updateElevation(games[queue[index]], function(){
+    updateElevation(index, games[queue[index]], function(){
         index++;
         if ( index < queue.length ){
             updateElevationRun(index, games, locations, callback);
@@ -39,18 +55,19 @@ function updateElevationRun(index, games, locations, callback){
 * получение высот точек от севиса высотных данных
 * и обновление в соответсвии с ними объектов юнитов
 * в объекте игры game
+* @param index индекс хеша в массиве хешей юнитов
 * @param game объект игры
 * @callback функция обратного вызова, вызываемая по завершении операции
 **/
-function updateElevation(game, callback){
+function updateElevation(index, game, callback){
     
      /*проверяем было ли изменение положения юнитов*/
     var hash = calcUnitsPositionsHash(game);
-    if ( unitsPositionsHash == hash ){
+    if ( unitsPositionsHash[index] == hash ){
         callback();
         return;
     }
-    unitsPositionsHash = hash;
+    unitsPositionsHash[index] = hash;
     
     var dots = prepareDots(game);
     if (dots.length == 0){
@@ -103,10 +120,10 @@ function prepareDots(game){
         dots[i][0] = game.regiments[i].latlng[0];
         dots[i][1] = game.regiments[i].latlng[1];
     }
-    for ( var i = rNumber; i < rNumber + bNumber; i++ ){
+    for ( var i = 0; i < bNumber; i++ ){
         if ( game.bases[i] == undefined ) continue;
-        dots[i][0] = game.bases[i-rNumber].latlng[0];
-        dots[i][1] = game.bases[i-rNumber].latlng[1];
+        dots[i+rNumber][0] = game.bases[i].latlng[0];
+        dots[i+rNumber][1] = game.bases[i].latlng[1];
     }
     
     return dots;
@@ -163,7 +180,7 @@ function findNearest( dot, array ){
 * получение данных  через отправку HTTP POST запроса 
 * @param dots массив точек своих полков и баз вида [[lat1,lng1],[lat2,lng2],...]
 * @param callback функция обратного вызова, в которую передается результата в 
-* виде объекта массива объектов [{lat:lat,lng:lng,elevation:elevation}, ...]
+* виде массива объектов [{lat:lat,lng:lng,elevation:elevation}, ...]
 **/
 function getElevations( dots, callback ){
     var path = '/elevations';
@@ -207,5 +224,4 @@ function getElevations( dots, callback ){
     req.end();
 }
 
-//exports.updateElevation = updateElevation;
 exports.startUpdateElevation = startUpdateElevation;
