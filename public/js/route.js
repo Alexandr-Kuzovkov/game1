@@ -14,6 +14,11 @@ var Route =
         Route.app = app;    
     },
     
+    /**получение маршрута с какого-либо сервиса маршрутов
+    * @param latlng объект точки куда двигаться {lat:lat,lng:lng}
+    * @param source объект точки откуда двигаться {lat:lat,lng:lng}
+    * @param callback объект в который передается маршрут в виде массива точек и объект полка
+    **/
     getRoute: function(latlng,source,callback){
         if ( Route.service == 'google' ){
             Route.getRouteGoogle(latlng,source,callback);
@@ -53,7 +58,6 @@ var Route =
     			for ( var i = 0; i < points.length; i++ ){
     				route.push([points[i][liters[0]],points[i][liters[1]]]);
     			}
-                //console.log(JSON.stringify(route));
                 callback(route);
 			}
 		});

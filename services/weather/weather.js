@@ -58,7 +58,7 @@ function updateWeatherRun(index, games, locations, callback){
 **/
 function updateWeather(index, game, callback){
     
-    var currDate = Helper.getDate(2013);
+    var currDate = Helper.getDate(game.location.year);
     /*провер€ем было ли изменение положени€ юнитов*/
     var hash = calcUnitsPositionsHash(game);
     if ( unitsPositionsHash[index] == hash && currDate == date){
