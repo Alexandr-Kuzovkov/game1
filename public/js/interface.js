@@ -33,7 +33,8 @@ Interface.init = function(app) {
     Interface.unitsList = document.getElementById('units-list');
     Interface.alert = document.getElementById('alert-wrap');
     Interface.alert_button = document.getElementById('alert-button');
-    Interface.alert_text = document.getElementById('alert-text');    
+    Interface.alert_text = document.getElementById('alert-text');
+    Interface.preloader = document.getElementById('preloader');    
     /*установка сервиса маршрутов*/
     Interface.selectService = document.getElementById('service');
     Interface.alert_callback = false;
@@ -381,6 +382,20 @@ Interface.showAlert = function(msg, callback){
 Interface.closeAlert = function(){
     Interface.alert.style.display = 'none';
     if (Interface.alert_callback) Interface.alert_callback();
+};
+
+/**
+* Показ прелоадера
+**/
+Interface.showPreloader = function(){
+    if (Interface.preloader) Interface.preloader.style.display = 'block';
+};
+
+/**
+* Скрытие прелоадера
+**/
+Interface.hidePreloader = function(){
+    if (Interface.preloader) Interface.preloader.style.display = 'none';
 };  
 
     

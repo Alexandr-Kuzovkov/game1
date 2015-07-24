@@ -37,8 +37,19 @@ app.get('/routespatialite',function(req,res){
 		res.writeHead(200, {"Content-Type": "text/html","Access-Control-Allow-Origin": "*"});
         res.write(JSON.stringify(route));
 		res.end();
-	});
-     
+	});   
+});
+
+/*маршрут для GET запроса ближайшего узла графа*/
+app.get('/getnearestnode',function(req,res){
+    var dot = JSON.parse(req.query.data);
+	time.start();
+	spatialite.getNearestNode(dot, function(node){
+		console.log('Executing time: '+time.stop());
+		res.writeHead(200, {"Content-Type": "text/html","Access-Control-Allow-Origin": "*"});
+        res.write(JSON.stringify(node));
+		res.end();
+	});   
 });
 
 

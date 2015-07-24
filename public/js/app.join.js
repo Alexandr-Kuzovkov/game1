@@ -30,8 +30,8 @@ App.init = function(){
 
 App.units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
 App.unitObject = []; //массив объектов юнитов
-App.location = null;
-App.location_units = {};
+App.location = null; 
+App.location_units = {};/*объект хранящий начальное количество юнитов в локации*/
 
 /**
 * Установка обработчиков на события рассылаемые сервером
@@ -140,7 +140,7 @@ App.showUnitMenu = function(){
         if ( type == null ) type = key;
     }
     App.updateUnitList(type);
-    App.map.addEventListener('click',App.makeUnit);   
+    App.map.addEventListener('click',App.touchMap);   
 };
 
 /**
@@ -239,11 +239,23 @@ App.allUnitsLocated = function(){
 };
 
 /**
-* ставим юнита на карту
+* обрабатываем клик на карте для установки юнита
 * @param e объект события клика на карте
 **/
-App.makeUnit = function(e){
-    var latlng = [e.latlng.lat, e.latlng.lng];
+App.touchMap = function(e){
+    var dot = [e.latlng.lat, e.latlng.lng];
+    App.iface.showPreloader();
+    App.getNearestNode(dot, function(latlng){
+        App.iface.hidePreloader();
+        App.makeUnit(latlng);
+    });
+};
+
+/**
+* создаем юнита в заданной точке карты
+* @param latlng объект события клика на карте
+**/
+App.makeUnit = function(latlng){
     if (App.isPlaceBusy(latlng)){
         App.iface.showAlert('Вы не можете ставить юнитов друг на друга');
         return;
@@ -253,7 +265,7 @@ App.makeUnit = function(e){
     var iconCountry = Countries[country].icon;
     var typeObject = UnitTypes.getType(type);
     var iconType = typeObject.icon;
-    var unit = null; 
+    var unit = null;  
     var unit = App.unitFactory.createUnit(latlng, type, country, 0, App.user.id);
     unit.init();
     if ( unit.type.id == 'base'){
@@ -323,5 +335,20 @@ App.isPlaceBusy = function(latlng){
     for (var i = 0, len = App.game.bases.length; i < len; i++){
         if ( Helper.rastGrad(latlng, App.game.bases[i].latlng) <= App.game.bases[i].type.radius*2) return true;
     }
+    for (var i = 0, len = App.unitObject.length; i < len; i++){
+        if ( Helper.rastGrad(latlng, App.unitObject[i].latlng) <= App.unitObject[i].type.radius*2) return true;
+    }
     return false;
+};
+
+/**
+* получение координат узла графа, ближайшего к заданным координатам
+* @param latlng массив координат [lat,lng]
+* @param callback функция обратного вызова в которую передается результат [lat,lng] 
+**/
+App.getNearestNode = function(latlng, callback){
+   var params = 'data=' + JSON.stringify(latlng);
+   Ajax.sendRequest('GET', App.game.location.geoserver + '/getnearestnode', params, function(node) {
+        callback(node);
+	});  
 };

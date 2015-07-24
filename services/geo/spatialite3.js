@@ -543,6 +543,16 @@ function distance(dot, node){
 	return (dot[0]-node.lat)*(dot[0]-node.lat) + (dot[1]-node.lng)*(dot[1]-node.lng);
 }
 
+/**
+* вычисление квадрата расстояния между точкой и узлом графа
+* @param dot точка, заданная как массив координат [lat,lng]
+* @param node узел графа, заданный как объект вида {node_id:node_id,lat:lat,lng:lng }
+* @return квадрат расстояния (без учета кривизны) 
+**/
+function distance2(dot, node){
+	return (dot[0]-node.lat)*(dot[0]-node.lat) + (dot[1]-node.lng)*(dot[1]-node.lng);
+}
+
 
 /**
 * получение всех запрещенных узлов
@@ -843,6 +853,28 @@ function setBoundary(regiments, bases){
    
 }
 
+/**
+* получение координат узла графа, ближайшего
+* к точке с задаными координатам
+* @param dot массив координат [lat,lng]
+* @param callback функция обратного вызова 
+* в которую передается массив координат [lat,lng] 
+**/
+function getNearestNode(dot, callback){
+	var node_dot = [nodes[0].lat, nodes[0].lng];
+	var minDist = distance(dot,nodes[0]);
+	for ( var i = 0; i < n; i++ ){
+		if ( !nodes[i].connected ) continue;
+        var currDist = distance(dot, nodes[i]);
+		if ( currDist < minDist ){
+			node_dot[0] = nodes[i].lat;
+            node_dot[1] = nodes[i].lng;
+			minDist = currDist;
+		}
+	}
+	callback(node_dot);
+}
+
 exports.init = init;
 exports.query = query;
 exports.loadNodes = loadNodes;
@@ -852,3 +884,4 @@ exports.routeQuery = routeQuery;
 exports.findRouteToBases = findRouteToBases;
 exports.getReady = getReady;
 exports.around = around;
+exports.getNearestNode = getNearestNode;

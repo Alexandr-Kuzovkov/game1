@@ -653,5 +653,12 @@ hr
    padding: 5px 15px 5px 15px;
 }
 
+#preloader
+{
+    display: none;
+    z-index: 9999;
+    margin: auto;
+}
+
 
  
