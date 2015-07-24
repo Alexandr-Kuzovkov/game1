@@ -8,7 +8,7 @@ var Locations = {
         countries: ['Russia', 'USA', 'UK', 'Germany', 'Iraq'],
         units: {tank: 1, foot: 0, base: 1},
         mission: 'Описание миссии в Ираке',
-        geoserver: 'http://127.0.0.1:8010',
+        geoserver: 'http://192.168.10.10:8010',
         year: 2013
     },
     
@@ -19,7 +19,7 @@ var Locations = {
         countries: ['Russia', 'USA', 'UK', 'Germany','Syria'],
         units: {tank: 4, foot: 5, base: 2},
         mission: 'Описание миссии в Сирии',
-        geoserver: 'http://127.0.0.1:8011',
+        geoserver: 'http://192.168.10.10:8011',
         year: 2013
     },
     
@@ -30,7 +30,7 @@ var Locations = {
         countries: ['Russia', 'Vietnam', 'USA', 'UK', 'Germany'],
         units: {tank: 4, foot: 5, base: 2},
         mission: 'Описание миссии во Вьетнаме',
-        geoserver: 'http://127.0.0.1:8012',
+        geoserver: 'http://192.168.10.10:8012',
         year: 2013
     }
 

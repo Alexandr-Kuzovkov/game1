@@ -1,6 +1,6 @@
 #! /bin/sh
-./game_server & 
-services/elevation/elevation_server & 
-services/weather/weather_server &
-#services/route/route_server & 
-#services/around/around_server 
+./game.server.sh & 
+services/elevation/elevation.server.sh & 
+services/weather/weather.server.sh &
+services/geo/geo.servers.sh
+ 

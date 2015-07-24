@@ -1,32 +1,28 @@
-/*сервер расчета окружения*/
+/*сервер гео-данных*/
+var argv = process.argv;
+if ( argv.length < 4 ){
+	console.log("Usage: node geo.server <port> <geo_data_db_file>");
+	process.exit(0);
+ }
+
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var port = 8001;
+var port = parseInt(argv[2]);
+var db_file = argv[3];
 var spatialite = require('./spatialite3');
 var Helper = require('./helper');
 var time = require('./time');
 var bodyParser = require('body-parser');
 
 server.listen(port,function(){
-    console.log('Around server start at port '+port+ ' ' + Helper.getTime());
-});
-
-
-
-app.use(express.static(__dirname+'/public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-
-/*маршрут для получения команды инициализации модуля spatialite*/
-app.post('/init',function(req,res){
-    var db_file = req.body.data;
-    spatialite.init(db_file,function(){
-   	    console.log('server: spatialite ready ');
-        res.writeHead(200, {"Content-Type": "text/html","Access-Control-Allow-Origin": "*"});
-		res.write(JSON.stringify(true));
-		res.end();   
+    console.log('GEO server start at port '+port+ ' ' + Helper.getTime());
+    spatialite.init(db_file, function(){
+        console.log(db_file+': server ready');
     });
 });
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 
 /*маршрут для GET запроса маршрута от модуля spatialite*/

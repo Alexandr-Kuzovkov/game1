@@ -1,2 +1,0 @@
-#! /bin/sh
-node services/around/around.server.js

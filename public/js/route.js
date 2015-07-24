@@ -75,7 +75,7 @@ var Route =
 		var start = [source.lat, source.lng];
 		var end = [latlng.lat, latlng.lng];
 		var params = 'data=' + JSON.stringify([start,end]);
-        Ajax.sendRequest('GET', 'http://' + hostname + ':' + Route.SPATIALITE_PORT + '/routespatialite', params, function(route) {
+        Ajax.sendRequest('GET', Route.app.game.location.geoserver + '/routespatialite', params, function(route) {
             callback(route);
 		}); 
 	},
