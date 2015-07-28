@@ -188,7 +188,7 @@ function getWeather( date, dots, callback ){
     //console.log(dots);
     var path = '/weather/multi';
     var params = 'date=' + date + '&dots=' + JSON.stringify(dots);
-    var results = '';
+    var results = [];
     var options = {
                         hostname: WEATHER_SERVICE_HOSTNAME,
                         port: WEATHER_SERVICE_PORT,
@@ -201,10 +201,10 @@ function getWeather( date, dots, callback ){
         if ( res.statusCode === 200 ){
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
-                    results += chunk;
+                    results.push(chunk);
                 });
                 res.on('end',function(){
-                   var result = JSON.parse(results);
+                   var result = JSON.parse(results.join(''));
                    callback(result); 
                 });
         }

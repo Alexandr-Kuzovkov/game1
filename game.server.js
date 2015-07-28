@@ -15,7 +15,7 @@ var Handler = require('./modules/handler');
 var cons = require('consolidate');
 var locations  = require('./modules/locations').locations;
 global.locations = locations;
-//var around = require(parameters.services.around); /*подключение модуля окружения*/
+
 var elevation = require('./services/elevation/elevation'); /*подключение модуля высот*/
 var weather = require('./services/weather/weather'); /*подключение модуля погоды*/
 
@@ -47,7 +47,8 @@ for ( var key in locations){
     io.of('/location/'+key).on('connection',function(socket){
         Handler.get_game(socket, sdata);
         Handler.set_units(socket, sdata);
-        Handler.data_from_client(socket, sdata);         
+        Handler.data_from_client(socket, sdata);
+        Handler.getnearestnode(socket, sdata);        
     });
 }
 

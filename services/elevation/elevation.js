@@ -178,7 +178,7 @@ function findNearest( dot, array ){
 function getElevations( dots, callback ){
     var path = '/elevations';
     var params = 'data=' + JSON.stringify(dots);
-    var results = '';
+    var results = [];
     var options = {
                         hostname: ELEVATION_SERVICE_HOSTNAME,
                         port: ELEVATION_SERVICE_PORT,
@@ -191,10 +191,10 @@ function getElevations( dots, callback ){
         if ( res.statusCode === 200 ){
                 res.setEncoding('utf8');
                 res.on('data', function (chunk) {
-                    results += chunk;
+                    results.push(chunk);
                 });
                 res.on('end',function(){
-                   var result = JSON.parse(results);
+                   var result = JSON.parse(results.join(''));
                    callback(result); 
                 });
         }

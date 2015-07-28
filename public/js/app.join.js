@@ -30,7 +30,7 @@ App.init = function(){
 
 App.units = {regiments: [], bases: [], country: null}; /*установленные юниты*/
 App.unitObject = []; //массив объектов юнитов
-App.location = null; 
+App.location = null; /*объект описывающий локацию*/
 App.location_units = {};/*объект хранящий начальное количество юнитов в локации*/
 
 /**
@@ -42,6 +42,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('new_game', App.join);
     App.socket.setEventHandler('client_refresh_by_server', App.clientRefreshByServer);
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
+    App.socket.setEventHandler('takenearestnode', App.makeUnit);
 };
 
 /**
@@ -245,17 +246,16 @@ App.allUnitsLocated = function(){
 App.touchMap = function(e){
     var dot = [e.latlng.lat, e.latlng.lng];
     App.iface.showPreloader();
-    App.getNearestNode(dot, function(latlng){
-        App.iface.hidePreloader();
-        App.makeUnit(latlng);
-    });
+    App.socket.send('getnearestnode', {latlng:dot, location: App.location.id});
 };
 
 /**
 * создаем юнита в заданной точке карты
 * @param latlng объект события клика на карте
 **/
-App.makeUnit = function(latlng){
+App.makeUnit = function(data){
+    App.iface.hidePreloader();
+    var latlng = data.latlng;
     if (App.isPlaceBusy(latlng)){
         App.iface.showAlert('Вы не можете ставить юнитов друг на друга');
         return;
@@ -339,16 +339,4 @@ App.isPlaceBusy = function(latlng){
         if ( Helper.rastGrad(latlng, App.unitObject[i].latlng) <= App.unitObject[i].type.radius*2) return true;
     }
     return false;
-};
-
-/**
-* получение координат узла графа, ближайшего к заданным координатам
-* @param latlng массив координат [lat,lng]
-* @param callback функция обратного вызова в которую передается результат [lat,lng] 
-**/
-App.getNearestNode = function(latlng, callback){
-   var params = 'data=' + JSON.stringify(latlng);
-   Ajax.sendRequest('GET', App.game.location.geoserver + '/getnearestnode', params, function(node) {
-        callback(node);
-	});  
 };

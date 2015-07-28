@@ -1,6 +1,6 @@
 /*серверный модуль обработчиков событий при взаимодействии клиентов и сервера*/
 
-
+var httpRequest = require('./httprequest');
 /**
 * обработчик события получения данных от клиента для синхронизации
 * объекта game
@@ -79,6 +79,22 @@ function sendLogMessages(socket, sdata, location ){
 **/
 function update_elevation(game,callback){
    elevation.updateElevation(game, function(){});            
+}
+
+
+/**
+* обработчик события запроса клиента на добавление юнитов в игру
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+**/
+function getnearestnode( socket, sdata ){
+    socket.on('getnearestnode', function(data){
+        var geoserver = sdata.games[data.location].location.geoserver;
+        httpRequest.get(geoserver+'/getnearestnode?data='+JSON.stringify(data.latlng), function(data){
+            console.log('data='+JSON.stringify(data));
+            socket.emit('takenearestnode',{latlng:data});
+        });
+    });
 }
 
 
@@ -326,7 +342,7 @@ function get_game_message_client(socket, sdata){
 exports.data_from_client = data_from_client;
 exports.get_game = get_game;
 exports.set_units = set_units;
-
+exports.getnearestnode = getnearestnode;
 
 //exports.game_init_client = game_init_client;
 //exports.game_clone_client = game_clone_client;
