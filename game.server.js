@@ -48,7 +48,8 @@ for ( var key in locations){
         Handler.get_game(socket, sdata);
         Handler.set_units(socket, sdata);
         Handler.data_from_client(socket, sdata);
-        Handler.getnearestnode(socket, sdata);        
+        Handler.getnearestnode(socket, sdata); 
+        Handler.getroute(socket, sdata);        
     });
 }
 

@@ -104,6 +104,21 @@ function Game( user )
         }
         return null;  
     };
+    
+    /**
+    * Возвращает объект юнита по его id
+    **/
+    this.getUnit = function(id){
+        for ( var i = 0; i < this.bases.length; i++ ){
+            if ( this.bases[i].id == id ) return this.bases[i];
+        }
+        for ( var i = 0; i < this.regiments.length; i++ ){
+            if ( this.regiments[i].id == id ) return this.regiments[i];
+        }
+        return null;  
+    };
+    
+    
 	
     /**
     * уничтожение юнита

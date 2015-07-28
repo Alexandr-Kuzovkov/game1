@@ -6,6 +6,7 @@ var Route =
     OSRM_PORT: 8003,
     SPATIALITE_PORT: 8001,
     app: null, /*объект приложения*/
+    callbackQueue: [], /*очередь обратных вызовов*/
     
     /*объект directionsService*/
     directionsService: new google.maps.DirectionsService(),
@@ -17,7 +18,7 @@ var Route =
     /**получение маршрута с какого-либо сервиса маршрутов
     * @param latlng объект точки куда двигаться {lat:lat,lng:lng}
     * @param source объект точки откуда двигаться {lat:lat,lng:lng}
-    * @param callback объект в который передается маршрут в виде массива точек и объект полка
+    * @param callback объект в который передается маршрут в виде массива точек
     **/
     getRoute: function(latlng,source,callback){
         if ( Route.service == 'google' ){
@@ -34,7 +35,7 @@ var Route =
     /**получение маршрута с сервиса маршрутов Google через JS API
     * @param latlng объект точки куда двигаться {lat:lat,lng:lng}
     * @param source объект точки откуда двигаться {lat:lat,lng:lng}
-    * @param callback объект в который передается маршрут в виде массива точек и объект полка
+    * @param callback объект в который передается маршрут в виде массива точек
     **/
 	getRouteGoogle: function(latlng,source,callback){
 		var start = new google.maps.LatLng(source.lat, source.lng);
@@ -68,23 +69,21 @@ var Route =
     * получение маршрута от модуля Spatialite
     * @param latlng объект точки куда двигаться {lat:lat,lng:lng}
     * @param source source объект точки откуда двигаться {lat:lat,lng:lng}
-    * @param callback функция обратного вызова в которую передается маршрут и объект полка
+    * @param callback функция обратного вызова в которую передается маршрут
     **/
     
     getRouteSpatialite: function(latlng,source,callback){
 		var start = [source.lat, source.lng];
 		var end = [latlng.lat, latlng.lng];
-		var params = 'data=' + JSON.stringify([start,end]);
-        Ajax.sendRequest('GET', Route.app.game.location.geoserver + '/routespatialite', params, function(route) {
-            callback(route);
-		}); 
+        Route.callbackQueue.push(callback);
+        Route.app.socket.send('getroute', {start:start, end:end, location:Route.app.game.location.id});
 	},
     
     /**
     * получение маршрута от модуля OSRM
     * @param latlng объект точки куда двигаться {lat:lat,lng:lng}
     * @param source source объект точки откуда двигаться {lat:lat,lng:lng}
-    * @param callback функция обратного вызова в которую передается маршрут и объект полка
+    * @param callback функция обратного вызова в которую передается маршрут
     **/
     
     getRouteOSRM: function(latlng,source,callback){

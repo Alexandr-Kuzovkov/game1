@@ -83,7 +83,8 @@ function update_elevation(game,callback){
 
 
 /**
-* обработчик события запроса клиента на добавление юнитов в игру
+* обработчик события запроса клиента на определение координат узла графа 
+* ближайшего к заданной точке
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user
 **/
@@ -93,6 +94,21 @@ function getnearestnode( socket, sdata ){
         httpRequest.get(geoserver+'/getnearestnode?data='+JSON.stringify(data.latlng), function(data){
             console.log('data='+JSON.stringify(data));
             socket.emit('takenearestnode',{latlng:data});
+        });
+    });
+}
+
+/**
+* обработчик события запроса клиента на получение маршрута
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+**/
+function getroute( socket, sdata ){
+    socket.on('getroute', function(data){
+        var geoserver = sdata.games[data.location].location.geoserver;
+        httpRequest.get(geoserver+'/routespatialite?data='+JSON.stringify([data.start,data.end]), function(route){
+            console.log('data='+JSON.stringify(data));
+            socket.emit('takeroute',{route:route,id:data.id});
         });
     });
 }
@@ -343,6 +359,7 @@ exports.data_from_client = data_from_client;
 exports.get_game = get_game;
 exports.set_units = set_units;
 exports.getnearestnode = getnearestnode;
+exports.getroute = getroute;
 
 //exports.game_init_client = game_init_client;
 //exports.game_clone_client = game_clone_client;

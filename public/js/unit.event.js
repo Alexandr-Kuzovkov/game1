@@ -10,6 +10,7 @@ var UnitEvent =
     iface: null,/*объект интерфейса*/
      
     init: function(app){
+        UnitEvent.app = app;
         UnitEvent.map = app.map;
         UnitEvent.game = app.game;
         UnitEvent.iface = app.iface; 
@@ -49,7 +50,7 @@ var UnitEvent =
     **/
     dblclick: function(e, object){
         var latlng = {lat: e.latlng.lat, lng: e.latlng.lng};
-        object.goRoute(latlng);
+        UnitEvent.app.getRoute(object,[e.latlng.lat, e.latlng.lng]);
         object.unselect();
     			
     },
@@ -147,7 +148,7 @@ var UnitEvent =
         for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
             if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
                 UnitEvent.game.regiments[i].setStatus('attack');
-                UnitEvent.game.regiments[i].goRoute(latlng);
+                UnitEvent.app.getRoute(UnitEvent.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
     },
@@ -182,7 +183,7 @@ var UnitEvent =
         for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
             if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
                 UnitEvent.game.regiments[i].setStatus('attack');
-                UnitEvent.game.regiments[i].goRoute(latlng);
+                UnitEvent.app.getRoute(UnitEvent.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
     }

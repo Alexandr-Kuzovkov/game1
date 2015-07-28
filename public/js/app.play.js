@@ -36,6 +36,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('client_refresh_by_server', App.clientRefreshByServer);
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
     App.socket.setEventHandler('game_over', App.gameOver);
+    App.socket.setEventHandler('takeroute', App.moveUnit);
 };
 
 /**
@@ -107,7 +108,7 @@ App.gameOver = function(){
 **/
 App.sendDataToServer = function(){
     App.socket.send('data_from_client', {game: App.game.toString(), user: App.user.toString(), location:App.socket.pathname.slice(App.socket.prefix.length)});
-}
+};
 
 /**
 * позиционирование карты и установка границ
@@ -121,6 +122,20 @@ App.setMapOptions = function(game){
     var center = [(SW_lat + NE_lat)/2, (SW_lng + NE_lng)/2];
     App.map.setView(center,13);
     App.map.setBoundary(SW_lat, SW_lng, NE_lat, NE_lng);
-}
+};
+
+App.getRoute = function(unit, latlng){
+    var start = unit.latlng;
+    var end = latlng;
+    App.socket.send('getroute', {id:unit.id, start:start, end:end, location:App.game.location.id});
+};
+
+App.moveUnit = function(data){
+    var unit = App.game.getUnit(data.id);
+    console.log(JSON.stringify(data.id));
+    if (unit != null){
+        Move.moveUnitRouteAnimation( unit, data.route );
+    }   
+};
 
 
