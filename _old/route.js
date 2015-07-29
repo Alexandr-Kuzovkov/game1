@@ -6,7 +6,6 @@ var Route =
     OSRM_PORT: 8003,
     SPATIALITE_PORT: 8001,
     app: null, /*объект приложения*/
-    callbackQueue: [], /*очередь обратных вызовов*/
     
     /*объект directionsService*/
     directionsService: new google.maps.DirectionsService(),

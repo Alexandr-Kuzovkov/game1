@@ -15,14 +15,12 @@ App.init = function(){
     App.unitEvent = UnitEvent;
     App.user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/      
     App.game = new Game(App.user);/*переменная для хранения клиентского объекта game*/
-    App.route = Route;
     
     App.map.init(App);  
     App.socket.init(App);
     App.unitFactory.init(App);
     App.unitEvent.init(App);
     App.iface.init(App);
-    App.route.init(App);
     App.setEventHandlers();
 };
 
@@ -124,12 +122,22 @@ App.setMapOptions = function(game){
     App.map.setBoundary(SW_lat, SW_lng, NE_lat, NE_lng);
 };
 
-App.getRoute = function(unit, latlng){
+/**
+* перемещение юнита по маршруту (запрос маршрута движения у сервера)
+* @param unit объект юнита
+* @param latlng координаты точки назначения [lat,lng]
+**/
+App.unitGoRoute = function(unit, latlng){
     var start = unit.latlng;
     var end = latlng;
     App.socket.send('getroute', {id:unit.id, start:start, end:end, location:App.game.location.id});
 };
 
+/**
+* функция обратного вызова, вызываемая после получеия маршрута от сервера
+* анимированное движение юнита на карте по маршруту
+* @param data объект данных, получаемый с сервера
+**/
 App.moveUnit = function(data){
     var unit = App.game.getUnit(data.id);
     console.log(JSON.stringify(data.id));
