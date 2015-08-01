@@ -1,34 +1,9 @@
 {% extends 'layout.html' %}
 
-{% block css%} 
-    <link rel="stylesheet" href="/css/leaflet.css" />
-	<link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/unit.css" />
-{%endblock%}
+{% block css%}{%endblock%}
 
 {% block topjs %}
-    <script src="/js/lib/leaflet.js"></script>
-	<script src="/js/lib/leaflet-providers.js"></script>
-    <script src="/js/lib/google_tiles.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="/js/debug.js"></script>
-	<script type="text/javascript" src="/js/countries.js"></script>
-	<script type="text/javascript" src="/js/unit.types.js"></script>
-    <script type="text/javascript" src="/js/app.play.js"></script>
-	<script type="text/javascript" src="/js/index.js"></script>
-	<script type="text/javascript" src="/js/move.js"></script>
-    <script type="text/javascript" src="/js/interface.js"></script>
-	<script type="text/javascript" src="/js/game.js"></script>
-    <script type="text/javascript" src="/js/map.js"></script>
-    <script type="text/javascript" src="/js/unit.js"></script>
-    <script type="text/javascript" src="/js/unit.factory.js"></script>
-    <script type="text/javascript" src="/js/user.js"></script>
-    <script type="text/javascript" src="/js/unit.event.js"></script>
-    <script type="text/javascript" src="/js/helper.js"></script>
-    <script type="text/javascript" src="/js/socket.js"></script>
-    <script type="text/javascript" src="/js/ajax.js"></script>
-    
+    <script type="text/javascript" src="/js/app.play.js"></script>     
 {% endblock %}
 
 {% block content %}
@@ -73,12 +48,6 @@
                 <div id="game-over" class="game-over font-response">
                     <p></p>
                     <label id="label-next">Далее >></label>
-                </div>
-                <div id="alert-wrap">
-                    <div class="alert grad2">
-                        <div id="alert-text"></div> 
-                        <button id="alert-button">Закрыть</button>
-                    </div>
                 </div>
                 
         <hr size="3" />

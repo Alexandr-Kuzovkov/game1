@@ -2,7 +2,7 @@ var App = {};
 
 App.init = function(){
     App.interval = null; /*интервал обновления клиента и сервера*/
-    App.UPDATE_INTERVAL = 1000; /*длина интервала обновления клиента и сервера в мс*/
+    App.UPDATE_INTERVAL = 10000; /*длина интервала обновления клиента и сервера в мс*/
     App.maplib = L;
     App.io = io;
     App.socket = Socket;

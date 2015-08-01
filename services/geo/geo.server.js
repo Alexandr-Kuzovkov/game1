@@ -60,10 +60,10 @@ app.post('/routetobases',function(req,res){
 	var targets = JSON.parse(req.body.targets);
     var enemy = JSON.parse(req.body.enemies);
 	time.start();
-	spatialite.findRouteToBases(source, targets, enemy, function(result){
+	spatialite.findRouteToBases(source, targets, enemy, function(route){
 		console.log('Executing time: '+time.stop());
 		res.writeHead(200, {"Content-Type": "text/html","Access-Control-Allow-Origin": "*"});
-		res.write(JSON.stringify(result));
+		res.write(JSON.stringify(route));
 		res.end();
 	});
      

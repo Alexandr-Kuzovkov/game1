@@ -23,8 +23,7 @@ var UnitEvent =
     * @param game клиентский объект игры Game 
     **/
     click: function(object){
-        
-		if ( object.selected ){
+        if ( object.selected ){
 			object.unselect();
 		}
 		else{
@@ -61,7 +60,7 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     contextmenu: function(object){
-   	    object.popup.show(object.latlng, UnitEvent.iface.showMenu(object));   
+           object.popup.show(object.latlng, UnitEvent.iface.showMenu(object));   
     },
     
     /**

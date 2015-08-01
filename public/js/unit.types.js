@@ -75,6 +75,40 @@ UnitTypes.Foot = function(){
      };
 };
 
+UnitTypes.Convoy = function(){
+	this.name =	'Конвой';
+	this.id = 'convoy';
+    this.VELOCITY = 40;
+	this.radius = 0.005;
+    this.power = 10;              /*боевая мощь*/
+    this.cycle = 
+    {
+        ammoOutGo: 3,          /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
+        ammoInGo: 1,           /*пополнение боеприпасов за 1 цикл игры*/
+        foodOutGo: 1,           /*расход обеспечения за 1 цикл игры*/
+        foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
+        menInGo: 1             /*пополнение людьми за 1 цикл игры*/
+    };
+	this.icon =	{   url: '/img/type/convoy24.png',
+                    size: [24,24],
+                    anchor: [12,12],
+                    shadowanchor: [4,23],
+                    popupanchor: [-3,-23]
+    }; 
+					
+	this.resources =	{
+					men: 100, /*личный состав %*/
+					ammo: 100, /*вооружение и боеприпасы %*/
+					food: 100, /*прочее обеспечение %*/
+					discipline: 1, /*организованность 0-1*/
+					experience: 0 /*боевой опыт 0-1*/
+				};
+                
+    this.toString = function(){
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, cycle: this.cycle}; 
+     };
+};
+
 UnitTypes.Base = function(){
 	this.name =	'База снабжения';
 	this.id = 'base';

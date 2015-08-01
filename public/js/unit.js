@@ -20,7 +20,8 @@ function Unit( latlng, id, userId, map )
     this.lastbattle = false; /*предыдущее значение флага боя*/
     this.enemyCount = 0; /*количество противников*/
     this.weather = null; /*погодные данные*/
-    this.latlng = latlng;/*позиция юнита*/
+    this.latlng = latlng;/*позиция юнита [lat,lng]*/
+    this.visible = true; /*видимость юнита*/
     //this.latlng = L.latLng(latlng[0], latlng[1]);
     this.status = 
     {
@@ -30,7 +31,6 @@ function Unit( latlng, id, userId, map )
         speed_coff: 0.5  /*степень замедления скорости в атаке*/
     };
     this.popup = map.createPopup(); /*объект всплывающего окна из leaflet http://leafletjs.com/*/
-	this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
 	this.iconCountry = {    url:'/img/default.png', /*объект иконки страны принадлежности*/
                             size: [24,24],
                             anchor: [12,12],
@@ -162,11 +162,13 @@ function Unit( latlng, id, userId, map )
         if ( this.battle == this.lastbattle ) return;
         if ( this.battle ){
             this.lastbattle = this.battle;
-            this.marker.battle.setIcon(this.iconBattle);
+            if (this.marker.battle)
+                this.marker.battle.setIcon(this.iconBattle);
             
         }else{
             this.lastbattle = this.battle;
-            this.marker.battle.setIcon(this.iconUnselected);
+            if (this.marker.battle)
+                this.marker.battle.setIcon(this.iconUnselected);
            
         } 
     };
@@ -191,9 +193,37 @@ function Unit( latlng, id, userId, map )
 		this.marker.country.setIcon(this.country.icon);
         this.iconSelected.url = ( this.OWN )? '/img/selected.png' : '/img/enemy.selected.png';
         this.marker.area.setRadius(this.type.radius * 111300);
+        this.path = map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
+        this.setListeners();
 	};
-	
-	
+    
+    /**
+    * показ юнита
+    **/
+	this.show = function(){
+        this.marker = 
+    	{
+    		area: map.createCircle(this.latlng, '#f03', '#f03', 0.1, 0.1 ),
+            battle: map.createMarker(this.latlng, this.iconUnselected),
+            type: map.createMarker(this.latlng, this.iconType),
+    		country: map.createMarker(this.latlng, this.iconCountry ),
+    		explosion: map.createMarker(this.latlng, this.iconUnselected),
+            selected: map.createMarker(this.latlng, this.iconUnselected)
+        };
+        this.init();
+        this.visible = true;
+	};
+    
+    /**
+    * сокрытие юнита
+    **/ 
+	this.hide = function(){
+        this.destroy();
+        this.marker = {};
+        this.visible = false;
+	};
+    
+    
     /**
     * здесь может быть реализовано обновление состояния юнита
     **/
@@ -241,9 +271,11 @@ function Unit( latlng, id, userId, map )
 	
 	/*Обработчики событий*/
 	
-    this.marker.selected.addEventListener('click', function(){UnitEvent.click(this)},this);
-	this.marker.selected.addEventListener('contextmenu',function(){UnitEvent.contextmenu(this)},this);
-    this.marker.selected.addEventListener('mouseover', function(){UnitEvent.mouseover(this)},this);
-    this.marker.selected.addEventListener('mouseout', function(){UnitEvent.mouseout(this)},this);
-	
+    this.setListeners = function(){
+        this.marker.selected.clearAllEventListeners();
+        this.marker.selected.addEventListener('click', function(){UnitEvent.click(this)},this);
+    	this.marker.selected.addEventListener('contextmenu',function(){UnitEvent.contextmenu(this)},this);
+        this.marker.selected.addEventListener('mouseover', function(){UnitEvent.mouseover(this)},this);
+        this.marker.selected.addEventListener('mouseout', function(){UnitEvent.mouseout(this)},this);
+	};
 }//end func
