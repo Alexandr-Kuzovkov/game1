@@ -1,7 +1,9 @@
 /**
 * конструктор объекта игрового юнита
-* param latlng координаты [lat,lng]
-* param id идентификатор
+* @param latlng координаты [lat,lng]
+* @param id идентификатор
+* @param userId идентификатор пользователя
+* @param map объект карты
 **/
 function Unit( latlng, id, userId, map )
 {
@@ -22,7 +24,6 @@ function Unit( latlng, id, userId, map )
     this.weather = null; /*погодные данные*/
     this.latlng = latlng;/*позиция юнита [lat,lng]*/
     this.visible = true; /*видимость юнита*/
-    //this.latlng = L.latLng(latlng[0], latlng[1]);
     this.status = 
     {
         kind: 'march', /*статус юнита; может быть march, attack, defense*/

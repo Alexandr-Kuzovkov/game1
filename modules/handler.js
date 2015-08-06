@@ -46,15 +46,15 @@ function get_game( socket, sdata ){
 }
 
 /**
-* обработчик события запроса клиента на добавление юнитов в игру
+* обработчик события запроса клиента на добавление клиента в игру
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user
 **/
-function set_units( socket, sdata ){
-    socket.on('set_units', function(data){
+function join_user( socket, sdata ){
+    socket.on('join_user', function(data){
         sdata.games[data.location].joinUser(data.units, data.user, function(){
             socket.emit('client_refresh_by_server');
-            socket.broadcast.emit('client_refresh_by_server');
+            socket.broadcast.emit('updategame',{game:sdata.games[data.location].toString()});
         });
     });
 }
@@ -71,15 +71,7 @@ function sendLogMessages(socket, sdata, location ){
     socket.broadcast.emit('server_msg',{msg: messages});
 }
 
-/**
-* получение высотных данных для юнитов и обновление соответсвующего 
-* поля объектов полков в серверном объекте game 
-* @param game объект Game
-* @param callback функция обратного вызова, вызываемая после завершения
-**/
-function update_elevation(game,callback){
-   elevation.updateElevation(game, function(){});            
-}
+
 
 
 /**
@@ -291,6 +283,16 @@ function update_weather(socket,sdata){
 }
 
 /**
+* получение высотных данных для юнитов и обновление соответсвующего 
+* поля объектов полков в серверном объекте game 
+* @param game объект Game
+* @param callback функция обратного вызова, вызываемая после завершения
+**
+function update_elevation(game,callback){
+   elevation.updateElevation(game, function(){});            
+}
+
+/**
 * обработчик события connect
 * @param socket объект socket.io
 * @param sdata разделяемый объект, содержащий объект game и массив объектов user 
@@ -357,7 +359,7 @@ function get_game_message_client(socket, sdata){
 
 exports.data_from_client = data_from_client;
 exports.get_game = get_game;
-exports.set_units = set_units;
+exports.join_user = join_user;
 exports.getnearestnode = getnearestnode;
 exports.getroute = getroute;
 

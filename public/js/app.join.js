@@ -43,6 +43,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('client_refresh_by_server', App.clientRefreshByServer);
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
     App.socket.setEventHandler('takenearestnode', App.makeUnit);
+    App.socket.setEventHandler('updategame', App.updateGame);
 };
 
 /**
@@ -79,6 +80,15 @@ App.join = function(data){
         App.showUnitMenu();
         App.interval = setInterval(App.sync, App.UPDATE_INTERVAL);
    } 
+};
+
+/**
+* обработчик события от сервера об обновлении объекта игры
+**/
+App.updateGame = function(data){
+    App.game.restore(data.game, function(){
+        App.clear();
+    });
 };
 
 /**
@@ -305,7 +315,7 @@ App.begin = function(){
     }
     var now = new Date();
     App.user.lastTime = now.getTime();   
-    App.socket.send('set_units', {units:App.units, location:App.game.location.id, user:App.user.toString()});    
+    App.socket.send('join_user', {units:App.units, location:App.game.location.id, user:App.user.toString()});    
 };
 
 /**

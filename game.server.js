@@ -46,7 +46,7 @@ for ( var key in locations){
     /*обработчики событий модуля socket.io*/
     io.of('/location/'+key).on('connection',function(socket){
         Handler.get_game(socket, sdata);
-        Handler.set_units(socket, sdata);
+        Handler.join_user(socket, sdata);
         Handler.data_from_client(socket, sdata);
         Handler.getnearestnode(socket, sdata); 
         Handler.getroute(socket, sdata);        

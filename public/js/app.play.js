@@ -1,8 +1,11 @@
 var App = {};
 
+/**
+* инициализация приложения
+**/
 App.init = function(){
     App.interval = null; /*интервал обновления клиента и сервера*/
-    App.UPDATE_INTERVAL = 10000; /*длина интервала обновления клиента и сервера в мс*/
+    App.UPDATE_INTERVAL = 1000; /*длина интервала обновления клиента и сервера в мс*/
     App.maplib = L;
     App.io = io;
     App.socket = Socket;
@@ -35,6 +38,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('data_from_server', App.dataFromServer);
     App.socket.setEventHandler('game_over', App.gameOver);
     App.socket.setEventHandler('takeroute', App.moveUnit);
+    App.socket.setEventHandler('updategame', App.updateGame);
 };
 
 /**
@@ -89,6 +93,13 @@ App.dataFromServer = function(data){
 **/
 App.clientRefreshByServer = function(data){
     window.location.reload(true);
+};
+
+/**
+* обработчик события от сервера об обновлении объекта игры
+**/
+App.updateGame = function(data){
+    App.game.restore(data.game, function(){});
 };
 
 /**
