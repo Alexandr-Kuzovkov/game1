@@ -64,6 +64,9 @@ App.play = function(data){
     if ( data.game ) {
         App.game.restore(data.game, function(){});
         App.user.gameId = data.game.id;
+        App.iface.input_username.innerText = App.game.user.name;
+        App.iface.input_username.textContent = App.game.user.name;
+        App.iface.country_image.src=Countries[App.game.country.id].icon.url; 
         App.setMapOptions(data.game);
         App.interval = setInterval(App.sync, App.UPDATE_INTERVAL);       
    }

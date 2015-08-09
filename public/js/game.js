@@ -175,6 +175,15 @@ function Game( user )
         this.id = remoteGame.id;
         this.location = remoteGame.location;
         this.users = remoteGame.users;
+        for (key in this.users){
+            if (this.users[key].id == this.user.id) this.user.name = this.users[key].name;
+        }
+        for (var i = 0; i < this.regiments.length; i++){
+            if (this.regiments[i].userId == this.user.id){
+                this.country = this.regiments[i].country;
+                break;
+            }
+        }
         callback();
     };
     
