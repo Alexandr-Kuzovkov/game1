@@ -314,7 +314,9 @@ Game.prototype.gameMsgText = function(msgId, object){
 
 /**
 * присоединение игрока к игре
+* @param units объект, содержащий данные об установленных юнитах
 * @param user объект User
+* @param callback функция обратного вызова после завершеия
 **/
 Game.prototype.joinUser = function(units, user, callback){
     this.users[user.id] = user;

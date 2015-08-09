@@ -38,6 +38,7 @@ Interface.init = function(app) {
     /*установка сервиса маршрутов*/
     Interface.selectService = document.getElementById('service');
     Interface.alert_callback = false;
+    Interface.input_username = document.getElementById('username');
     
     if ( Interface.alert_button ) Interface.alert_button.onclick = Interface.closeAlert;
     

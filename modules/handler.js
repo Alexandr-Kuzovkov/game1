@@ -7,7 +7,7 @@ var httpRequest = require('./httprequest');
 * генерация событий data_from_server и отправка данных клиенту для 
 * синхронизации его объекта game с серверным объектом game
 * @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
+* @param sdata разделяемый объект, содержащий объекты games и users 
 **/
 function data_from_client(socket,sdata){
     socket.on('data_from_client',function(data){
@@ -30,7 +30,7 @@ function data_from_client(socket,sdata){
 * обработчик события запроса серверного объекта game клиентом 
 * генерация событий send_game и посылка данных серверного объекта game
 * @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user 
+* @param sdata разделяемый объект, содержащий объекты games и users 
 **/
 function get_game( socket, sdata ){
    socket.on('get_game', function(data){
@@ -48,37 +48,24 @@ function get_game( socket, sdata ){
 /**
 * обработчик события запроса клиента на добавление клиента в игру
 * @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+* @param sdata разделяемый объект, содержащий объекты games и users
 **/
 function join_user( socket, sdata ){
     socket.on('join_user', function(data){
         sdata.games[data.location].joinUser(data.units, data.user, function(){
             socket.emit('client_refresh_by_server');
             socket.broadcast.emit('updategame',{game:sdata.games[data.location].toString()});
+            sdata.games[data.location].addLogMessage(data.user.name + ' присоединился к игре');
         });
     });
 }
-
-/**
-* отправка лог-сообщений по клиентам
-* @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user
-* @param mess строка сообщения
-**/
-function sendLogMessages(socket, sdata, location ){
-    var messages = sdata.games[location].getLogMessages();
-    socket.emit('server_msg',{msg: messages});
-    socket.broadcast.emit('server_msg',{msg: messages});
-}
-
-
 
 
 /**
 * обработчик события запроса клиента на определение координат узла графа 
 * ближайшего к заданной точке
 * @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+* @param sdata разделяемый объект, содержащий объекты games и users
 **/
 function getnearestnode( socket, sdata ){
     socket.on('getnearestnode', function(data){
@@ -93,7 +80,7 @@ function getnearestnode( socket, sdata ){
 /**
 * обработчик события запроса клиента на получение маршрута
 * @param socket объект socket.io
-* @param sdata разделяемый объект, содержащий объект game и массив объектов user
+* @param sdata разделяемый объект, содержащий объекты games и users
 **/
 function getroute( socket, sdata ){
     socket.on('getroute', function(data){

@@ -6,6 +6,7 @@ function Game( user )
 {
 	this.id = 0; /*идентификатор*/
     this.user = user; /*поле для хранения объекта user*/
+    this.users = {}; /*объект для хранения объектов пользователей игры*/
     this.country = null; /*выбранная страна за которую играет игрок*/
     this.location = null;
 	this.regiments = []; /**массив полков*/
@@ -173,6 +174,7 @@ function Game( user )
             this.createSupplyBase( bases[i].latlng, bases[i].country.id, bases[i].type.id, bases[i].id, bases[i].userId ); 
         this.id = remoteGame.id;
         this.location = remoteGame.location;
+        this.users = remoteGame.users;
         callback();
     };
     

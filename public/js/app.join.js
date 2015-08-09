@@ -230,7 +230,7 @@ App.updateUnitList = function(type){
 App.getRadio = function(){
     var inputs = document.getElementsByTagName('input');
     for ( var i = 0; i < inputs.length; i++ ){
-        if ( inputs[i].attributes.name.value == 'type' )
+        if ( inputs[i].attributes.name && inputs[i].attributes.name.value == 'type' )
             if ( inputs[i].attributes.type.value == 'radio' )
                 if( inputs[i].checked ) return inputs[i].value;
     }
@@ -261,7 +261,7 @@ App.touchMap = function(e){
 
 /**
 * создаем юнита в заданной точке карты
-* @param latlng объект события клика на карте
+* @param data объект возвращаемый сервером
 **/
 App.makeUnit = function(data){
     App.iface.hidePreloader();
@@ -315,6 +315,17 @@ App.begin = function(){
     }
     var now = new Date();
     App.user.lastTime = now.getTime();   
+    if (App.iface.input_username.value == ''){
+        App.iface.showAlert('Нужно ввести Ваше имя');
+        return;
+    }
+    
+    if (!App.isUserNameFree(App.iface.input_username.value)){
+        App.iface.showAlert('Указанное Вами имя занято. Выберите другое');
+        return;
+    }
+    
+    App.user.name = App.iface.input_username.value;
     App.socket.send('join_user', {units:App.units, location:App.game.location.id, user:App.user.toString()});    
 };
 
@@ -349,4 +360,16 @@ App.isPlaceBusy = function(latlng){
         if ( Helper.rastGrad(latlng, App.unitObject[i].latlng) <= App.unitObject[i].type.radius*2) return true;
     }
     return false;
+};
+
+/**
+* проверка есть ли уже такое имя пользователя
+* @param username Имя пользователя
+* @return true если имя не занято, иначе false
+**/
+App.isUserNameFree = function(username){
+    for (key in App.game.users){
+        if ( App.game.users[key].name == username ) return false;
+    }
+    return true;
 };
