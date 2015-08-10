@@ -184,6 +184,12 @@ function Game( user )
                 break;
             }
         }
+        for (var i = 0; i < this.bases.length; i++){
+            if (this.bases[i].userId == this.user.id){
+                this.country = this.bases[i].country;
+                break;
+            }
+        }
         callback();
     };
     

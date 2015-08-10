@@ -6,7 +6,7 @@
 * обработка боя между юнитами
 * @param game объект игры
 **/
-function perform(game){
+function combat(game){
     /*бой полка*/
     var battle = false;
     for ( var i = 0; i < game.regiments.length; i++ ){
@@ -50,14 +50,9 @@ function perform(game){
             } else{
                 game.addGameMessage(game.gameMsgText('endBattle',game.regiments[i]));
             }
-        }
-            
+        }   
         game.regiments[i].battle = battle;
         game.regiments[i].enemyCount = enemyCount; /*обновляем количество противников у юнита*/
-        /*учитываем пополнение и расход ресурсов*/
-        
-        resourcesOutGo(game.regiments[i]);
-        resourcesInGo(game.regiments[i]);
         
     }
     
@@ -106,12 +101,24 @@ function perform(game){
         }
         game.bases[i].battle = battle;
         game.bases[i].enemyCount = enemyCount; /*обновляем количество противников у юнита*/
-        /*учитываем пополнение и расход ресурсов*/
         
-        resourcesOutGo(game.bases[i]);
-        resourcesInGo(game.bases[i]);
+        
+        
     }
 };
+
+/**
+* учитываем расход ресурсов
+* @param game объект игры
+**/
+function outGo(game){
+    for (var i = 0; i < game.regiments.length; i++){
+        resourcesOutGo(game.regiments[i]);
+    }
+    for (var i = 0; i < game.bases.length; i++){
+        resourcesOutGo(game.bases[i]);
+    }
+}
 
 /**
 * возвращает интенсивность боя между двумя юнитами
@@ -185,28 +192,6 @@ function ammoGoOut(unit, powerBattle){
     if ( unit.type.resources.ammo < 0 ) unit.type.resources.ammo = 0;
 };
 
-/**
-* учитываем пополнение ресурсов юнита за 1 цикл
-* @param unit объект юнита
-**/
-function resourcesInGo(unit){
-    if ( !unit.around ){
-        if ( unit.type.resources.ammo < 100 ){
-            unit.type.resources.ammo += unit.type.cycle.ammoInGo;
-            unit.type.resources.ammo = (unit.type.resources.ammo < 100)? unit.type.resources.ammo : 100;
-        }
-        
-        if ( unit.type.resources.food < 100 ){
-            unit.type.resources.food += unit.type.cycle.foodInGo;
-            unit.type.resources.food = (unit.type.resources.food < 100)? unit.type.resources.food : 100;
-        }
-        
-        if ( unit.type.resources.men < 100 ){
-            unit.type.resources.men += unit.type.cycle.menInGo;
-            unit.type.resources.men = (unit.type.resources.men < 100)? unit.type.resources.men : 100;
-        }
-    } 
-};
 
 /**
 * учитываем расход ресурсов юнита за 1 цикл
@@ -219,7 +204,7 @@ function resourcesOutGo(unit){
         if (unit.weather && unit.weather.temperature < -10 ){
             weatherCoff *= 1.5;
         }
-        unit.type.resources.food -= unit.type.cycle.foodOutGo * weatherCoff;
+        unit.type.resources.food -= unit.type.cycle.foodOutGo * weatherCoff * 0.01;
         unit.type.resources.food = (unit.type.resources.food >= 0)? unit.type.resources.food : 0;
     }
 };
@@ -313,4 +298,5 @@ function rastGrad(dot1,dot2){
 	return dist;
 }
 
-exports.perform = perform;
+exports.combat = combat;
+exports.outGo = outGo;

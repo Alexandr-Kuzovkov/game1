@@ -14,7 +14,7 @@ function data_from_client(socket,sdata){
         if ( sdata.games[data.location] ){
             sdata.games[data.location].updateUserTime(data.user);
             sdata.games[data.location].sync(data.game);
-            sdata.games[data.location].battleLoop();
+            sdata.games[data.location].actionsLoop();
             if ( !sdata.games[data.location].checkGameOver(data.user.id)){
                 socket.emit('data_from_server',{game:sdata.games[data.location].toString()}); 
             }else{

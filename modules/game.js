@@ -1,6 +1,6 @@
 /*конструктор серверного объекта Game*/
 var Helper = require('./helper');
-var Battle = require('./battle');
+var Action = require('./action');
 
 function Game(location)
 {
@@ -17,6 +17,8 @@ function Game(location)
     this.gameMessages = []; /*массив игровых сообщений*/
     this.MAX_LOG_MESSAGES = 10; /*максимальное количество лог-сообщений*/
     this.MAX_GAME_MESSAGES = 20;/*максимальное количество игровых сообщений*/
+    this.lastActionTime = 0;/*временная метка посленей обработки событий игры*/
+    this.MIN_TIME_ACTION = 1000; /*минимальный интервал времени между обработкой игровый событий*/
 }
 
     
@@ -161,8 +163,24 @@ Game.prototype.sync = function(game){
     }
 };
 
-Game.prototype.battleLoop = function(){
-    Battle.perform(this);  
+/**
+* обработка цикла событий игры
+**/
+Game.prototype.actionsLoop = function(){
+    var now = new Date();
+    var currTime = now.getTime();
+    
+    if ((currTime - this.lastActionTime) < 0){
+        this.lastActionTime = currTime;
+    }
+    
+    if ((currTime - this.lastActionTime) < this.MIN_TIME_ACTION){
+        return;
+    }
+    
+    this.lastActionTime = currTime;
+    Action.combat(this); /*бой*/
+    Action.outGo(this); /*расход ресурсов*/ 
 };
 
 /**
