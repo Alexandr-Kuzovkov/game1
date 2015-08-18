@@ -14,7 +14,6 @@ function Unit( latlng, id, userId, map )
     this.STOP = false; /*флаг сигнала на остановку*/
     this.OWN = false; /*флаг свой ли юнит*/
 	this.selected = false; /*флаг что юнит выбран*/
-    this.around = false; /*флаг что юнит окружен*/
     this.lastelevation = 0; /*предыдущая высота*/
     this.elevation = 0; /*высота точки нахождения юнита*/
 	this.colorPath = 'red'; /*цвет траектории пути*/
@@ -163,7 +162,7 @@ Unit.prototype.unselect = function(){
 * установка анимации для обозначения состояния боя
 * @param battle устанавливаемый флаг боя
 **/
-Unit.prototype.checkBattle = function(){
+Unit.prototype.setBattleAnimation = function(){
     if ( this.battle == this.lastbattle ) return;
     if ( this.battle ){
         this.lastbattle = this.battle;
@@ -200,6 +199,7 @@ Unit.prototype.init = function(){
     this.marker.area.setRadius(this.type.radius * 111300);
     this.path = this.map.createPolyline([],this.colorPath); /*объект полилинии пути движения*/
     this.setListeners();
+    this.onInit();
 };
 
 /**
@@ -233,20 +233,21 @@ Unit.prototype.hide = function(){
 * здесь может быть реализовано обновление состояния юнита
 **/
 Unit.prototype.update = function(){
-	/*гибель юнита если нет ресурсов или людей*/
-    this.checkBattle();
-    if ( this.type.resources.food <= 0 || this.type.resources.men <= 0 ){
-        this.marker.explosion.setIcon(this.iconExplosion);
-        var self = this;
-        setTimeout( function(){App.game.deleteUnit(self.id);}, 3000);
-	} 
+    this.setBattleAnimation();
+};
+
+/**
+* установка анимации гибели юнита
+**/
+Unit.prototype.setDiedAnimation = function(){
+    this.marker.explosion.setIcon(this.iconExplosion);
 };
 
 /**
 * уничтожение объекта юнита
 **/
-Unit.prototype.destroy = function(){
-	this.path.destroy();
+Unit.prototype.destroy = function(){	
+    this.path.destroy();
 	this.marker.selected.clearAllEventListeners();
 	if ( this.selected ) UnitEvent.removeDblclick(this);
 	for ( key in this.marker ) this.marker[key].destroy();
@@ -264,7 +265,6 @@ Unit.prototype.toString = function(){
     unit.latlng = this.latlng;
     unit.selected = this.selected;
     unit.colorPath = this.colorPath;
-    unit.around = this.around;
     unit.elevation = this.elevation;
     unit.lastelevation = this.lastelevation;
     unit.battle = this.battle;
@@ -272,6 +272,13 @@ Unit.prototype.toString = function(){
     unit.weather = this.weather;
     unit.enemyCount = this.enemyCount; 
     return unit;  
+};
+
+/**
+* обработчик события инициализации юнита
+**/
+Unit.prototype.onInit = function(){
+    
 };
 
 /*Обработчики событий*/

@@ -117,7 +117,6 @@ Interface.translate = {
     discipline: 'Организованность',
     experience: 'Опыт',
     elevation: 'Высота',
-    around: 'Окружение',
     battle: 'Бой',
     status: 'Состояние',
     attack: 'Атака',
@@ -305,6 +304,7 @@ Interface.getBaseMenu = function(object){
                         <li onclick='UnitEvent.unitcontextmenu(5,"+object.id+")'>Стоп</li>\
                         <li onclick='UnitEvent.unitcontextmenu(6,"+object.id+")'>Марш</li>\
                         <li onclick='UnitEvent.unitcontextmenu(7,"+object.id+")'>Оборона</li>\
+                        <li onclick='UnitEvent.unitcontextmenu(9,"+object.id+")'>Создать конвой</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\

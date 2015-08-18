@@ -5,15 +5,10 @@
 
 var UnitEvent = 
 {
-    map: null,/*объект карты*/
-    game: null,/*объект игры*/
-    iface: null,/*объект интерфейса*/
+    app: null,/*объект приложения*/
      
     init: function(app){
-        UnitEvent.app = app;
-        UnitEvent.map = app.map;
-        UnitEvent.game = app.game;
-        UnitEvent.iface = app.iface; 
+        UnitEvent.app = app; 
     },
     
     /**
@@ -27,10 +22,10 @@ var UnitEvent =
 			object.unselect();
 		}
 		else{
-			if ( !object.OWN ) UnitEvent.game.unselectNotOwn();
+			if ( !object.OWN ) UnitEvent.app.game.unselectNotOwn();
 			object.select();
 			if ( object.OWN ){
-			     UnitEvent.map.addOneTimeEventListener('dblclick', function(e){
+			     UnitEvent.app.map.addOneTimeEventListener('dblclick', function(e){
     				UnitEvent.dblclick(e,object);
     			},object);
 			}
@@ -60,7 +55,7 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     contextmenu: function(object){
-           object.popup.show(object.latlng, UnitEvent.iface.showMenu(object));   
+           object.popup.show(object.latlng, UnitEvent.app.iface.showMenu(object));   
     },
     
     /**
@@ -69,14 +64,14 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     removeDblclick: function(object){
-        UnitEvent.map.removeEventListener('dblclick',null,object);
+        UnitEvent.app.map.removeEventListener('dblclick',null,object);
     },
     
     mouseover: function(object){
          for ( marker in object.marker ) {
             if ( marker != 'area' )object.marker[marker].setOpacity(0.7);
          }
-         UnitEvent.iface.showUnit(object.getInfo());
+         UnitEvent.app.iface.showUnit(object.getInfo());
          this.overUnit = object;      
     },
     
@@ -84,7 +79,7 @@ var UnitEvent =
          for ( marker in object.marker ) {
             if ( marker != 'area') object.marker[marker].setOpacity(1.0);
          }
-         UnitEvent.iface.hideUnit();
+         UnitEvent.app.iface.hideUnit();
          this.overUnit = null;
     },
     
@@ -105,28 +100,29 @@ var UnitEvent =
                             this.ownBaseStop, /*отмена марша своей базы*/
                             this.ownBaseMarch,      /*включение состояния базы марш*/
                             this.ownBaseDefense, /*включение состояния базы оборона*/
-                            this.baseCapture     /*команда на захват вражеской базы*/
+                            this.baseCapture,     /*команда на захват вражеской базы*/
+                            this.createConvoy /*cоздание конвоя*/
                         ];
         contextMenuHandler[id](objectId);
     },
     
     /*отмена марша своего полка*/
     ownRegStop: function(id){  
-        var object = UnitEvent.game.getRegiment(id);
+        var object = UnitEvent.app.game.getRegiment(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния полка марш*/
     ownRegMarch: function(id){
-        var object = UnitEvent.game.getRegiment(id);
+        var object = UnitEvent.app.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния полка оборона*/
     ownRegDefense: function(id){
-        var object = UnitEvent.game.getRegiment(id);
+        var object = UnitEvent.app.game.getRegiment(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense')
@@ -134,41 +130,41 @@ var UnitEvent =
     
     /*включение состояния атаки*/
     ownRegAttack: function(id){
-        var object = UnitEvent.game.getRegiment(id);
+        var object = UnitEvent.app.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('attack')
     },
     
     /*команда на атаку вражеского полка*/
     attack: function(id){
-        var object = UnitEvent.game.getRegiment(id);
+        var object = UnitEvent.app.game.getRegiment(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
-            if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
-                UnitEvent.game.regiments[i].setStatus('attack');
-                UnitEvent.app.unitGoRoute(UnitEvent.game.regiments[i],[latlng.lat, latlng.lng]);
+        for ( var i = 0; i < UnitEvent.app.game.regiments.length; i++ ){
+            if ( UnitEvent.app.game.regiments[i].OWN && UnitEvent.app.game.regiments[i].selected ){
+                UnitEvent.app.game.regiments[i].setStatus('attack');
+                UnitEvent.app.unitGoRoute(UnitEvent.app.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
     },
     
     /*отмена марша своей базы*/
     ownBaseStop: function(id){
-        var object = UnitEvent.game.getBase(id);
+        var object = UnitEvent.app.game.getBase(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния базы марш*/
     ownBaseMarch: function(id){
-        var object = UnitEvent.game.getBase(id);
+        var object = UnitEvent.app.game.getBase(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния базы оборона*/
     ownBaseDefense: function(id){
-        var object = UnitEvent.game.getBase(id);
+        var object = UnitEvent.app.game.getBase(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense');
@@ -176,15 +172,28 @@ var UnitEvent =
     
     /*команда на захват вражеской базы*/
     baseCapture: function(id){
-        var object = UnitEvent.game.getBase(id);
+        var object = UnitEvent.app.game.getBase(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < UnitEvent.game.regiments.length; i++ ){
-            if ( UnitEvent.game.regiments[i].OWN && UnitEvent.game.regiments[i].selected ){
-                UnitEvent.game.regiments[i].setStatus('attack');
-                UnitEvent.app.unitGoRoute(UnitEvent.game.regiments[i],[latlng.lat, latlng.lng]);
+        for ( var i = 0; i < UnitEvent.app.game.regiments.length; i++ ){
+            if ( UnitEvent.app.game.regiments[i].OWN && UnitEvent.app.game.regiments[i].selected ){
+                UnitEvent.app.game.regiments[i].setStatus('attack');
+                UnitEvent.app.unitGoRoute(UnitEvent.app.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
+    },
+    
+    /*создание конвоя*/
+    createConvoy: function(id){
+        /*
+        var object = UnitEvent.app.game.getBase(id);
+        if ( object == null ) return false;
+        var latlng = [object.latlng[0]+0.01, object.latlng[1]+0.01];
+        var country = UnitEvent.app.game.country.id;
+        var type = 'convoy';
+        var userId = UnitEvent.app.user.id;
+        UnitEvent.app.game.createRegiment(latlng, country, type, 0, userId);
+        */
     }
                    
 }

@@ -102,7 +102,7 @@ App.clientRefreshByServer = function(data){
 * обработчик события от сервера об обновлении объекта игры
 **/
 App.updateGame = function(data){
-    App.game.restore(data.game, function(){});
+    //App.game.restore(data.game, function(){});
 };
 
 /**

@@ -152,6 +152,7 @@ UnitTypes.getType = function(type){
         case 'tank': return new UnitTypes.Tank(); break;
         case 'foot': return new UnitTypes.Foot(); break;
         case 'base': return new UnitTypes.Base(); break;
+        case 'convoy': return new UnitTypes.Convoy(); break;
         default: return null;
     }
 };
@@ -160,6 +161,7 @@ UnitTypes.getType = function(type){
 UnitTypes.names = {
     tank: 'Танковый полк',
     foot: 'Мотострелковый полк',
-    base: 'База снабжения'  
+    base: 'База снабжения',
+    convoy: 'Конвой'  
 };
 

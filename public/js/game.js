@@ -60,10 +60,12 @@ function Game( user )
     * создание полка
     * @param latlng координаты [lat,lng]
     * @param country строковый идентификатор страны
-    * @type строка указывающая тип объекта
+    * @param type строка указывающая тип объекта
+    * @param id идентификатор юнита
+    * @param userId id пользователя 
     **/
 	this.createRegiment = function( latlng, country, type, id, userId ){
-		var regiment = UnitFactory.createUnit( latlng, type, country, id, userId ); 
+		var regiment = App.unitFactory.createUnit( latlng, type, country, id, userId ); 
         regiment.OWN = ( this.user.id == regiment.userId )? true:false;
         if ( this.user.id != regiment.userId ) regiment.userId = 0;
         regiment.init();
@@ -75,10 +77,12 @@ function Game( user )
     * создание базы снабжения
     * @param latlng координаты [lat,lng]
     * @param country строковый идентификатор страны
-    * @type строка указывающая тип объекта
+    * @param type строка указывающая тип объекта
+    * @param id идентификатор юнита
+    * @param userId id пользователя
     **/
 	this.createSupplyBase = function( latlng, country, type, id, userId ){
-		var base = UnitFactory.createUnit( latlng, type, country, id, userId ); 
+		var base = App.unitFactory.createUnit( latlng, type, country, id, userId ); 
         base.OWN = ( this.user.id == base.userId )? true:false;
         if ( this.user.id != base.userId ) base.userId = 0;
         base.init();
@@ -123,21 +127,31 @@ function Game( user )
 	
     /**
     * уничтожение юнита
-    * @param id полка
+    * @param id юнита
     **/
 	this.deleteUnit = function(id){
 		for ( var i = 0; i < this.regiments.length; i++ ) {
             if ( this.regiments[i].id == id ){
-    			this.regiments[i].destroy();
-    			delete this.regiments[i];
-    			this.regiments.splice(i,1);
+    			this.regiments[i].setDiedAnimation();
+                var game = this;
+                setTimeout(function(){
+                    game.regiments[i].destroy();
+                    delete game.regiments[i];
+                    game.regiments.splice(i,1);
+                },2000);
+                return;
     		}
         }
+        
         for ( var i = 0; i < this.bases.length; i++ ) {
             if ( this.bases[i].id == id ){
-    			this.bases[i].destroy();
-    			delete this.bases[i];
-    			this.bases.splice(i,1);
+    			this.bases[i].setDiedAnimation();
+                var game = this;
+                setTimeout(function(){
+                    game.bases[i].destroy();
+        			delete game.bases[i];
+        			game.bases.splice(i,1);                  
+                },2000);
     		}
         }  
 	};
@@ -151,7 +165,7 @@ function Game( user )
     };
     
     /**
-    * игровой цикл в котором происходит отправка данных на сервер
+    * игровой цикл в котором происходит обновление юнитов игры
     **/
 	this.loop = function(){
         for ( var i = 0, len = this.regiments.length; i < len; i++ ) this.regiments[i].update();
@@ -164,7 +178,7 @@ function Game( user )
     * @param callback функция обратного вызова, вызываемая по завершении операции
     **/
     this.restore = function(remoteGame,callback){
-        console.log(JSON.stringify(remoteGame));
+        //console.log(JSON.stringify(remoteGame));
         this.destroyAll();
         var regiments = remoteGame.regiments;
         var bases = remoteGame.bases;
@@ -247,7 +261,7 @@ function Game( user )
     * @return true/false
     **/
     this.isSyncParamFromServer = function(param){
-        var syncParams = ['around', 'elevation', 'battle', 'weather' ];
+        var syncParams = ['elevation', 'battle', 'weather' ];
         return ( syncParams.indexOf(param) != -1 )? true : false;
     };
     
@@ -256,11 +270,77 @@ function Game( user )
     * @param game серверный объект игры
     **/
     this.sync = function(game){
-        //console.log('client='+this.regiments.length+'; server='+game.regiments.length);
         var actualGame = ( this.id == game.id );
-        //console.log(JSON.stringify(game.regiments));
-        //console.log(JSON.stringify(Missions));
         if ( actualGame ){
+            
+            /*уничтожение полков которых нет в серверном объекте игры*/
+            var exists = false;
+            for (var i = 0; i < this.regiments.length; i++){
+                for (var j = 0; j < game.regiments.length; j++){
+                    if ( this.regiments[i].id == game.regiments[j].id ) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if ( !exists ){
+                    this.regiments[i].deleteUnit(this.regiments[i].id);
+                }
+            }
+            
+            /*уничтожение баз которых нет в серверном объекте игры*/
+            var exists = false;
+            for (var i = 0; i < this.bases.length; i++){
+                for (var j = 0; j < game.bases.length; j++){
+                    if ( this.bases[i].id == game.bases[j].id ) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if ( !exists ){
+                    this.bases[i].deleteUnit(this.bases[i].id);
+                }
+            }
+            
+            /*добавление полков которых нет в клиентском объекте игры*/
+            var exists = false;
+            for (var i = 0; i < game.regiments.length; i++ ){
+                for ( var j = 0; j < this.regiments.length; j++ ){
+                    if ( game.regiments[i].id == this.regiments[j].id ){
+                        exists = true;
+                        break;
+                    }
+                    if ( !exists ){
+                        var latlng = game.regiments[i].latlng;
+                        var country = game.regiments[i].country.id;
+                        var type = game.regiments[i].type.id;
+                        var id = game.regiments[i].id;
+                        var userId = game.regiments[i].userId;
+                        this.createRegiment(latlng, country, type, id, userId);
+                    }
+                }
+            }
+            
+            /*добавление баз которых нет в клиентском объекте игры*/
+            var exists = false;
+            for (var i = 0; i < game.bases.length; i++ ){
+                for ( var j = 0; j < this.bases.length; j++ ){
+                    if ( game.bases[i].id == this.bases[j].id ){
+                        exists = true;
+                        break;
+                    }
+                    if ( !exists ){
+                        var latlng = game.bases[i].latlng;
+                        var country = game.bases[i].country.id;
+                        var type = game.bases[i].type.id;
+                        var id = game.bases[i].id;
+                        var userId = game.bases[i].userId;
+                        this.createSupplyBase(latlng, country, type, id, userId);
+                    }
+                }
+            }
+            
+            
+            
             /*движение полков противника*/
             for ( var i = 0; i < this.regiments.length; i++ ){
                 if (game.regiments[i] == undefined) continue;
@@ -302,14 +382,6 @@ function Game( user )
                 if (game.bases[i] == undefined) continue;
                 var corresponding = this.bases[i].id == game.bases[i].id;
                 if (corresponding){
-                    /*база стала окружена*/
-                    if ( !this.bases[i].around && game.bases[i].around ){
-                        createGameMessage(getGameMsg('beginAround', this.bases[i]));
-                    }
-                    /*база перестала быть окружена*/
-                    if ( this.bases[i].around && !game.bases[i].around ){
-                        createGameMessage(getGameMsg('endAround', this.bases[i]));
-                    }
                     this.bases[i].lastelevation = this.bases[i].elevation;
                     for ( param in game.bases[i] ){
                         if ( this.isSyncParamFromServer(param) ){
@@ -323,10 +395,6 @@ function Game( user )
             
         }//end if actualGame
         
-        /*обновление юнитов игры*/
-        this.updateUnits();
-        //console.log(JSON.stringify(this.mission));
-        //console.log(JSON.stringify(Missions));  
     };
        
 }//end Game

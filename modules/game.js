@@ -11,13 +11,13 @@ function Game(location)
     this.status = ''; /*состояние игры*/
     this.regiments = []; /*массив полков*/
     this.bases = []; /*массив баз*/
-    this.unitcnt = 0 /*счетчик для присвоения id юнитам*/
+    this.unitcnt = 1 /*счетчик для присвоения id юнитам*/
     this.logMessages = []; /*массив лог-сообщений*/
     this.MAX_LIVE_TIMEOUT = 15; /*максимальное время непоступления событий от пользователя*/
     this.gameMessages = []; /*массив игровых сообщений*/
     this.MAX_LOG_MESSAGES = 10; /*максимальное количество лог-сообщений*/
     this.MAX_GAME_MESSAGES = 20;/*максимальное количество игровых сообщений*/
-    this.lastActionTime = 0;/*временная метка посленей обработки событий игры*/
+    this.lastActionTime = 0;/*временная метка последней обработки событий игры*/
     this.MIN_TIME_ACTION = 1000; /*минимальный интервал времени между обработкой игровый событий*/
 }
 
@@ -98,41 +98,10 @@ Game.prototype.isSyncParamFromClient = function(param){
 **/
 Game.prototype.sync = function(game){
     if ( !this.ready ) return false;
-    
-    /*уничтожение отсутсвующих в клиентском объекте полков*/
-    var i = 0;
-    while( i < this.regiments.length ){
-        var unitPresent = false;
-        for ( var j = 0; j < game.regiments.length; j++ ){
-            if ( this.regiments[i].id == game.regiments[j].id ) unitPresent = true;
-        }
-        if ( !unitPresent ){
-            this.addGameMessage(this.gameMsgText('unitKilled',this.regiments[i]));
-            delete this.regiments[i];
-            this.regiments.splice(i,1);
-        }else{
-            i++;
-        }
-    }
-    
-    /*уничтожение отсутсвующих в клиентском объекте баз*/
-    var i = 0;
-    while( i < this.bases.length ){
-        var unitPresent = false;
-        for ( var j = 0; j < game.bases.length; j++ ){
-            if ( this.bases[i].id == game.bases[j].id ) unitPresent = true;
-        }
-        if ( !unitPresent ){
-            this.addGameMessage(this.gameMsgText('unitKilled',this.bases[i]));
-            delete this.bases[i];
-            this.bases.splice(i,1);
-        }else{
-            i++;
-        }
-    }
-    
+   
     /*синхронизация полков*/ 
     for ( var i = 0; i < this.regiments.length; i++ ){
+        if (game.regiments[i] == undefined) continue;
         var correct = ( 
             this.regiments[i].id == game.regiments[i].id &&
             game.regiments[i].OWN == true &&
@@ -148,6 +117,7 @@ Game.prototype.sync = function(game){
     }
     /*синхронизация  баз*/
     for ( var i = 0; i < this.bases.length; i++ ){
+        if (game.bases[i] == undefined) continue;
         var correct = ( 
             this.bases[i].id == game.bases[i].id &&
             game.bases[i].OWN == true &&
@@ -180,7 +150,31 @@ Game.prototype.actionsLoop = function(){
     
     this.lastActionTime = currTime;
     Action.combat(this); /*бой*/
-    Action.outGo(this); /*расход ресурсов*/ 
+    Action.outGo(this); /*расход ресурсов*/
+    
+    /*уничтожение полков при наступлении заданных условий*/
+    var i = 0;
+    while( i < this.regiments.length ){     
+        if ( this.mustDied(this.regiments[i]) ){
+            this.addGameMessage(this.gameMsgText('unitKilled',this.regiments[i]));
+            delete this.regiments[i];
+            this.regiments.splice(i,1);
+        }else{
+            i++;
+        }
+    }
+    
+    /*уничтожение баз при наступлении заданных условий*/
+    var i = 0;
+    while( i < this.bases.length ){     
+        if ( this.mustDied(this.bases[i]) ){
+            this.addGameMessage(this.gameMsgText('unitKilled',this.bases[i]));
+            delete this.bases[i];
+            this.bases.splice(i,1);
+        }else{
+            i++;
+        }
+    } 
 };
 
 /**
@@ -352,5 +346,16 @@ Game.prototype.joinUser = function(units, user, callback){
     callback();
     
 };
+
+/**
+* определение что юнит должен быть уничтожен
+* @param unit объект юнита
+**/
+Game.prototype.mustDied = function(unit){
+    if (unit.type.resources.men == 0 || unit.type.resources.food == 0 ){
+        return true;
+    }
+    return false;
+}
 
 exports.Game = Game;

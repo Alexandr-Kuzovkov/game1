@@ -27,7 +27,6 @@ UnitFactory.createUnit = function(latlng, type, country, id, userId){
                           ammo: this.type.resources.ammo,
                           food:  this.type.resources.food,
                           elevation:  this.elevation,
-                          around: this.around,
                           battle: this.battle,
                           status: this.status.kind,
                           weather: this.weather
@@ -46,7 +45,6 @@ UnitFactory.createUnit = function(latlng, type, country, id, userId){
                           discipline: this.type.resources.discipline,
     		              experience: this.type.resources.experience,
                           elevation:  this.elevation,
-                          around: this.around,
                           battle: this.battle,
                           status: this.status.kind,
                           weather: this.weather
