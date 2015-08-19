@@ -49,7 +49,8 @@ for ( var key in locations){
         Handler.join_user(socket, sdata);
         Handler.data_from_client(socket, sdata);
         Handler.getnearestnode(socket, sdata); 
-        Handler.getroute(socket, sdata);        
+        Handler.getroute(socket, sdata);
+        Handler.add_unit(socket, sdata);        
     });
 }
 

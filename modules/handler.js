@@ -92,6 +92,17 @@ function getroute( socket, sdata ){
     });
 }
 
+/**
+* обработчик события запроса клиента на добавление юнита в игру
+* @param socket объект socket.io
+* @param sdata разделяемый объект, содержащий объекты games и users
+**/
+function add_unit( socket, sdata ){
+    socket.on('add_unit', function(data){
+        sdata.games[data.location].addUnit(data.unit);
+    });
+}
+
 
 /**
 * обработчик события постановки игры на паузу одним из клиентов
@@ -349,6 +360,7 @@ exports.get_game = get_game;
 exports.join_user = join_user;
 exports.getnearestnode = getnearestnode;
 exports.getroute = getroute;
+exports.add_unit = add_unit;
 
 //exports.game_init_client = game_init_client;
 //exports.game_clone_client = game_clone_client;

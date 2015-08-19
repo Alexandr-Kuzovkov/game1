@@ -356,6 +356,19 @@ Game.prototype.mustDied = function(unit){
         return true;
     }
     return false;
-}
+};
+
+/**
+* добавление юнита в игру
+* @param unit объект юнита
+**/
+Game.prototype.addUnit = function(unit){
+    unit.id = this.unitcnt++;
+    if (unit.type.id == 'base'){
+        this.bases.push(unit);
+    }else{
+        this.regiments.push(unit);
+    }
+};
 
 exports.Game = Game;

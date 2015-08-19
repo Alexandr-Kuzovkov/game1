@@ -132,12 +132,12 @@ function Game( user )
 	this.deleteUnit = function(id){
 		for ( var i = 0; i < this.regiments.length; i++ ) {
             if ( this.regiments[i].id == id ){
-    			this.regiments[i].setDiedAnimation();
-                var game = this;
+    			var unit = this.regiments[i];
+                unit.setDiedAnimation();
+                delete this.regiments[i];
+                this.regiments.splice(i,1);
                 setTimeout(function(){
-                    game.regiments[i].destroy();
-                    delete game.regiments[i];
-                    game.regiments.splice(i,1);
+                    unit.destroy();
                 },2000);
                 return;
     		}
@@ -145,12 +145,12 @@ function Game( user )
         
         for ( var i = 0; i < this.bases.length; i++ ) {
             if ( this.bases[i].id == id ){
-    			this.bases[i].setDiedAnimation();
-                var game = this;
+    			var unit = this.bases[i];
+                unit.setDiedAnimation();
+                delete this.bases[i];
+    			this.bases.splice(i,1);
                 setTimeout(function(){
-                    game.bases[i].destroy();
-        			delete game.bases[i];
-        			game.bases.splice(i,1);                  
+                    unit.destroy();              
                 },2000);
     		}
         }  
