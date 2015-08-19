@@ -154,7 +154,6 @@ App.unitGoRoute = function(unit, latlng){
 **/
 App.moveUnit = function(data){
     var unit = App.game.getUnit(data.id);
-    console.log(JSON.stringify(data.id));
     if (unit != null){
         Move.moveUnitRouteAnimation( unit, data.route );
     }   

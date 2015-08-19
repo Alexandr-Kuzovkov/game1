@@ -185,6 +185,7 @@ function makeDamage(unit, power){
 * @param powerBattle интенсивность боя
 **/
 function ammoGoOut(unit, powerBattle){
+     return;
      var enemyCountCoff = (unit.enemyCount == 0)? 1 : unit.enemyCount;
     if ( unit.battle ){
         unit.type.resources.ammo -= unit.type.cycle.ammoOutGo * powerBattle / enemyCountCoff;

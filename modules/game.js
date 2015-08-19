@@ -352,7 +352,7 @@ Game.prototype.joinUser = function(units, user, callback){
 * @param unit объект юнита
 **/
 Game.prototype.mustDied = function(unit){
-    if (unit.type.resources.men == 0 || unit.type.resources.food == 0 ){
+    if (unit.type.resources.men <= 0 || unit.type.resources.food <= 0 ){
         return true;
     }
     return false;

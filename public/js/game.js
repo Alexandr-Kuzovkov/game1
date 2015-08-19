@@ -270,12 +270,13 @@ function Game( user )
     * @param game серверный объект игры
     **/
     this.sync = function(game){
+        var exists = false;
         var actualGame = ( this.id == game.id );
+        console.log(game.regiments.length);
         if ( actualGame ){
-            
             /*уничтожение полков которых нет в серверном объекте игры*/
-            var exists = false;
             for (var i = 0; i < this.regiments.length; i++){
+                exists = false;
                 for (var j = 0; j < game.regiments.length; j++){
                     if ( this.regiments[i].id == game.regiments[j].id ) {
                         exists = true;
@@ -283,13 +284,13 @@ function Game( user )
                     }
                 }
                 if ( !exists ){
-                    this.regiments[i].deleteUnit(this.regiments[i].id);
+                    this.deleteUnit(this.regiments[i].id);
                 }
             }
             
             /*уничтожение баз которых нет в серверном объекте игры*/
-            var exists = false;
             for (var i = 0; i < this.bases.length; i++){
+                exists = false;
                 for (var j = 0; j < game.bases.length; j++){
                     if ( this.bases[i].id == game.bases[j].id ) {
                         exists = true;
@@ -297,50 +298,49 @@ function Game( user )
                     }
                 }
                 if ( !exists ){
-                    this.bases[i].deleteUnit(this.bases[i].id);
+                    this.deleteUnit(this.bases[i].id);
                 }
             }
             
             /*добавление полков которых нет в клиентском объекте игры*/
-            var exists = false;
+            
             for (var i = 0; i < game.regiments.length; i++ ){
+                exists = false;
                 for ( var j = 0; j < this.regiments.length; j++ ){
                     if ( game.regiments[i].id == this.regiments[j].id ){
                         exists = true;
                         break;
-                    }
-                    if ( !exists ){
-                        var latlng = game.regiments[i].latlng;
-                        var country = game.regiments[i].country.id;
-                        var type = game.regiments[i].type.id;
-                        var id = game.regiments[i].id;
-                        var userId = game.regiments[i].userId;
-                        this.createRegiment(latlng, country, type, id, userId);
-                    }
+                    }  
+                }
+                if ( !exists ){
+                    var latlng = game.regiments[i].latlng;
+                    var country = game.regiments[i].country.id;
+                    var type = game.regiments[i].type.id;
+                    var id = game.regiments[i].id;
+                    var userId = game.regiments[i].userId;
+                    this.createRegiment(latlng, country, type, id, userId);
                 }
             }
             
             /*добавление баз которых нет в клиентском объекте игры*/
-            var exists = false;
             for (var i = 0; i < game.bases.length; i++ ){
+                exists = false;
                 for ( var j = 0; j < this.bases.length; j++ ){
                     if ( game.bases[i].id == this.bases[j].id ){
                         exists = true;
                         break;
-                    }
-                    if ( !exists ){
-                        var latlng = game.bases[i].latlng;
-                        var country = game.bases[i].country.id;
-                        var type = game.bases[i].type.id;
-                        var id = game.bases[i].id;
-                        var userId = game.bases[i].userId;
-                        this.createSupplyBase(latlng, country, type, id, userId);
-                    }
+                    }  
+                }
+                if ( !exists ){
+                    var latlng = game.bases[i].latlng;
+                    var country = game.bases[i].country.id;
+                    var type = game.bases[i].type.id;
+                    var id = game.bases[i].id;
+                    var userId = game.bases[i].userId;
+                    this.createSupplyBase(latlng, country, type, id, userId);
                 }
             }
-            
-            
-            
+                        
             /*движение полков противника*/
             for ( var i = 0; i < this.regiments.length; i++ ){
                 if (game.regiments[i] == undefined) continue;
