@@ -39,6 +39,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('game_over', App.gameOver);
     App.socket.setEventHandler('takeroute', App.moveUnit);
     App.socket.setEventHandler('updategame', App.updateGame);
+    App.socket.setEventHandler('unit_added', App.onAddUnit);
 };
 
 /**
@@ -159,4 +160,51 @@ App.moveUnit = function(data){
     }   
 };
 
+/**
+* отправка запроса на добавление юнита в игру
+* @param id id юнита от имени которого отправляется запрос
+* @param unitType id типа создаваемого юнита
+**/
+App.addUnit = function(id, unitType){
+    var object = App.game.getBase(id);
+    if ( object == null ) return false;
+    var delta = 0.01;
+    var latlng = [object.latlng[0]+delta, object.latlng[1]+delta];
+    var country = App.game.country.id;
+    var type = unitType;
+    var userId = App.user.id;
+    var unit = App.unitFactory.createUnit(latlng, type, country, 0, App.user.id);
+    unit.init();
+    App.socket.send('add_unit', {id:id, unit:unit.toString(), location:App.game.location.id});
+    unit.destroy();
+};
+
+/**
+* отправка запроса на удаление юнита из игры
+* @param id идентификатор юнита, который нужно удалить
+* @param parentId id юнита от имени которого отправляется запрос 
+**/
+App.delUnit = function(id, parentId ){
+    App.socket.send('del_unit', {id:id, parent_id:parentId, location:App.game.location.id});
+};
+
+/**
+* обработчик события создания юнита от сервера 
+* @param data объект данных, получаемый с сервера
+**/
+App.onAddUnit = function(data){
+    var parent_unit = App.game.getUnit(data.parent_id);
+    if (parent_unit == null) return false;
+    parent_unit.addChild(data.added_unit_id);
+};
+
+/**
+* обработчик события удаления юнита от сервера 
+* @param data объект данных, получаемый с сервера
+**/
+App.onDelUnit = function(data){
+    var parent_unit = App.game.getUnit(data.parent_id);
+    if (parent_unit == null) return false;
+    parent_unit.delChild(data.deleted_unit_id);
+};
 

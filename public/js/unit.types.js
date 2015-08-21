@@ -10,13 +10,10 @@ UnitTypes.Tank = function(){
     this.VELOCITY = 40;         /*скорость движения юнита в км/ч*/
     this.radius = 0.01;          /*радиус области действия полка в градусах*/
 	this.power = 50;              /*боевая мощь*/
-    this.cycle = 
+    this.outGo = 
     {
-        ammoOutGo: 3,           /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
-        ammoInGo: 1,           /*пополнение боеприпасов за 1 цикл игры*/
-        foodOutGo: 1,           /*расход обеспечения за 1 цикл игры*/
-        foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
-        menInGo: 1             /*пополнение людьми за 1 цикл игры*/
+        ammo: 3,           /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
+        food: 1,           /*расход обеспечения за 1 цикл игры*/
     };
     /*картинка иконки*/ 
 	this.icon =	{   url: '/img/type/tank24.png',
@@ -36,7 +33,7 @@ UnitTypes.Tank = function(){
 					};
                     
      this.toString = function(){                 /*преобразование в строку*/  
-        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, cycle: this.cycle}; 
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
      };
 
 };
@@ -47,13 +44,10 @@ UnitTypes.Foot = function(){
     this.VELOCITY = 40;
 	this.radius = 0.01;
     this.power = 30;              /*боевая мощь*/
-    this.cycle = 
+    this.outGo = 
     {
-        ammoOutGo: 3,          /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
-        ammoInGo: 1,           /*пополнение боеприпасов за 1 цикл игры*/
-        foodOutGo: 1,           /*расход обеспечения за 1 цикл игры*/
-        foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
-        menInGo: 1             /*пополнение людьми за 1 цикл игры*/
+        ammo: 3,          /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
+        food: 1,           /*расход обеспечения за 1 цикл игры*/
     };
 	this.icon =	{   url: '/img/type/foot24.png',
                     size: [24,24],
@@ -71,7 +65,7 @@ UnitTypes.Foot = function(){
 				};
                 
     this.toString = function(){
-        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, cycle: this.cycle}; 
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
      };
 };
 
@@ -81,13 +75,10 @@ UnitTypes.Convoy = function(){
     this.VELOCITY = 40;
 	this.radius = 0.005;
     this.power = 10;              /*боевая мощь*/
-    this.cycle = 
+    this.outGo = 
     {
-        ammoOutGo: 3,          /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
-        ammoInGo: 1,           /*пополнение боеприпасов за 1 цикл игры*/
-        foodOutGo: 1,           /*расход обеспечения за 1 цикл игры*/
-        foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
-        menInGo: 1             /*пополнение людьми за 1 цикл игры*/
+        ammo: 3,          /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
+        food: 1,           /*расход обеспечения за 1 цикл игры*/
     };
 	this.icon =	{   url: '/img/type/convoy24.png',
                     size: [24,24],
@@ -105,7 +96,7 @@ UnitTypes.Convoy = function(){
 				};
                 
     this.toString = function(){
-        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, cycle: this.cycle}; 
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
      };
 };
 
@@ -115,13 +106,12 @@ UnitTypes.Base = function(){
     this.VELOCITY = 20;
 	this.radius = 0.01;
     this.power = 10;              /*боевая мощь*/
-	this.cycle = 
+    this.child = []; /*массив id дочерних юнитов*/
+    this.MAX_CHILD = 3; /*максимальное количество дочерних юнитов*/
+	this.outGo = 
     {
-        ammoOutGo: 3,           /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
-        ammoInGo: 1,           /*пополнение боеприпасов за 1 цикл игры*/
-        foodOutGo: 1,           /*расход обеспечения за 1 цикл игры*/
-        foodInGo: 2,           /*пополнение обеспечения за 1 цикл игры*/
-        menInGo: 1             /*пополнение людьми за 1 цикл игры*/
+        ammo: 3,           /*расход боеприпасов за 1 цикл игры при интенсивности боя 1*/
+        food: 1,           /*расход обеспечения за 1 цикл игры*/
     };
     this.icon =	{   url: '/img/type/base24.png',
                     size: [24,24],
@@ -137,7 +127,7 @@ UnitTypes.Base = function(){
 				};
                 
     this.toString = function(){
-        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, cycle: this.cycle}; 
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo, child: this.child }; 
      };
 };
 

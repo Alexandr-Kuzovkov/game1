@@ -242,6 +242,19 @@ Game.prototype.getBase = function(id){
 };
 
 /**
+* Возвращает объект юнита по его id
+**/
+Game.prototype.getUnit = function(id){
+    for ( var i = 0; i < this.bases.length; i++ ){
+        if ( this.bases[i].id == id ) return this.bases[i];
+    }
+    for ( var i = 0; i < this.regiments.length; i++ ){
+        if ( this.regiments[i].id == id ) return this.regiments[i];
+    }
+    return null;  
+};
+
+/**
 * добавление лог-сообщения
 * @param mess строка сообщения
 **/
@@ -352,6 +365,11 @@ Game.prototype.joinUser = function(units, user, callback){
 * @param unit объект юнита
 **/
 Game.prototype.mustDied = function(unit){
+    if (unit.type.resources.men <= 20 || unit.type.resources.food <= 20 ){
+        unit.died = true;
+    }else{
+        unit.died = false;
+    }
     if (unit.type.resources.men <= 0 || unit.type.resources.food <= 0 ){
         return true;
     }
@@ -363,12 +381,39 @@ Game.prototype.mustDied = function(unit){
 * @param unit объект юнита
 **/
 Game.prototype.addUnit = function(unit){
-    unit.id = this.unitcnt++;
+    var id = this.unitcnt++;
+    unit.id = id;
     if (unit.type.id == 'base'){
         this.bases.push(unit);
     }else{
         this.regiments.push(unit);
     }
+    return id;
 };
+
+/**
+* удаление юнита из игры
+* @param id идентификатор юнита
+**/
+Game.prototype.delUnit = function(id){
+    var i = 0;
+    while(i < this.regiments.length){
+        if ( this.regiments[i].id == id ){
+            delete this.regiments[i];
+            this.regiments[i].splice(i,1);
+        }
+    }
+    
+    var i = 0;
+    while(i < this.bases.length){
+        if ( this.bases[i].id == id ){
+            delete this.bases[i];
+            this.bases[i].splice(i,1);
+        }
+    }
+    return id;
+};
+
+
 
 exports.Game = Game;

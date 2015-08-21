@@ -23,7 +23,9 @@ function Unit( latlng, id, userId, map )
     this.weather = null; /*погодные данные*/
     this.latlng = latlng;/*позиция юнита [lat,lng]*/
     this.visible = true; /*видимость юнита*/
-    this.map = map;
+    this.map = map; /*ссылка на объект карты*/
+    this.died = false; /*флаг состояния близкого к гибели*/
+    this.lastdied = false; /*предыдущее значение флага died*/
     this.status = 
     {
         kind: 'march', /*статус юнита; может быть march, attack, defense*/
@@ -164,16 +166,13 @@ Unit.prototype.unselect = function(){
 **/
 Unit.prototype.setBattleAnimation = function(){
     if ( this.battle == this.lastbattle ) return;
+    this.lastbattle = this.battle;
     if ( this.battle ){
-        this.lastbattle = this.battle;
         if (this.marker.battle)
             this.marker.battle.setIcon(this.iconBattle);
-        
     }else{
-        this.lastbattle = this.battle;
         if (this.marker.battle)
             this.marker.battle.setIcon(this.iconUnselected);
-       
     } 
 };
 
@@ -234,13 +233,23 @@ Unit.prototype.hide = function(){
 **/
 Unit.prototype.update = function(){
     this.setBattleAnimation();
+    this.setDiedAnimation();
 };
 
 /**
 * установка анимации гибели юнита
 **/
 Unit.prototype.setDiedAnimation = function(){
-    this.marker.explosion.setIcon(this.iconExplosion);
+    if ( this.died == this.lastdied ) return;
+    this.lastdied = this.died;
+    if ( this.died ){
+        if (this.marker.explosion)
+            this.marker.explosion.setIcon(this.iconExplosion);
+        
+    }else{
+        if (this.marker.explosion)
+            this.marker.explosion.setIcon(this.iconUnselected);
+    }
 };
 
 /**
@@ -268,6 +277,7 @@ Unit.prototype.toString = function(){
     unit.elevation = this.elevation;
     unit.lastelevation = this.lastelevation;
     unit.battle = this.battle;
+    unit.died = this.died;
     unit.status = this.status;
     unit.weather = this.weather;
     unit.enemyCount = this.enemyCount; 
@@ -291,3 +301,29 @@ Unit.prototype.setListeners = function(){
     this.marker.selected.addEventListener('mouseout', function(){UnitEvent.mouseout(this)},this);
 };
 
+/**
+* добавление id дочерних юнитов
+* @param id идентификатор дочернего юнита 
+**/
+Unit.prototype.addChild = function(id){
+    if (this.type.child == undefined) return;
+    if (this.type.child.length < this.type.MAX_CHILD){
+        this.type.child.push(id);
+    }
+};
+
+/**
+* удаление id дочернего юнита
+* @param id идентификатор дочернего юнита
+**/
+Unit.prototype.delChild = function(id){
+    if (this.type.child == undefined) return;
+    var i = 0;
+    while(i < this.type.child.length){
+        if ( this.type.child[i] == id ){
+            this.type.child.splice(i,1);
+        }else{
+            i++;
+        }
+    }
+};

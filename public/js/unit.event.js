@@ -185,18 +185,7 @@ var UnitEvent =
     
     /*создание конвоя*/
     createConvoy: function(id){
-        
-        var object = UnitEvent.app.game.getBase(id);
-        if ( object == null ) return false;
-        var delta = 0.01;
-        var latlng = [object.latlng[0]+delta, object.latlng[1]+delta];
-        var country = UnitEvent.app.game.country.id;
-        var type = 'convoy';
-        var userId = UnitEvent.app.user.id;
-        var unit = App.unitFactory.createUnit(latlng, type, country, 0, App.user.id);
-        unit.init();
-        App.socket.send('add_unit', {unit:unit.toString(), location:App.game.location.id});
-        unit.destroy();
+        App.addUnit(id, 'convoy');
     }
                    
 }

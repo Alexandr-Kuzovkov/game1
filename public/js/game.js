@@ -133,12 +133,9 @@ function Game( user )
 		for ( var i = 0; i < this.regiments.length; i++ ) {
             if ( this.regiments[i].id == id ){
     			var unit = this.regiments[i];
-                unit.setDiedAnimation();
                 delete this.regiments[i];
                 this.regiments.splice(i,1);
-                setTimeout(function(){
-                    unit.destroy();
-                },2000);
+                unit.destroy();
                 return;
     		}
         }
@@ -146,12 +143,9 @@ function Game( user )
         for ( var i = 0; i < this.bases.length; i++ ) {
             if ( this.bases[i].id == id ){
     			var unit = this.bases[i];
-                unit.setDiedAnimation();
                 delete this.bases[i];
     			this.bases.splice(i,1);
-                setTimeout(function(){
-                    unit.destroy();              
-                },2000);
+                unit.destroy();              
     		}
         }  
 	};
@@ -261,7 +255,7 @@ function Game( user )
     * @return true/false
     **/
     this.isSyncParamFromServer = function(param){
-        var syncParams = ['elevation', 'battle', 'weather' ];
+        var syncParams = ['elevation', 'battle', 'weather', 'died' ];
         return ( syncParams.indexOf(param) != -1 )? true : false;
     };
     

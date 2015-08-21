@@ -22,7 +22,7 @@ function combat(game){
                     var powerBattle = getPowerBattle(game.regiments[i], game.regiments[j]);
                     var enemyPower = getPower(game.regiments[j], powerBattle);
                     makeDamage(game.regiments[i], enemyPower);
-                    ammoGoOut(game.regiments[i], powerBattle);
+                    ammoOutGo(game.regiments[i], powerBattle);
                     addExperience(game.regiments[i], powerBattle);  
                 }
                     
@@ -38,7 +38,7 @@ function combat(game){
                     var powerBattle = getPowerBattle(game.regiments[i], game.bases[j]);
                     var enemyPower = getPower(game.bases[j], powerBattle);
                     makeDamage(game.regiments[i], enemyPower);
-                    ammoGoOut(game.regiments[i], powerBattle);
+                    ammoOutGo(game.regiments[i], powerBattle);
                     addExperience(game.regiments[i], powerBattle); 
                 }     
             }
@@ -71,7 +71,7 @@ function combat(game){
                     var powerBattle = getPowerBattle(game.bases[i], game.bases[j]);
                     var enemyPower = getPower(game.bases[j], powerBattle);
                     makeDamage(game.bases[i], enemyPower);
-                    ammoGoOut(game.bases[i], powerBattle);  
+                    ammoOutGo(game.bases[i], powerBattle);  
                 }     
             }
         }
@@ -85,7 +85,7 @@ function combat(game){
                     var powerBattle = getPowerBattle(game.bases[i], game.regiments[j]);
                     var enemyPower = getPower(game.regiments[j], powerBattle);
                     makeDamage(game.bases[i], enemyPower);
-                    ammoGoOut(game.bases[i], powerBattle);
+                    ammoOutGo(game.bases[i], powerBattle);
                     country = game.regiments[j].country;
                 }
             }
@@ -184,11 +184,11 @@ function makeDamage(unit, power){
 * @param unit объект юнита
 * @param powerBattle интенсивность боя
 **/
-function ammoGoOut(unit, powerBattle){
+function ammoOutGo(unit, powerBattle){
      return;
      var enemyCountCoff = (unit.enemyCount == 0)? 1 : unit.enemyCount;
     if ( unit.battle ){
-        unit.type.resources.ammo -= unit.type.cycle.ammoOutGo * powerBattle / enemyCountCoff;
+        unit.type.resources.ammo -= unit.type.outGo.ammo * powerBattle / enemyCountCoff;
     }
     if ( unit.type.resources.ammo < 0 ) unit.type.resources.ammo = 0;
 };
@@ -205,7 +205,7 @@ function resourcesOutGo(unit){
         if (unit.weather && unit.weather.temperature < -10 ){
             weatherCoff *= 1.5;
         }
-        unit.type.resources.food -= unit.type.cycle.foodOutGo * weatherCoff * 0.01;
+        unit.type.resources.food -= unit.type.outGo.food * weatherCoff * 0.01;
         unit.type.resources.food = (unit.type.resources.food >= 0)? unit.type.resources.food : 0;
     }
 };
