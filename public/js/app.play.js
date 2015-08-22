@@ -15,15 +15,17 @@ App.init = function(){
     App.countries = Countries;
     App.unit = Unit;
     App.unitFactory = UnitFactory;
-    App.unitEvent = UnitEvent;
+    App.mouse = Mouse;
+    App.action = Action;
     App.user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/      
     App.game = new Game(App.user);/*переменная для хранения клиентского объекта game*/
     
     App.map.init(App);  
     App.socket.init(App);
     App.unitFactory.init(App);
-    App.unitEvent.init(App);
+    App.mouse.init(App);
     App.iface.init(App);
+    App.action.init(App);
     App.setEventHandlers();
 };
 
@@ -40,6 +42,7 @@ App.setEventHandlers = function(){
     App.socket.setEventHandler('takeroute', App.moveUnit);
     App.socket.setEventHandler('updategame', App.updateGame);
     App.socket.setEventHandler('unit_added', App.onAddUnit);
+    App.socket.setEventHandler('unit_deleted', App.onDelUnit);
 };
 
 /**
@@ -149,7 +152,7 @@ App.unitGoRoute = function(unit, latlng){
 };
 
 /**
-* функция обратного вызова, вызываемая после получеия маршрута от сервера
+* функция обратного вызова, вызываемая после получения маршрута от сервера
 * анимированное движение юнита на карте по маршруту
 * @param data объект данных, получаемый с сервера
 **/

@@ -14,7 +14,7 @@ App.init = function(){
     App.unitTypes = UnitTypes;
     App.countries = Countries;
     App.unit = Unit;
-    App.unitEvent = UnitEvent;
+    App.mouse = Mouse;
     App.unitFactory = UnitFactory;
     App.user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/      
     App.game = new Game(App.user);/*переменная для хранения клиентского объекта game*/
@@ -22,7 +22,7 @@ App.init = function(){
     App.map.init(App);  
     App.socket.init(App);
     App.unitFactory.init(App);
-    App.unitEvent.init(App);
+    App.mouse.init(App);
     App.iface.init(App);
     App.setEventHandlers();
     

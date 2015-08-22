@@ -12,6 +12,7 @@ function Game( user )
 	this.regiments = []; /**массив полков*/
 	this.bases = [];     /*массив баз*/
     this.start = false;  /*флаг состояния игры*/
+    this.gameEventQueue = [];/*очередь игровых событий*/
     
     /*запуск инициализации объектов полков*/
     this.initRegiments = function(){
@@ -164,6 +165,7 @@ function Game( user )
 	this.loop = function(){
         for ( var i = 0, len = this.regiments.length; i < len; i++ ) this.regiments[i].update();
 		for ( var i = 0, len = this.bases.length; i < len; i++ ) this.bases[i].update();
+        this.handlingGameEvents();
     };
     
     /**
@@ -231,7 +233,7 @@ function Game( user )
     };
     
     /**
-    * преобразование в объекта игры в строку
+    * преобразование объекта в вид который может быть преобразован в строку
     **/
     this.toString = function(){
         var game = {};
@@ -389,6 +391,36 @@ function Game( user )
             
         }//end if actualGame
         
+    };
+    
+    /**
+    * добавление события в очередь игровых событий
+    * @param eventName имя события
+    * @param eventData объект данных, передаваемый обработчику
+    * @param priority приоритет события
+    **/
+    this.addGameEvent = function(eventName, eventData, priority){
+        this.gameEventQueue.push({eventName:eventName, eventData:eventData, priority:priority});
+    };
+    
+    /*определени обработчиков игровых событий*/
+    this.gameEventHandlers = {
+        
+    };
+    
+    /*обработка игровых событий*/
+    this.handlingGameEvents = function(){
+        var i = 0;
+        while(i < this.gameEventQueue.length){
+            this.gameEventQueue[i].priority--;
+            if (this.gameEventQueue[i].priority <= 0){
+                this.gameEventHandlers[this.gameEventQueue[i].eventName](this.gameEventQueue[i].eventData);
+                delete this.gameEventQueue[i];
+                this.gameEventQueue.splice(i,1);
+            }else{
+                i++;
+            }
+        } 
     };
        
 }//end Game

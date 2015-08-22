@@ -3,12 +3,12 @@
 * для юнитов
 **/
 
-var UnitEvent = 
+var Mouse = 
 {
     app: null,/*объект приложения*/
      
     init: function(app){
-        UnitEvent.app = app; 
+        Mouse.app = app; 
     },
     
     /**
@@ -22,29 +22,29 @@ var UnitEvent =
 			object.unselect();
 		}
 		else{
-			if ( !object.OWN ) UnitEvent.app.game.unselectNotOwn();
+			if ( !object.OWN ) Mouse.app.game.unselectNotOwn();
 			object.select();
 			if ( object.OWN ){
-			     UnitEvent.app.map.addOneTimeEventListener('dblclick', function(e){
-    				UnitEvent.dblclick(e,object);
+			     Mouse.app.map.addOneTimeEventListener('dblclick', function(e){
+    				Mouse.dblclick(e,object);
     			},object);
 			}
             else{
                 object.marker.selected.addOneTimeEventListener('dblclick',function(){
-                    UnitEvent.attack(object.id);
+                    Mouse.attack(object.id);
                 },object);
             }       
 		}
     },
     
     /**
-    * обработчик события  doubleclick на юните
+    * обработчик события  doubleclick на карте
     * @param object объект юнита 
     * @param e объект события
     **/
     dblclick: function(e, object){
         var latlng = {lat: e.latlng.lat, lng: e.latlng.lng};
-        UnitEvent.app.unitGoRoute(object,[e.latlng.lat, e.latlng.lng]);
+        Mouse.app.unitGoRoute(object,[e.latlng.lat, e.latlng.lng]);
         object.unselect();
     			
     },
@@ -55,7 +55,7 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     contextmenu: function(object){
-           object.popup.show(object.latlng, UnitEvent.app.iface.showMenu(object));   
+           object.popup.show(object.latlng, Mouse.app.iface.showMenu(object));   
     },
     
     /**
@@ -64,14 +64,14 @@ var UnitEvent =
     * @param map объект карты Map
     **/
     removeDblclick: function(object){
-        UnitEvent.app.map.removeEventListener('dblclick',null,object);
+        Mouse.app.map.removeEventListener('dblclick',null,object);
     },
     
     mouseover: function(object){
          for ( marker in object.marker ) {
             if ( marker != 'area' )object.marker[marker].setOpacity(0.7);
          }
-         UnitEvent.app.iface.showUnit(object.getInfo());
+         Mouse.app.iface.showUnit(object.getInfo());
          this.overUnit = object;      
     },
     
@@ -79,7 +79,7 @@ var UnitEvent =
          for ( marker in object.marker ) {
             if ( marker != 'area') object.marker[marker].setOpacity(1.0);
          }
-         UnitEvent.app.iface.hideUnit();
+         Mouse.app.iface.hideUnit();
          this.overUnit = null;
     },
     
@@ -108,21 +108,21 @@ var UnitEvent =
     
     /*отмена марша своего полка*/
     ownRegStop: function(id){  
-        var object = UnitEvent.app.game.getRegiment(id);
+        var object = Mouse.app.game.getRegiment(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния полка марш*/
     ownRegMarch: function(id){
-        var object = UnitEvent.app.game.getRegiment(id);
+        var object = Mouse.app.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния полка оборона*/
     ownRegDefense: function(id){
-        var object = UnitEvent.app.game.getRegiment(id);
+        var object = Mouse.app.game.getRegiment(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense')
@@ -130,41 +130,41 @@ var UnitEvent =
     
     /*включение состояния атаки*/
     ownRegAttack: function(id){
-        var object = UnitEvent.app.game.getRegiment(id);
+        var object = Mouse.app.game.getRegiment(id);
         if ( object == null ) return false;
         object.setStatus('attack')
     },
     
     /*команда на атаку вражеского полка*/
     attack: function(id){
-        var object = UnitEvent.app.game.getRegiment(id);
+        var object = Mouse.app.game.getRegiment(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < UnitEvent.app.game.regiments.length; i++ ){
-            if ( UnitEvent.app.game.regiments[i].OWN && UnitEvent.app.game.regiments[i].selected ){
-                UnitEvent.app.game.regiments[i].setStatus('attack');
-                UnitEvent.app.unitGoRoute(UnitEvent.app.game.regiments[i],[latlng.lat, latlng.lng]);
+        for ( var i = 0; i < Mouse.app.game.regiments.length; i++ ){
+            if ( Mouse.app.game.regiments[i].OWN && Mouse.app.game.regiments[i].selected ){
+                Mouse.app.game.regiments[i].setStatus('attack');
+                Mouse.app.unitGoRoute(Mouse.app.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
     },
     
     /*отмена марша своей базы*/
     ownBaseStop: function(id){
-        var object = UnitEvent.app.game.getBase(id);
+        var object = Mouse.app.game.getBase(id);
         if ( object == null || object.MOVE == false ) return false;
         object.STOP = true;
     },
     
     /*включение состояния базы марш*/
     ownBaseMarch: function(id){
-        var object = UnitEvent.app.game.getBase(id);
+        var object = Mouse.app.game.getBase(id);
         if ( object == null ) return false;
         object.setStatus('march');
     },
     
     /*включение состояния базы оборона*/
     ownBaseDefense: function(id){
-        var object = UnitEvent.app.game.getBase(id);
+        var object = Mouse.app.game.getBase(id);
         if ( object == null ) return false;
         if (object.MOVE) object.STOP = true;
         object.setStatus('defense');
@@ -172,13 +172,13 @@ var UnitEvent =
     
     /*команда на захват вражеской базы*/
     baseCapture: function(id){
-        var object = UnitEvent.app.game.getBase(id);
+        var object = Mouse.app.game.getBase(id);
         if ( object == null ) return false;
         var latlng  = { lat: object.toString().latlng[0], lng: object.toString().latlng[1] };
-        for ( var i = 0; i < UnitEvent.app.game.regiments.length; i++ ){
-            if ( UnitEvent.app.game.regiments[i].OWN && UnitEvent.app.game.regiments[i].selected ){
-                UnitEvent.app.game.regiments[i].setStatus('attack');
-                UnitEvent.app.unitGoRoute(UnitEvent.app.game.regiments[i],[latlng.lat, latlng.lng]);
+        for ( var i = 0; i < Mouse.app.game.regiments.length; i++ ){
+            if ( Mouse.app.game.regiments[i].OWN && Mouse.app.game.regiments[i].selected ){
+                Mouse.app.game.regiments[i].setStatus('attack');
+                Mouse.app.unitGoRoute(Mouse.app.game.regiments[i],[latlng.lat, latlng.lng]);
             }
         }
     },

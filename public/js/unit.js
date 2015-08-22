@@ -262,7 +262,7 @@ Unit.prototype.destroy = function(){
 	for ( key in this.marker ) this.marker[key].destroy();
 };
 
-/*преобразование в строку*/
+/*преобразование объекта в вид который может быть преобразован в строку*/
 Unit.prototype.toString = function(){
     var unit = {};
     unit.country = this.country.toString();
@@ -295,10 +295,10 @@ Unit.prototype.onInit = function(){
 
 Unit.prototype.setListeners = function(){
     this.marker.selected.clearAllEventListeners();
-    this.marker.selected.addEventListener('click', function(){UnitEvent.click(this)},this);
-	this.marker.selected.addEventListener('contextmenu',function(){UnitEvent.contextmenu(this)},this);
-    this.marker.selected.addEventListener('mouseover', function(){UnitEvent.mouseover(this)},this);
-    this.marker.selected.addEventListener('mouseout', function(){UnitEvent.mouseout(this)},this);
+    this.marker.selected.addEventListener('click', function(){Mouse.click(this)},this);
+	this.marker.selected.addEventListener('contextmenu',function(){Mouse.contextmenu(this)},this);
+    this.marker.selected.addEventListener('mouseover', function(){Mouse.mouseover(this)},this);
+    this.marker.selected.addEventListener('mouseout', function(){Mouse.mouseout(this)},this);
 };
 
 /**

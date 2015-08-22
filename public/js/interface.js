@@ -267,8 +267,8 @@ Interface.hideElem = function(el){
 * обновление информации об юните во всплывающем блоке
 **/
 Interface.updateInfoUnit = function(){
-    if ( Interface.unitinfo_div.style.display == 'block' && UnitEvent.overUnit != null){
-        this.showUnit(UnitEvent.overUnit.getInfo());
+    if ( Interface.unitinfo_div.style.display == 'block' && Mouse.overUnit != null){
+        this.showUnit(Mouse.overUnit.getInfo());
     }  
 };
 
@@ -280,14 +280,14 @@ Interface.getRegimentMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='UnitEvent.unitcontextmenu(0,"+object.id+")'>Стоп</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(1,"+object.id+")'>Марш</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(2,"+object.id+")'>Оборона</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(3,"+object.id+")'>Атака</li>\
+                        <li onclick='Mouse.unitcontextmenu(0,"+object.id+")'>Стоп</li>\
+                        <li onclick='Mouse.unitcontextmenu(1,"+object.id+")'>Марш</li>\
+                        <li onclick='Mouse.unitcontextmenu(2,"+object.id+")'>Оборона</li>\
+                        <li onclick='Mouse.unitcontextmenu(3,"+object.id+")'>Атака</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='UnitEvent.unitcontextmenu(4,"+object.id+")'>Атаковать</li>\
+                        <li onclick='Mouse.unitcontextmenu(4,"+object.id+")'>Атаковать</li>\
                     </ul>";
     }
     return menu;
@@ -301,14 +301,14 @@ Interface.getBaseMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='UnitEvent.unitcontextmenu(5,"+object.id+")'>Стоп</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(6,"+object.id+")'>Марш</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(7,"+object.id+")'>Оборона</li>\
-                        <li onclick='UnitEvent.unitcontextmenu(9,"+object.id+")'>Создать конвой</li>\
+                        <li onclick='Mouse.unitcontextmenu(5,"+object.id+")'>Стоп</li>\
+                        <li onclick='Mouse.unitcontextmenu(6,"+object.id+")'>Марш</li>\
+                        <li onclick='Mouse.unitcontextmenu(7,"+object.id+")'>Оборона</li>\
+                        <li onclick='Mouse.unitcontextmenu(9,"+object.id+")'>Создать конвой</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='UnitEvent.unitcontextmenu(8,"+object.id+")'>Уничтожить</li>\
+                        <li onclick='Mouse.unitcontextmenu(8,"+object.id+")'>Уничтожить</li>\
                     </ul>";
     }
     return menu;
