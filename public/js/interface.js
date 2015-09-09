@@ -38,6 +38,13 @@ Interface.init = function(app) {
     Interface.alert_callback = false;
     Interface.input_username = document.getElementById('username');
     Interface.country_image = document.getElementById('country-image');
+    Interface.lang = document.getElementById('lang');
+    
+    Interface.lang.onchange = function(){
+        Lang.curr = Interface.lang.value;
+        Storage.save('lang', Interface.lang.value);
+        window.location.reload(true);
+    };
     
     if ( Interface.alert_button ) Interface.alert_button.onclick = Interface.closeAlert;
     
@@ -62,15 +69,17 @@ Interface.init = function(app) {
     if (Interface.label_mission) Interface.label_mission.onmouseout = function(){ Interface.hideMission(); }; 
 
     /*включение скрытия/показа блоков*/
-    Interface.hideShowElement( document.getElementById('label-btn-block'), 'Скрыть кнопки', 'Показать кнопки', 'btn-block control-block grad2 font-response hide', 'btn-block control-block grad2 font-response' );
-    Interface.hideShowElement( document.getElementById('label-log-block'), 'Скрыть лог', 'Показать лог', 'log-block control-block grad2 font-response hide', 'log-block control-block grad2 font-response' );
-    Interface.hideShowElement( document.getElementById('label-info-block'), 'Скрыть сводку', 'Показать сводку', 'info-block control-block grad2 font-response hide', 'info-block control-block grad2 font-response' );
+    Interface.hideShowElement( document.getElementById('label-btn-block'), '-', '+', 'btn-block control-block grad2 font-response hide', 'btn-block control-block grad2 font-response' );
+    Interface.hideShowElement( document.getElementById('label-log-block'), '-', '+', 'log-block control-block grad2 font-response hide', 'log-block control-block grad2 font-response' );
+    Interface.hideShowElement( document.getElementById('label-info-block'), '-', '+', 'info-block control-block grad2 font-response hide', 'info-block control-block grad2 font-response' );
 
     /*смена сервиса маршрутов*/
     if (Interface.selectService) Interface.selectService.onchange = function(){
 		Route.service = Interface.selectService.value;
 	};
-
+    
+    Interface.fillLang();
+    
 };    
     /*перезагрузка страницы*/
 Interface.reloadPage = function(url){ window.location.replace(url); };
@@ -104,25 +113,46 @@ Interface.addInfo = function(mess){
 };
 
 /**
+* заполнения селекта языков
+**/
+Interface.fillLang = function(){
+    this.destroyChildren(this.lang);
+    var selected = false;
+    for (var key in Lang){
+        console.log(key);
+        if (Lang[key].name != undefined){
+            if (key == 'get' || key == 'curr') continue;
+            var opt = document.createElement('option');
+            opt.innerText = Lang[key].name;
+            opt.textContent = Lang[key].name;
+            opt.value = key;
+            if (key == Lang.curr) opt.setAttribute('selected','selected');
+            this.lang.appendChild(opt);
+        }
+        
+    }
+};
+
+/**
 * объект для перевода представления данных об юните
 **/
 
 Interface.translate = {
-    id: 'Идентификатор',
-    country: 'Страна',
-    type: 'Тип',
-    people: 'Личный состав',
-    ammo: 'Боеприпасы',
-    food: 'Обеспечение',
-    discipline: 'Организованность',
-    experience: 'Опыт',
-    elevation: 'Высота',
-    battle: 'Бой',
-    status: 'Состояние',
-    attack: 'Атака',
-    defense: 'Оборона',
-    march: 'Марш',
-    weather: 'Погода'  
+    id: Lang.get('identificator'),
+    country: Lang.get('country'),
+    type: Lang.get('type'),
+    people: Lang.get('people'),
+    ammo: Lang.get('ammo'),
+    food: Lang.get('food'),
+    discipline: Lang.get('discipline'),
+    experience: Lang.get('experience'),
+    elevation: Lang.get('elevation'),
+    battle: Lang.get('battle'),
+    status: Lang.get('status'),
+    attack: Lang.get('attack'),
+    defense: Lang.get('defense'),
+    march: Lang.get('march'),
+    weather: Lang.get('weather')  
 };
 
 /**
@@ -146,8 +176,8 @@ Interface.showUnit = function(unit){
         if ( item == 'weather' ) continue;
         var li = document.createElement('li');
         var value = unit[item];
-        if ( typeof(value) == 'boolean' && value == false ) value = 'Нет';
-        if ( typeof(value) == 'boolean' && value == true ) value = 'Да';
+        if ( typeof(value) == 'boolean' && value == false ) value = Lang.get('no');
+        if ( typeof(value) == 'boolean' && value == true ) value = Lang.get('yes');
         if ( typeof(value) == 'string' && this.translate[value] != undefined ) value = this.translate[value];
         var text = this.translate[item] + ': ' + value;
         li.innerText = text;
@@ -280,14 +310,14 @@ Interface.getRegimentMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(0,"+object.id+")'>Стоп</li>\
-                        <li onclick='Mouse.unitcontextmenu(1,"+object.id+")'>Марш</li>\
-                        <li onclick='Mouse.unitcontextmenu(2,"+object.id+")'>Оборона</li>\
-                        <li onclick='Mouse.unitcontextmenu(3,"+object.id+")'>Атака</li>\
+                        <li onclick='Mouse.unitcontextmenu(0,"+object.id+")'>"+Lang.get('stop')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(1,"+object.id+")'>"+Lang.get('march')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(2,"+object.id+")'>"+Lang.get('defense')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(3,"+object.id+")'>"+Lang.get('attack')+"</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(4,"+object.id+")'>Атаковать</li>\
+                        <li onclick='Mouse.unitcontextmenu(4,"+object.id+")'>"+Lang.get('attack')+"</li>\
                     </ul>";
     }
     return menu;
@@ -301,14 +331,14 @@ Interface.getBaseMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(5,"+object.id+")'>Стоп</li>\
-                        <li onclick='Mouse.unitcontextmenu(6,"+object.id+")'>Марш</li>\
-                        <li onclick='Mouse.unitcontextmenu(7,"+object.id+")'>Оборона</li>\
-                        <li onclick='Mouse.unitcontextmenu(9,"+object.id+")'>Создать конвой</li>\
+                        <li onclick='Mouse.unitcontextmenu(5,"+object.id+")'>"+Lang.get('stop')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(6,"+object.id+")'>"+Lang.get('march')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(7,"+object.id+")'>"+Lang.get('defense')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(9,"+object.id+")'>"+Lang.get('convoy')+"</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(8,"+object.id+")'>Уничтожить</li>\
+                        <li onclick='Mouse.unitcontextmenu(8,"+object.id+")'>"+Lang.get('destroy')+"</li>\
                     </ul>";
     }
     return menu;
@@ -344,20 +374,20 @@ Interface.formatWeatherData = function(weather){
     content += '</div>';
     
     content += '<div class="weather-line">';
-    content += (weather.frshht.slice(0,1) == '1')? ' Туман ' : '';
-    content += (weather.frshht.slice(1,2) == '1')? ' Дождь  ' : '';
-    content += (weather.frshht.slice(2,3) == '1')? ' Снег ' : '';
-    content += (weather.frshht.slice(3,4) == '1')? ' Град ' : '';
-    content += (weather.frshht.slice(4,5) == '1')? ' Гроза ' : '';
-    content += (weather.frshht.slice(5,6) == '1')? ' Торнадо ' : '';
-    content += 'Температура (С): ' + weather.temperature.toFixed(1);
-    content += '; Скорость ветра (м/с): ';
+    content += (weather.frshht.slice(0,1) == '1')? ' '+Lang.get('fog')+' ' : '';
+    content += (weather.frshht.slice(1,2) == '1')? ' '+Lang.get('rain')+'  ' : '';
+    content += (weather.frshht.slice(2,3) == '1')? ' '+Lang.get('snow')+' ' : '';
+    content += (weather.frshht.slice(3,4) == '1')? ' '+Lang.get('thunder')+' ' : '';
+    content += (weather.frshht.slice(4,5) == '1')? ' '+Lang.get('fog')+' ' : '';
+    content += (weather.frshht.slice(5,6) == '1')? ' '+Lang.get('tornado')+' ' : '';
+    content += Lang.get('temperature') + weather.temperature.toFixed(1);
+    content += Lang.get('wind');
     content += (weather.wind != null)? weather.wind.toFixed(1): 'н/д';
-    content += '; Давление (мм. рт. ст.): ';
+    content += Lang.get('pressure');
     content += (weather.pressure != null)? 760 * weather.pressure.toFixed(1):'н/д';
-    content += '; Видимость (м): ';
+    content += Lang.get('visib');
     content += (weather.visib != '999.9')? (parseFloat(weather.visib) * 1609).toFixed(1) : 'н/д';
-    content += '; Осадков за день(см): ';
+    content += Lang.get('prcp');
     content += (weather.prcp != '99.99')? (parseFloat(weather.prcp.slice(0,4))*2.54).toFixed(1) : 0;
     
     content += '</div>';

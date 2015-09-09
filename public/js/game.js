@@ -166,6 +166,7 @@ function Game( user )
         for ( var i = 0, len = this.regiments.length; i < len; i++ ) this.regiments[i].update();
 		for ( var i = 0, len = this.bases.length; i < len; i++ ) this.bases[i].update();
         this.handlingGameEvents();
+        
     };
     
     /**

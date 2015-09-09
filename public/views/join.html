@@ -24,22 +24,23 @@
                 
                 
                 <div class="btn-block control-block grad2 font-response">
-                   <button class="btn rad grad text-hover  font-response" id="btn-menu">Меню</button><br />
+                   <button class="btn rad grad text-hover  font-response" id="btn-menu"><script>document.write(Lang.get('menu'))</script></button><br />
                 </div>
                 <div id="unit-info" class="unit-info font-response"></div>
                 <div class="set-units control-block grad2 font-response">
-                    <input type="text" id="username" placeholder="Ваше имя"/>
+                    <input type="text" id="username" placeholder=""/>
+                    <script>document.getElementById('username').placeholder=Lang.get('your_name')</script>
                     <label>Выберите страну</label>
                     <select id="set-country"></select>
                     <hr />
-                    <label>Установите на карте доступные Вам Юниты:</label>
+                    <label><script>document.write(Lang.get('place_avail_units'))</script></label>
                     <hr />
                     <ul id="units-list">
                         
                     </ul>
                     <hr />
-                    <button class="btn rad grad text-hover  font-response" id="btn-clear-all">Удалить все</button>
-                    <button class="btn rad grad text-hover  font-response" id="btn-begin-game">Начать игру</button>
+                    <button class="btn rad grad text-hover  font-response" id="btn-clear-all"><script>document.write(Lang.get('start_game'))</script></button>
+                    <button class="btn rad grad text-hover  font-response" id="btn-begin-game"><script>document.write(Lang.get('delete_all'))</script></button>
                 </div>
                 <div id="mission-info" class="mission-info font-response"></div>
                 

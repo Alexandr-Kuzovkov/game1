@@ -660,5 +660,10 @@ hr
     margin: auto;
 }
 
-
+.lang
+{
+    position: absolute;
+    top: 40px;
+    right: 200px;
+}
  

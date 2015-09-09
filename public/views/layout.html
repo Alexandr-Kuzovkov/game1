@@ -15,6 +15,8 @@
     <script src="/js/lib/google_tiles.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/storage.js"></script>
+    <script type="text/javascript" src="/js/lang.js"></script>
 	<script type="text/javascript" src="/js/debug.js"></script>
 	<script type="text/javascript" src="/js/countries.js"></script>
 	<script type="text/javascript" src="/js/unit.types.js"></script>
@@ -29,7 +31,8 @@
     <script type="text/javascript" src="/js/helper.js"></script>
     <script type="text/javascript" src="/js/socket.js"></script>
     <script type="text/javascript" src="/js/ajax.js"></script>
-    <script type="text/javascript" src="/js/action.js"></script>
+    
+    
     {% block topjs %}{% endblock %}
       
 </head>
@@ -38,8 +41,12 @@
         <div id="alert-wrap">
             <div class="alert grad2">
                 <div id="alert-text"></div> 
-                <button id="alert-button">Закрыть</button>
+                <button id="alert-button"><script>document.write(Lang.get('close'))</script></button>
             </div>
+        </div>
+        <div class="lang grad2 rad">
+            <select id="lang">
+            </select>
         </div>      
         {% block bottomjs %}{% endblock %}
     </body>

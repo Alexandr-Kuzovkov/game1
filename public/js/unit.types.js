@@ -5,7 +5,7 @@
 var UnitTypes = {};
 
 UnitTypes.Tank = function(){
-	this.name =	'Танковый полк'; /*наименование*/
+	this.name =	Lang.get('tank_regiment'); /*наименование*/
 	this.id = 'tank';            /*идентификатор*/
     this.VELOCITY = 40;         /*скорость движения юнита в км/ч*/
     this.radius = 0.01;          /*радиус области действия полка в градусах*/
@@ -32,14 +32,14 @@ UnitTypes.Tank = function(){
     					experience: 0 /*боевой опыт 0-1*/
 					};
                     
-     this.toString = function(){                 /*преобразование в строку*/  
-        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
+     this.toString = function(){                 /*преобразование объекта в вид который может быть преобразован в строку*/  
+        return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo};
      };
 
 };
 
 UnitTypes.Foot = function(){
-	this.name =	'Мотострелковый полк';
+	this.name =	Lang.get('motorized_rifle_regiment');
 	this.id = 'foot';
     this.VELOCITY = 40;
 	this.radius = 0.01;
@@ -66,11 +66,12 @@ UnitTypes.Foot = function(){
                 
     this.toString = function(){
         return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
+        
      };
 };
 
 UnitTypes.Convoy = function(){
-	this.name =	'Конвой';
+	this.name =	Lang.get('convoy');
 	this.id = 'convoy';
     this.VELOCITY = 40;
 	this.radius = 0.005;
@@ -97,11 +98,12 @@ UnitTypes.Convoy = function(){
                 
     this.toString = function(){
         return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo}; 
+       
      };
 };
 
 UnitTypes.Base = function(){
-	this.name =	'База снабжения';
+	this.name =	Lang.get('depot');
 	this.id = 'base';
     this.VELOCITY = 20;
 	this.radius = 0.01;
@@ -128,6 +130,7 @@ UnitTypes.Base = function(){
                 
     this.toString = function(){
         return {name: this.name, id: this.id, DELTA: this.DELTA, DELTA_TIME: this.DELTA_TIME,resources: this.resources, radius:this.radius, power: this.power, outGo: this.outGo, child: this.child }; 
+       
      };
 };
 
@@ -149,9 +152,9 @@ UnitTypes.getType = function(type){
 
 
 UnitTypes.names = {
-    tank: 'Танковый полк',
-    foot: 'Мотострелковый полк',
-    base: 'База снабжения',
-    convoy: 'Конвой'  
+    tank: Lang.get('tank_regiment'),
+    foot: Lang.get('motorized_rifle_regiment'),
+    base: Lang.get('depot'),
+    convoy: Lang.get('convoy')  
 };
 

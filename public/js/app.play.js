@@ -16,7 +16,6 @@ App.init = function(){
     App.unit = Unit;
     App.unitFactory = UnitFactory;
     App.mouse = Mouse;
-    App.action = Action;
     App.user = new User(Helper.getCookie('user_id'),'noname');/*клиентский объект user*/      
     App.game = new Game(App.user);/*переменная для хранения клиентского объекта game*/
     
@@ -25,7 +24,7 @@ App.init = function(){
     App.unitFactory.init(App);
     App.mouse.init(App);
     App.iface.init(App);
-    App.action.init(App);
+    
     App.setEventHandlers();
 };
 

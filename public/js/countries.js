@@ -16,8 +16,8 @@ Countries.Russia = {
     },  
 			
 					
-    toString: function(){                             /*метод для преобразования в строку*/
-        return {name: this.name, id: this.id};
+    toString: function(){                             /*преобразование объекта в вид который может быть преобразован в строку*/
+        return {name: this.name, id: this.id,icon: this.icon};
     }	
 
 };
@@ -35,7 +35,7 @@ Countries.Ukraine = {
     }, 	
 
     toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -52,7 +52,7 @@ Countries.USA = {
     }, 
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 
 };
@@ -70,7 +70,7 @@ Countries.UK = {
     }, 
 		
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 
 };
@@ -89,7 +89,7 @@ Countries.Germany = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 
 };
@@ -107,7 +107,7 @@ Countries.Iraq = {
     }, 
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 
 };
@@ -126,7 +126,7 @@ Countries.NorthKorea = {
 			
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -144,7 +144,7 @@ Countries.USSR = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -162,7 +162,7 @@ Countries.Syria = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -180,7 +180,7 @@ Countries.Tajikistan = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -198,7 +198,7 @@ Countries.Vietnam = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -216,7 +216,7 @@ Countries.Azerbaijan = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -234,7 +234,7 @@ Countries.Israel = {
 			
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -252,7 +252,7 @@ Countries.Palestine = {
 			
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -270,7 +270,7 @@ Countries.Mongolia = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -288,7 +288,7 @@ Countries.Pakistan = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -306,7 +306,7 @@ Countries.Turkmenistan = {
 		
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
 
@@ -324,6 +324,6 @@ Countries.Uzbekistan = {
 			
 					
 	toString: function(){
-        return {name: this.name, id: this.id};
+        return {name: this.name, id: this.id,icon: this.icon};
     }
 };
