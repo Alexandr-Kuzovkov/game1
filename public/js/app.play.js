@@ -112,7 +112,7 @@ App.updateGame = function(data){
 * обработчик сообщения события окончания игры 
 **/
 App.gameOver = function(){
-    App.iface.showAlert('Ваша игра закончена', function(){ App.iface.reloadPage('/');});
+    App.iface.showAlert(App.iface.dict['game_over'], function(){ App.iface.reloadPage('/');});
 };
 
 

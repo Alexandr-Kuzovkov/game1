@@ -24,23 +24,22 @@
                 
                 
                 <div class="btn-block control-block grad2 font-response">
-                   <button class="btn rad grad text-hover  font-response" id="btn-menu"><script>document.write(Lang.get('menu'))</script></button><br />
+                   <button class="btn rad grad text-hover  font-response" id="btn-menu">{{dict.menu}}</button><br />
                 </div>
                 <div id="unit-info" class="unit-info font-response"></div>
                 <div class="set-units control-block grad2 font-response">
-                    <input type="text" id="username" placeholder=""/>
-                    <script>document.getElementById('username').placeholder=Lang.get('your_name')</script>
-                    <label>Выберите страну</label>
+                    <input type="text" id="username" placeholder="{{dict.your_name}}"/>
+                    <label>{{dict.select_country}}</label>
                     <select id="set-country"></select>
                     <hr />
-                    <label><script>document.write(Lang.get('place_avail_units'))</script></label>
+                    <label>{{dict.place_avail_units}}</label>
                     <hr />
                     <ul id="units-list">
                         
                     </ul>
                     <hr />
-                    <button class="btn rad grad text-hover  font-response" id="btn-clear-all"><script>document.write(Lang.get('start_game'))</script></button>
-                    <button class="btn rad grad text-hover  font-response" id="btn-begin-game"><script>document.write(Lang.get('delete_all'))</script></button>
+                    <button class="btn rad grad text-hover  font-response" id="btn-clear-all">{{dict.delete_all}}</button>
+                    <button class="btn rad grad text-hover  font-response" id="btn-begin-game">{{dict.start_game}}</button>
                 </div>
                 <div id="mission-info" class="mission-info font-response"></div>
                 

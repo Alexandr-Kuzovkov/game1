@@ -5,7 +5,7 @@
 var UnitTypes = {};
 
 UnitTypes.Tank = function(){
-	this.name =	Lang.get('tank_regiment'); /*наименование*/
+	this.name =	'tank_regiment'; /*наименование*/
 	this.id = 'tank';            /*идентификатор*/
     this.VELOCITY = 40;         /*скорость движения юнита в км/ч*/
     this.radius = 0.01;          /*радиус области действия полка в градусах*/
@@ -39,7 +39,7 @@ UnitTypes.Tank = function(){
 };
 
 UnitTypes.Foot = function(){
-	this.name =	Lang.get('motorized_rifle_regiment');
+	this.name =	'motorized_rifle_regiment';
 	this.id = 'foot';
     this.VELOCITY = 40;
 	this.radius = 0.01;
@@ -71,7 +71,7 @@ UnitTypes.Foot = function(){
 };
 
 UnitTypes.Convoy = function(){
-	this.name =	Lang.get('convoy');
+	this.name =	'convoy';
 	this.id = 'convoy';
     this.VELOCITY = 40;
 	this.radius = 0.005;
@@ -103,7 +103,7 @@ UnitTypes.Convoy = function(){
 };
 
 UnitTypes.Base = function(){
-	this.name =	Lang.get('depot');
+	this.name =	'depot';
 	this.id = 'base';
     this.VELOCITY = 20;
 	this.radius = 0.01;
@@ -152,9 +152,9 @@ UnitTypes.getType = function(type){
 
 
 UnitTypes.names = {
-    tank: Lang.get('tank_regiment'),
-    foot: Lang.get('motorized_rifle_regiment'),
-    base: Lang.get('depot'),
-    convoy: Lang.get('convoy')  
+    tank: 'tank_regiment',
+    foot: 'motorized_rifle_regiment',
+    base: 'depot',
+    convoy: 'convoy'  
 };
 

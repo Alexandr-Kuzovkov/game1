@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>On-line стратегия</title>
+  <title>{{dict.online_strategy}}</title>
   
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta charset="utf-8" />
@@ -16,7 +16,7 @@
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/js/storage.js"></script>
-    <script type="text/javascript" src="/js/lang.js"></script>
+    <script type="text/javascript" src="/js/dicts.js"></script>
 	<script type="text/javascript" src="/js/debug.js"></script>
 	<script type="text/javascript" src="/js/countries.js"></script>
 	<script type="text/javascript" src="/js/unit.types.js"></script>
@@ -41,7 +41,7 @@
         <div id="alert-wrap">
             <div class="alert grad2">
                 <div id="alert-text"></div> 
-                <button id="alert-button"><script>document.write(Lang.get('close'))</script></button>
+                <button id="alert-button">{{dict.close}}</button>
             </div>
         </div>
         <div class="lang grad2 rad">

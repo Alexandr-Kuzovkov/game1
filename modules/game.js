@@ -324,12 +324,10 @@ Game.prototype.checkGameOver = function(userId){
 **/
 Game.prototype.gameMsgText = function(msgId, object){
     var messages = {
-        beginBattle: object.type.name + ' ' + object.id + ' ' +object.country.name + ' вступил в бой',
-        endBattle: object.type.name + ' ' + object.id + ' ' +object.country.name + ' вышел из боя',
-        beginAround: object.type.name + ' ' + object.id + ' ' +object.country.name + ' снабжение прервано',
-        endAround: object.type.name + ' ' + object.id + ' ' +object.country.name + ' снабжение восстановлено',
-        unitKilled: object.type.name + ' ' + object.id + ' ' +object.country.name + ' уничтожен',
-        baseCaptured: object.type.name + ' ' + object.id + ' ' +object.country.name + ' захвачена противником'
+        beginBattle: object.type.name + ' ' + object.id + ' ' +object.country.name + ' joined_battle',
+        endBattle: object.type.name + ' ' + object.id + ' ' +object.country.name + ' came_out_battle',
+        unitKilled: object.type.name + ' ' + object.id + ' ' +object.country.name + ' destroyed',
+        baseCaptured: object.type.name + ' ' + object.id + ' ' +object.country.name + ' captured'
     };
     
     return messages[msgId];

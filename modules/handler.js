@@ -55,7 +55,7 @@ function join_user( socket, sdata ){
         sdata.games[data.location].joinUser(data.units, data.user, function(){
             socket.emit('client_refresh_by_server');
             socket.broadcast.emit('updategame',{game:sdata.games[data.location].toString()});
-            sdata.games[data.location].addLogMessage(data.user.name + ' присоединился к игре');
+            sdata.games[data.location].addLogMessage(data.user.name + 'join_to_game');
         });
     });
 }

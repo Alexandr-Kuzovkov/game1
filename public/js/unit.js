@@ -258,7 +258,7 @@ Unit.prototype.setDiedAnimation = function(){
 Unit.prototype.destroy = function(){	
     this.path.destroy();
 	this.marker.selected.clearAllEventListeners();
-	if ( this.selected ) UnitEvent.removeDblclick(this);
+	if ( this.selected ) Mouse.removeDblclick(this);
 	for ( key in this.marker ) this.marker[key].destroy();
 };
 

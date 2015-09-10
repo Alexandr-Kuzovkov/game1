@@ -38,13 +38,34 @@ Interface.init = function(app) {
     Interface.alert_callback = false;
     Interface.input_username = document.getElementById('username');
     Interface.country_image = document.getElementById('country-image');
-    Interface.lang = document.getElementById('lang');
+    Interface.lang_select = document.getElementById('lang');
     
-    Interface.lang.onchange = function(){
-        Lang.curr = Interface.lang.value;
-        Storage.save('lang', Interface.lang.value);
+    Interface.languages = {
+        ru: {
+            icon: '/img/country/Russia.png',
+            name: 'Русский'
+        },
+        
+        en: {
+            icon: '/img/country/United-Kingdom.png',
+            name: 'English'
+        }       
+    };
+    Interface.lang = (Storage.load('lang') != null)? Storage.load('lang') : 'ru';
+    //console.log(Storage.load('lang'));
+    //Storage.clear();
+    Helper.setCookie('lang',Interface.lang);
+    Interface.dict = Dicts[Interface.lang];
+    
+    /*обработка выбора языка*/
+    Interface.lang_select.onchange = function(){
+        Interface.lang = Interface.lang_select.value;
+        Storage.save('lang', Interface.lang_select.value);
+        Helper.setCookie('lang',Interface.lang);
+        Interface.dict = Dicts[Interface.lang];
         window.location.reload(true);
     };
+    
     
     if ( Interface.alert_button ) Interface.alert_button.onclick = Interface.closeAlert;
     
@@ -78,7 +99,7 @@ Interface.init = function(app) {
 		Route.service = Interface.selectService.value;
 	};
     
-    Interface.fillLang();
+    Interface.fillLangSelect();
     
 };    
     /*перезагрузка страницы*/
@@ -92,6 +113,12 @@ Interface.addLog = function(mess){
     this.destroyChildren(this.log_div);
     for ( var i = 0; i < mess.length; i++ ){
         var p = document.createElement('p');
+        for(key in this.dict){
+            if (mess[i].indexOf(key) != -1){
+                var regV = new RegExp(key,"g");
+                mess[i] = mess[i].replace(regV,this.dict[key]);
+            }
+        }
         p.innerText = mess[i];
         p.textContent = mess[i];
         this.log_div.appendChild(p);
@@ -106,6 +133,12 @@ Interface.addInfo = function(mess){
     this.destroyChildren(this.info_div);
     for ( var i = 0; i < mess.length; i++ ){
         var p = document.createElement('p');
+        for(key in this.dict){
+            if (mess[i].indexOf(key) != -1){
+                var regV = new RegExp(key,"g");
+                mess[i] = mess[i].replace(regV,this.dict[key]);
+            }
+        }
         p.innerText = mess[i];
         p.textContent = mess[i];
         this.info_div.appendChild(p);
@@ -115,19 +148,16 @@ Interface.addInfo = function(mess){
 /**
 * заполнения селекта языков
 **/
-Interface.fillLang = function(){
-    this.destroyChildren(this.lang);
-    var selected = false;
-    for (var key in Lang){
-        console.log(key);
-        if (Lang[key].name != undefined){
-            if (key == 'get' || key == 'curr') continue;
+Interface.fillLangSelect = function(){
+    this.destroyChildren(this.lang_select);
+    for (var key in this.languages){
+        if (this.languages[key].name != undefined){
             var opt = document.createElement('option');
-            opt.innerText = Lang[key].name;
-            opt.textContent = Lang[key].name;
+            opt.innerText = this.languages[key].name;
+            opt.textContent = this.languages[key].name;
             opt.value = key;
-            if (key == Lang.curr) opt.setAttribute('selected','selected');
-            this.lang.appendChild(opt);
+            if (key == this.lang) opt.setAttribute('selected','selected');
+            this.lang_select.appendChild(opt);
         }
         
     }
@@ -138,21 +168,21 @@ Interface.fillLang = function(){
 **/
 
 Interface.translate = {
-    id: Lang.get('identificator'),
-    country: Lang.get('country'),
-    type: Lang.get('type'),
-    people: Lang.get('people'),
-    ammo: Lang.get('ammo'),
-    food: Lang.get('food'),
-    discipline: Lang.get('discipline'),
-    experience: Lang.get('experience'),
-    elevation: Lang.get('elevation'),
-    battle: Lang.get('battle'),
-    status: Lang.get('status'),
-    attack: Lang.get('attack'),
-    defense: Lang.get('defense'),
-    march: Lang.get('march'),
-    weather: Lang.get('weather')  
+    id: 'identificator',
+    country: 'country',
+    type: 'type',
+    people: 'people',
+    ammo: 'ammo',
+    food: 'food',
+    discipline: 'discipline',
+    experience: 'experience',
+    elevation: 'elevation',
+    battle: 'battle_',
+    status: 'status',
+    attack: 'attack',
+    defense: 'defense',
+    march: 'march',
+    weather: 'weather'  
 };
 
 /**
@@ -176,10 +206,11 @@ Interface.showUnit = function(unit){
         if ( item == 'weather' ) continue;
         var li = document.createElement('li');
         var value = unit[item];
-        if ( typeof(value) == 'boolean' && value == false ) value = Lang.get('no');
-        if ( typeof(value) == 'boolean' && value == true ) value = Lang.get('yes');
-        if ( typeof(value) == 'string' && this.translate[value] != undefined ) value = this.translate[value];
-        var text = this.translate[item] + ': ' + value;
+        if ( typeof(value) == 'boolean' && value == false ) value = this.dict['no'];
+        if ( typeof(value) == 'boolean' && value == true ) value = this.dict['yes'];
+        if ( typeof(value) == 'string' && this.dict[this.translate[value]] != undefined ) value = this.dict[this.translate[value]];
+        if ( typeof(value) == 'string' && this.dict[value] != undefined) value = this.dict[value];
+        var text = this.dict[this.translate[item]] + ': ' + value;
         li.innerText = text;
         li.textContent = text;
         ul.appendChild(li);
@@ -209,8 +240,8 @@ Interface.hideUnit = function(){
 Interface.showMission = function(){
     var p = document.createElement('p');
     var text = App.game.location.mission;
-    p.innerText = text;
-    p.textContent = text;
+    p.innerText = this.dict[text];
+    p.textContent = this.dict[text];
     this.missioninfo_div.style.display = 'block';
     this.missioninfo_div.appendChild(p);
 };
@@ -224,8 +255,8 @@ Interface.hideMission = function(){
 };
 
 Interface.setMissionDecs = function(text){
-    this.missiondesc_p.innerText = text;
-    this.missiondesc_p.textContent = text; 
+    this.missiondesc_p.innerText = this.dict[text];
+    this.missiondesc_p.textContent = this.dict[text]; 
 };
 
 /**
@@ -310,14 +341,14 @@ Interface.getRegimentMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(0,"+object.id+")'>"+Lang.get('stop')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(1,"+object.id+")'>"+Lang.get('march')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(2,"+object.id+")'>"+Lang.get('defense')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(3,"+object.id+")'>"+Lang.get('attack')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(0,"+object.id+")'>"+this.dict['stop']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(1,"+object.id+")'>"+this.dict['march']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(2,"+object.id+")'>"+this.dict['defense']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(3,"+object.id+")'>"+this.dict['attack']+"</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(4,"+object.id+")'>"+Lang.get('attack')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(4,"+object.id+")'>"+this.dict['attack']+"</li>\
                     </ul>";
     }
     return menu;
@@ -331,14 +362,14 @@ Interface.getBaseMenu = function(object){
     var menu = '';
     if (object.OWN ){
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(5,"+object.id+")'>"+Lang.get('stop')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(6,"+object.id+")'>"+Lang.get('march')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(7,"+object.id+")'>"+Lang.get('defense')+"</li>\
-                        <li onclick='Mouse.unitcontextmenu(9,"+object.id+")'>"+Lang.get('convoy')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(5,"+object.id+")'>"+this.dict['stop']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(6,"+object.id+")'>"+this.dict['march']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(7,"+object.id+")'>"+this.dict['defense']+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(9,"+object.id+")'>"+this.dict['convoy']+"</li>\
                     </ul>";
     }else{
         var menu = "<ul id='" + object.id + "'class='regiment unit-menu'>\
-                        <li onclick='Mouse.unitcontextmenu(8,"+object.id+")'>"+Lang.get('destroy')+"</li>\
+                        <li onclick='Mouse.unitcontextmenu(8,"+object.id+")'>"+this.dict['destroy_']+"</li>\
                     </ul>";
     }
     return menu;
@@ -374,20 +405,20 @@ Interface.formatWeatherData = function(weather){
     content += '</div>';
     
     content += '<div class="weather-line">';
-    content += (weather.frshht.slice(0,1) == '1')? ' '+Lang.get('fog')+' ' : '';
-    content += (weather.frshht.slice(1,2) == '1')? ' '+Lang.get('rain')+'  ' : '';
-    content += (weather.frshht.slice(2,3) == '1')? ' '+Lang.get('snow')+' ' : '';
-    content += (weather.frshht.slice(3,4) == '1')? ' '+Lang.get('thunder')+' ' : '';
-    content += (weather.frshht.slice(4,5) == '1')? ' '+Lang.get('fog')+' ' : '';
-    content += (weather.frshht.slice(5,6) == '1')? ' '+Lang.get('tornado')+' ' : '';
-    content += Lang.get('temperature') + weather.temperature.toFixed(1);
-    content += Lang.get('wind');
-    content += (weather.wind != null)? weather.wind.toFixed(1): 'н/д';
-    content += Lang.get('pressure');
-    content += (weather.pressure != null)? 760 * weather.pressure.toFixed(1):'н/д';
-    content += Lang.get('visib');
-    content += (weather.visib != '999.9')? (parseFloat(weather.visib) * 1609).toFixed(1) : 'н/д';
-    content += Lang.get('prcp');
+    content += (weather.frshht.slice(0,1) == '1')? ' '+this.dict['fog']+' ' : '';
+    content += (weather.frshht.slice(1,2) == '1')? ' '+this.dict['rain']+'  ' : '';
+    content += (weather.frshht.slice(2,3) == '1')? ' '+this.dict['snow']+' ' : '';
+    content += (weather.frshht.slice(3,4) == '1')? ' '+this.dict['thunder']+' ' : '';
+    content += (weather.frshht.slice(4,5) == '1')? ' '+this.dict['fog']+' ' : '';
+    content += (weather.frshht.slice(5,6) == '1')? ' '+this.dict['tornado']+' ' : '';
+    content += this.dict['temperature'] + weather.temperature.toFixed(1);
+    content += this.dict['wind'];
+    content += (weather.wind != null)? weather.wind.toFixed(1): '---';
+    content += this.dict['pressure'];
+    content += (weather.pressure != null)? 760 * weather.pressure.toFixed(1):'---';
+    content += this.dict['visib'];
+    content += (weather.visib != '999.9')? (parseFloat(weather.visib) * 1609).toFixed(1) : '---';
+    content += this.dict['prcp'];
     content += (weather.prcp != '99.99')? (parseFloat(weather.prcp.slice(0,4))*2.54).toFixed(1) : 0;
     
     content += '</div>';

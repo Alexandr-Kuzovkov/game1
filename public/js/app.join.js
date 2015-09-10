@@ -176,7 +176,7 @@ App.updateUnitList = function(type){
     }
     
     if (listCountryIsEmpty){ //если список стран пуст, выводим сообщение и перекидываем на выбор локаций
-        App.iface.showAlert('К сожалению в этой локации все страны заняты, пожалуйста выберите другую', function(){ App.iface.reloadPage('/');});    
+        App.iface.showAlert(App.iface.dict['all_countries_bisy'], function(){ App.iface.reloadPage('/');});    
         return;
     }
     
@@ -185,8 +185,8 @@ App.updateUnitList = function(type){
     for ( var key in App.location.units ){
         if (App.allUnitsLocated()){ //если все юниты кончились показываем это
             var p = document.createElement('p');
-            p.innerText = 'Нет доступных юнитов';
-            p.textContent = 'Нет доступных юнитов';
+            p.innerText = App.iface.dict['no_avail_unit'];
+            p.textContent = App.iface.dict['no_avail_unit'];
             App.iface.unitsList.appendChild(p);
             return;
         }
@@ -210,8 +210,8 @@ App.updateUnitList = function(type){
         img.src = '/img/type/'+key+'24.png';
         li.appendChild(img);
         var span = document.createElement('span');
-        span.innerText = UnitTypes.names[key]+' - ';
-        span.textContent = UnitTypes.names[key]+' - ';
+        span.innerText = App.iface.dict[UnitTypes.names[key]]+' - ';
+        span.textContent = App.iface.dict[UnitTypes.names[key]]+' - ';
         li.appendChild(span);
         
         var count = document.createElement('span');
@@ -267,7 +267,7 @@ App.makeUnit = function(data){
     App.iface.hidePreloader();
     var latlng = data.latlng;
     if (App.isPlaceBusy(latlng)){
-        App.iface.showAlert('Вы не можете ставить юнитов друг на друга');
+        App.iface.showAlert(App.iface.dict['bad_pos']);
         return;
     }
     var type = App.getRadio();
@@ -310,18 +310,18 @@ App.clear = function(){
 **/
 App.begin = function(){
     if (!App.allUnitsLocated()){
-        App.iface.showAlert('Нужно расставить всех юнитов');
+        App.iface.showAlert(App.iface.dict['need_place_all']);
         return;
     }
     var now = new Date();
     App.user.lastTime = now.getTime();   
     if (App.iface.input_username.value == ''){
-        App.iface.showAlert('Нужно ввести Ваше имя');
+        App.iface.showAlert(App.iface.dict['enter_name']);
         return;
     }
     
     if (!App.isUserNameFree(App.iface.input_username.value)){
-        App.iface.showAlert('Указанное Вами имя занято. Выберите другое');
+        App.iface.showAlert(App.iface.dict['name_bisy']);
         return;
     }
     
