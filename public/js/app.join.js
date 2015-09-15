@@ -170,8 +170,8 @@ App.updateUnitList = function(type){
         var opt = document.createElement('option');
         opt.value = App.location.countries[i];
        
-        opt.innerText = Countries[App.location.countries[i]].name;
-        opt.textContent = Countries[App.location.countries[i]].name;
+        opt.innerText = App.iface.dict[Countries[App.location.countries[i]].name];
+        opt.textContent = App.iface.dict[Countries[App.location.countries[i]].name];
         App.iface.selectCountry.appendChild(opt);
     }
     

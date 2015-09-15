@@ -16,7 +16,7 @@ function index(req,res){
     var locations = [];
     for (var key in global.locations)
         locations.push({id: global.locations[key].id, name: global.locations[key].name});
-    res.render('select',{locations:locations});
+    res.render('select',{locations:locations, dict:dict});
 }
 
 /**

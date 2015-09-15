@@ -9,8 +9,11 @@
 {% block content %}
     <ul class="ul-select">
         {% for location in locations %}
-        <li><a href="/location/{{location.id}}">{{location.name}}</a></li>
+        <li><a href="/location/{{location.id}}">{{dict[location.name]}}</a></li>
         {%endfor%}
     </ul>
 
+{% endblock %}
+{% block bottomjs %}
+    <script type="text/javascript">Interface.init()</script>     
 {% endblock %}

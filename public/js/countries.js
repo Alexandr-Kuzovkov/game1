@@ -4,7 +4,7 @@
 var Countries = {};
 
 Countries.Russia = {
-	name:	'Российская Федерация', /*имя*/
+	name:	'russian_federation', /*имя*/
 	id:	    'Russia',               /*идентификатор*/
 	/*картинка иконки*/				
 	icon: 	{   url: '/img/country/Russia.png',
@@ -23,7 +23,7 @@ Countries.Russia = {
 };
 
 Countries.Ukraine = {
-	name:	'Украина',
+	name:	'ukraine',
 	id:	    'Ukraine',
 	
     icon: 	{   url: '/img/country/Ukraine.png',
@@ -40,7 +40,7 @@ Countries.Ukraine = {
 };
 
 Countries.USA = {
-	name:	'США',
+	name:	'usa',
 	id:	    'USA',
 					
     icon: 	{   url: '/img/country/United-States.png',
@@ -58,7 +58,7 @@ Countries.USA = {
 };
 
 Countries.UK = {
-	name:	'Великобритания',
+	name:	'uk',
 	id:	    'UK',
 					
     icon: 	{   url: '/img/country/United-Kingdom.png',
@@ -76,7 +76,7 @@ Countries.UK = {
 };
 
 Countries.Germany = {
-	name:	'Германия',
+	name:	'germany',
 	id:	    'Germany',
 					
     icon: 	{   url: '/img/country/Germany.png',
@@ -95,7 +95,7 @@ Countries.Germany = {
 };
 
 Countries.Iraq = {
-	name:	'Ирак',
+	name:	'iraq',
 	id:	    'Iraq',
 					
     icon: 	{   url: '/img/country/Iraq.png',
@@ -113,7 +113,7 @@ Countries.Iraq = {
 };
 
 Countries.NorthKorea = {
-	name:	'Северная Корея',
+	name:	'northkorea',
 	id:	    'NorthKorea',
 					
     icon: 	{   url: '/img/country/North-Korea.png',
@@ -131,7 +131,7 @@ Countries.NorthKorea = {
 };
 
 Countries.USSR = {
-	name:	'СССР',
+	name:	'ussr',
 	id:	    'USSR',
 					
     icon: 	{   url: '/img/country/Ussr.png',
@@ -149,7 +149,7 @@ Countries.USSR = {
 };
 
 Countries.Syria = {
-	name:	'Сирия',
+	name:	'syria',
 	id:	    'Syria',
 					
     icon: 	{   url: '/img/country/Syria.png',
@@ -167,7 +167,7 @@ Countries.Syria = {
 };
 
 Countries.Tajikistan = {
-	name:	'Таджикистан',
+	name:	'tajikistan',
 	id:	    'Tajikistan',
 					
     icon: 	{   url: '/img/country/Tajikistan.png',
@@ -185,7 +185,7 @@ Countries.Tajikistan = {
 };
 
 Countries.Vietnam = {
-	name:	'Вьетнам',
+	name:	'vietnam',
 	id:	    'Vietnam',
 					
     icon: 	{   url: '/img/country/Vietnam.png',
@@ -203,7 +203,7 @@ Countries.Vietnam = {
 };
 
 Countries.Azerbaijan = {
-	name:	'Азербайджан',
+	name:	'azerbaijan',
 	id:	    'Azerbaijan',
 					
     icon: 	{   url: '/img/country/Azerbaijan.png',
@@ -221,7 +221,7 @@ Countries.Azerbaijan = {
 };
 
 Countries.Israel = {
-	name:	'Израиль',
+	name:	'israel',
 	id:	    'Israel',
 					
     icon: 	{   url: '/img/country/Israel.png',
@@ -239,7 +239,7 @@ Countries.Israel = {
 };
 
 Countries.Palestine = {
-	name:	'Палестина',
+	name:	'palestine',
 	id:	    'Palestine',
 					
     icon: 	{   url: '/img/country/Palestine.png',
@@ -257,7 +257,7 @@ Countries.Palestine = {
 };
 
 Countries.Mongolia = {
-	name:	'Монголия',
+	name:	'mongolia',
 	id:	    'Mongolia',
 					
     icon: 	{   url: '/img/country/Mongolia.png',
@@ -275,7 +275,7 @@ Countries.Mongolia = {
 };
 
 Countries.Pakistan = {
-	name:	'Пакистан',
+	name:	'pakistan',
 	id:	    'Pakistan',
 					
     icon: 	{   url: '/img/country/Pakistan.png',
@@ -293,7 +293,7 @@ Countries.Pakistan = {
 };
 
 Countries.Turkmenistan = {
-	name:	'Туркменистан',
+	name:	'turkmenistan',
 	id:	    'Turkmenistan',
 					
     icon: 	{   url: '/img/country/Turkmenistan.png',
@@ -311,7 +311,7 @@ Countries.Turkmenistan = {
 };
 
 Countries.Uzbekistan = {
-	name:	'Узбекистан',
+	name:	'uzbekistan',
 	id:	    'Uzbekistan',
 					
     icon: 	{   url: '/img/country/Uzbekistan.png',

@@ -46,7 +46,7 @@ var Dicts = {
         menu: 'Меню',
         place_avail_units: 'Установите на карте доступные Вам Юниты:',
         start_game: 'Начать игру',
-        delete_all: 'Удалитьвсе',
+        delete_all: 'Удалить все',
         select_country: 'Выберите страну',
         online_strategy: 'Online стратегия',
         main_menu: 'Главное меню',
@@ -55,7 +55,25 @@ var Dicts = {
         joined_battle: ' вступил в бой',
         came_out_battle: ' вышел из боя',
         destroyed: ' уничтожен',
-        captured: ' захвачена' 
+        captured: ' захвачена',
+        russian_federation: 'Российская Федерация',
+        ukraine: 'Украина',
+        usa: 'США',
+        uk: 'Великобритания',
+        germany: 'Германия',
+        iraq: 'Ирак',
+        northkorea: 'Северная Корея',
+        ussr: 'СССР',
+        syria: 'Сирия',
+        tajikistan: 'Таджикистан',
+        vietnam: 'Вьетнам',
+        azerbaijan: 'Азербайджан',
+        israel: 'Израиль',
+        palestine: 'Палестина',
+        mongolia: 'Монголия',
+        pakistan: 'Пакистан',
+        turkmenistan: 'Туркменистан',
+        uzbekistan: 'Узбекистан' 
         
     },
     en:{
@@ -114,7 +132,25 @@ var Dicts = {
         joined_battle: 'Joined the battle',
         came_out_battle: ' came out from battle',
         destroyed: ' destroyed',
-        captured: ' captured'    
+        captured: ' captured',
+        russian_federation: 'Russian Federation',
+         ukraine: 'Ukraine',
+         usa: 'United States',
+         uk: 'United Kingdom',
+         germany: 'Germany',
+         iraq: 'Iraq',
+         northkorea: 'North Korea',
+         ussr: 'USSR',
+         syria: 'Syria',
+         tajikistan: 'Tajikistan',
+         vietnam: 'Vietnam',
+         azerbaijan: 'Azerbaijan',
+         israel: 'Israel',
+         palestine: 'Palestine',
+         mongolia: 'Mongolia',
+         pakistan: 'Pakistan',
+         turkmenistan: 'Turkmenistan',
+         uzbekistan: 'Uzbekistan'    
     }
 };
 
