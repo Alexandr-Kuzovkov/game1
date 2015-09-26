@@ -26,6 +26,7 @@ function Unit( latlng, id, userId, map )
     this.map = map; /*ссылка на объект карты*/
     this.died = false; /*флаг состояния близкого к гибели*/
     this.lastdied = false; /*предыдущее значение флага died*/
+    this.priority = 1; /*приоритет юнита*/
     this.status = 
     {
         kind: 'march', /*статус юнита; может быть march, attack, defense*/
@@ -280,7 +281,8 @@ Unit.prototype.toString = function(){
     unit.died = this.died;
     unit.status = this.status;
     unit.weather = this.weather;
-    unit.enemyCount = this.enemyCount; 
+    unit.enemyCount = this.enemyCount;
+    unit.priority = this.priority; 
     return unit;  
 };
 
@@ -306,10 +308,7 @@ Unit.prototype.setListeners = function(){
 * @param id идентификатор дочернего юнита 
 **/
 Unit.prototype.addChild = function(id){
-    if (this.type.child == undefined) return;
-    if (this.type.child.length < this.type.MAX_CHILD){
-        this.type.child.push(id);
-    }
+   
 };
 
 /**
@@ -317,13 +316,14 @@ Unit.prototype.addChild = function(id){
 * @param id идентификатор дочернего юнита
 **/
 Unit.prototype.delChild = function(id){
-    if (this.type.child == undefined) return;
-    var i = 0;
-    while(i < this.type.child.length){
-        if ( this.type.child[i] == id ){
-            this.type.child.splice(i,1);
-        }else{
-            i++;
-        }
-    }
+    
 };
+
+/**
+* установка приоритета юнита
+* @param priority приоритет (0-1)
+**/
+Unit.prototype.setPriority = function(priority){
+    if (priority < 0 || priority > 1) priority = 1
+    this.priority = priority
+}
