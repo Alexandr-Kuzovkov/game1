@@ -327,3 +327,57 @@ Countries.Uzbekistan = {
         return {name: this.name, id: this.id,icon: this.icon};
     }
 };
+
+Countries.Novorossia = {
+	name:	'novorossia',
+	id:	    'Novorossia',
+					
+    icon: 	{   url: '/img/country/Novorossia.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
+			
+					
+	toString: function(){
+        return {name: this.name, id: this.id,icon: this.icon};
+    }
+};
+
+Countries.Hato = {
+	name:	'hato',
+	id:	    'Hato',
+					
+    icon: 	{   url: '/img/country/Hato.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
+			
+					
+	toString: function(){
+        return {name: this.name, id: this.id,icon: this.icon};
+    }
+};
+
+Countries.Confederation = {
+	name:	'confederation',
+	id:	    'Confederation',
+					
+    icon: 	{   url: '/img/country/Confederation.png',
+                size: [24,24],
+                anchor: [12,36],
+                shadowanchor: [4,23],
+                popupanchor: [-3,-23]
+    
+    }, 
+			
+					
+	toString: function(){
+        return {name: this.name, id: this.id,icon: this.icon};
+    }
+};

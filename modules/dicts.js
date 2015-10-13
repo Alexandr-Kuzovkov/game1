@@ -73,7 +73,10 @@ var Dicts = {
         mongolia: 'Монголия',
         pakistan: 'Пакистан',
         turkmenistan: 'Туркменистан',
-        uzbekistan: 'Узбекистан' 
+        uzbekistan: 'Узбекистан',
+        novorossia: 'Новороссия',
+        hato: 'НАТО',
+        confederation: 'Конфедерация' 
         
     },
     en:{
@@ -150,7 +153,10 @@ var Dicts = {
          mongolia: 'Mongolia',
          pakistan: 'Pakistan',
          turkmenistan: 'Turkmenistan',
-         uzbekistan: 'Uzbekistan'    
+         uzbekistan: 'Uzbekistan',
+        novorossia: 'novorossia',
+        hato: 'НАТО',
+        confederation: 'Confederation'    
     }
 };
 

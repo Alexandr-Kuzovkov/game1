@@ -32,6 +32,39 @@ var Locations = {
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8012',
         year: 2013
+    },
+    
+    russia:{   
+        id: 'russia',
+        name: 'russia',
+        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+        countries: ['Russia', 'Hato'],
+        units: {tank: 20, foot: 20, base: 6},
+        mission: 'miss_desc',
+        geoserver: 'http://127.0.0.1:8013',
+        year: 2013
+    },
+    
+    novorossia:{   
+        id: 'novorossia',
+        name: 'novorossia',
+        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+        countries: ['Novorossia', 'Ukraine'],
+        units: {tank: 20, foot: 20, base: 6},
+        mission: 'miss_desc',
+        geoserver: 'http://127.0.0.1:8014',
+        year: 2013
+    },
+    
+     usa:{   
+        id: 'usa',
+        name: 'usa',
+        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+        countries: ['USA', 'Confederation'],
+        units: {tank: 20, foot: 20, base: 6},
+        mission: 'miss_desc',
+        geoserver: 'http://127.0.0.1:8015',
+        year: 2013
     }
 
 };
