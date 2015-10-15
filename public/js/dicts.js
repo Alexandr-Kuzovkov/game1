@@ -76,7 +76,9 @@ var Dicts = {
         uzbekistan: 'Узбекистан' ,
         novorossia: 'Новороссия',
         hato: 'НАТО',
-        confederation: 'Конфедерация'
+        confederation: 'Конфедерация',
+        russia_hato: 'Россия-НАТО',
+        usa_war: 'Гражданская война в США'
         
     },
     en:{
@@ -156,7 +158,9 @@ var Dicts = {
          uzbekistan: 'Uzbekistan',
         novorossia: 'novorossia',
         hato: 'НАТО',
-        confederation: 'Confederation'     
+        confederation: 'Confederation',
+        russia_hato: 'Russia-НАТО',
+        usa_war: 'Late unpleasantness'     
     }
 };
 

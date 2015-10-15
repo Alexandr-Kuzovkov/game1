@@ -137,6 +137,8 @@ App.setMapOptions = function(game){
     var center = [(SW_lat + NE_lat)/2, (SW_lng + NE_lng)/2];
     App.map.setView(center,13);
     App.map.setBoundary(SW_lat, SW_lng, NE_lat, NE_lng);
+    App.map.map.minZoom = game.location.minZoom;
+    App.map.map.maxZoom = game.location.maxZoom;
 };
 
 /**

@@ -9,7 +9,9 @@ var Locations = {
         units: {tank: 1, foot: 0, base: 1},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8010',
-        year: 2013
+        year: 2013,
+        minZoom: 1,
+        maxZoom: 14
     },
     
     sirya: {   
@@ -20,7 +22,9 @@ var Locations = {
         units: {tank: 4, foot: 5, base: 2},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8011',
-        year: 2013
+        year: 2013,
+        minZoom: 12,
+        maxZoom: 14
     },
     
     vietnam:{   
@@ -31,40 +35,48 @@ var Locations = {
         units: {tank: 4, foot: 5, base: 2},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8012',
-        year: 2013
+        year: 2013,
+         minZoom: 12,
+        maxZoom: 14
     },
     
-    russia:{   
-        id: 'russia',
-        name: 'russia',
-        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+    russia_hato:{   
+        id: 'russia_hato',
+        name: 'russia_hato',
+        bounds: {SW: [55.061963, 36.367152], NE: [56.324190, 38.327810]},
         countries: ['Russia', 'Hato'],
         units: {tank: 20, foot: 20, base: 6},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8013',
-        year: 2013
+        year: 2013,
+         minZoom: 12,
+        maxZoom: 14
     },
     
     novorossia:{   
         id: 'novorossia',
         name: 'novorossia',
-        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+        bounds: {SW: [46.885100, 36.472769], NE: [49.852250, 39.421360]},
         countries: ['Novorossia', 'Ukraine'],
         units: {tank: 20, foot: 20, base: 6},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8014',
-        year: 2013
+        year: 2013,
+         minZoom: 12,
+        maxZoom: 14
     },
     
-     usa:{   
-        id: 'usa',
-        name: 'usa',
-        bounds: {SW: [20.393639, 104.745454], NE: [22.249519, 106.644869]},
+     usa_war:{   
+        id: 'usa_war',
+        name: 'usa_war',
+        bounds: {SW: [29.458192, -103.897279], NE: [34.095732, -94.925399]},
         countries: ['USA', 'Confederation'],
-        units: {tank: 20, foot: 20, base: 6},
+        units: {foot: 20, base: 6},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8015',
-        year: 2013
+        year: 2013,
+         minZoom: 12,
+        maxZoom: 14
     }
 
 };
