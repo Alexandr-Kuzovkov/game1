@@ -4,7 +4,7 @@
 	
 	const BASE_URL = 'ftp://ftp.ncdc.noaa.gov/pub/data/gsod/';
 	const START_YEAR = 2009;
-	const END_YEAR = 2009;
+	const END_YEAR = 2015;
 
 	for ( $year = START_YEAR; $year <= END_YEAR; $year++ )
 	{

@@ -73,10 +73,11 @@ class Http
         $curlHandle = curl_init( $url );
         if ( $curlHandle === false )
         {
-            return false;
+            throw new Exception('curl_init false');
         }
        
-		if ( !($f = @fopen( $filename, 'w' ))) return false;
+		if ( !($f = @fopen( $filename, 'w' )))
+            throw new Exception('Cant open file '.$filename);
 		
         curl_setopt( $curlHandle, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt( $curlHandle, CURLOPT_FOLLOWLOCATION, 1 );
