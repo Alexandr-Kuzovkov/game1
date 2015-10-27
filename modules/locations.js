@@ -101,8 +101,8 @@ var Locations = {
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8016',
         year: 2013,
-        minZoom: 12,
-        maxZoom: 14
+        minZoom: 1,
+        maxZoom: 20
     }
 };
 
