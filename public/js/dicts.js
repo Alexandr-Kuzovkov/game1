@@ -78,6 +78,8 @@ var Dicts = {
         hato: 'НАТО',
         confederation: 'Конфедерация',
         russia_hato: 'Россия-НАТО',
+        mariel: 'MariEl',
+        nato: 'NATO',
         usa_war: 'Гражданская война в США',
         invading_to_russia: 'Вторжение в Россию',
         mariel_defence: 'MariEl defence'
@@ -157,6 +159,8 @@ var Dicts = {
          pakistan: 'Pakistan',
          turkmenistan: 'Turkmenistan',
          uzbekistan: 'Uzbekistan',
+         mariel: 'MariEl',
+         nato: 'NATO',
         novorossia: 'novorossia',
         hato: 'НАТО',
         confederation: 'Confederation',

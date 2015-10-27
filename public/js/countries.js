@@ -383,7 +383,7 @@ Countries.Confederation = {
 };
 
 Countries.NATO = {
-    name:	'NATO',
+    name:	'nato',
     id:	    'NATO',
 
     icon: 	{   url: '/img/country/NATO-big.png',
@@ -401,7 +401,7 @@ Countries.NATO = {
 };
 
 Countries.MariEl = {
-    name:	'MariEl', /*имя*/
+    name:	'mariel', /*имя*/
     id:	    'MariEl',               /*идентификатор*/
     /*картинка иконки*/
     icon: 	{   url: '/img/country/Russia.png',

@@ -166,6 +166,7 @@ App.updateUnitList = function(type){
     var presentCountries = App.getPresentCountries();
     var listCountryIsEmpty = true;
     //формируем список стран
+    console.log(App.location.countries.length);
     for (var i = 0; i < App.location.countries.length; i++){
         if ( presentCountries[App.location.countries[i]] !== undefined ) continue;//удаляем из списка страну которая уже выбрана
         listCountryIsEmpty = false;
