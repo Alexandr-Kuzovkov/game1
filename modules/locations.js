@@ -95,7 +95,7 @@ var Locations = {
     mariel_defence:{
         id: 'mariel_defence',
         name: 'mariel_defence',
-        bounds: {SW: [44.826868, 28.222686], NE: [57.428390, 50.060045]},
+        bounds: {SW: [55.986931, 45.559630], NE: [57.404351, 50.105223]},
         countries: ['NATO', 'MariEl'],
         units: {foot: 20, base: 6},
         mission: 'miss_desc',
