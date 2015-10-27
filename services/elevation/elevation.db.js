@@ -1,6 +1,6 @@
 /**получение высот из базы высот**/
 var sqlite3 = require('sqlite3');
-var db = new sqlite3.Database('/../../sqlite/el.sqlite');
+var db = new sqlite3.Database('/var/www/game1/sqlite/el.sqlite');
 var delta = 0.01;
 var resultArr = [];
 
