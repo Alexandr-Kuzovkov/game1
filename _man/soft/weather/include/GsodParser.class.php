@@ -34,7 +34,7 @@ class GsodParser implements IParser
 	}
 	
 	/**
-	* парсинг всех файлов в каталоге и получение метеоданных
+	* РїР°СЂСЃРёРЅРі РІСЃРµС… С„Р°Р№Р»РѕРІ РІ РєР°С‚Р°Р»РѕРіРµ Рё РїРѕР»СѓС‡РµРЅРёРµ РјРµС‚РµРѕРґР°РЅРЅС‹С…
 	**/
 	public function parseMeteoDataFiles($dir)
 	{
@@ -59,7 +59,7 @@ class GsodParser implements IParser
 	}
 	
 	/**
-	* парсинг файла isd-history.cvs и получение данных по станциям
+	* РїР°СЂСЃРёРЅРі С„Р°Р№Р»Р° isd-history.cvs Рё РїРѕР»СѓС‡РµРЅРёРµ РґР°РЅРЅС‹С… РїРѕ СЃС‚Р°РЅС†РёСЏРј
 	**/
 	public function parseStationsDataFile($file)
 	{

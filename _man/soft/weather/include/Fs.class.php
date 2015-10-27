@@ -3,9 +3,9 @@
 class Fs
 {
 	/**
-	* получаем список файлов в каталоге
-	* @param string $dir имя каталога
-	* @return array список файлов
+	* РїРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ РІ РєР°С‚Р°Р»РѕРіРµ
+	* @param string $dir РёРјСЏ РєР°С‚Р°Р»РѕРіР°
+	* @return array СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ
 	**/
 	public static function getFiles($dir)
 	{
@@ -21,9 +21,9 @@ class Fs
 	}
 	
 	/**
-	* получаем строки из файла
-	* @param string $filename имя файла
-	* @return array список строк в файле 
+	* РїРѕР»СѓС‡Р°РµРј СЃС‚СЂРѕРєРё РёР· С„Р°Р№Р»Р°
+	* @param string $filename РёРјСЏ С„Р°Р№Р»Р°
+	* @return array СЃРїРёСЃРѕРє СЃС‚СЂРѕРє РІ С„Р°Р№Р»Рµ 
 	**/
 	public static function getRows($filename)
 	{
@@ -38,10 +38,10 @@ class Fs
 	}
 	
 	/**
-	* получаем элементы строки в виде массива
-	* @param string $row строка
-	* @param string $delimiter разделитель полей в строке
-	* @return array список элементов в строке 
+	* РїРѕР»СѓС‡Р°РµРј СЌР»РµРјРµРЅС‚С‹ СЃС‚СЂРѕРєРё РІ РІРёРґРµ РјР°СЃСЃРёРІР°
+	* @param string $row СЃС‚СЂРѕРєР°
+	* @param string $delimiter СЂР°Р·РґРµР»РёС‚РµР»СЊ РїРѕР»РµР№ РІ СЃС‚СЂРѕРєРµ
+	* @return array СЃРїРёСЃРѕРє СЌР»РµРјРµРЅС‚РѕРІ РІ СЃС‚СЂРѕРєРµ 
 	**/
 	public static function getItems($row, $delimiter)
 	{
