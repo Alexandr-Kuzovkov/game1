@@ -3,7 +3,10 @@ var ELEVATION_SERVICE_HOSTNAME = '127.0.0.1'; /*хост сервиса высо
 var ELEVATION_SERVICE_PORT = 8002; /*порт сервиса высот*/
 var delta = 0.01;
 var FAIL = -1000000;
+var updatePeriod = 3000;//ms
 var unitsPositionsHash = []; /*массив хешей позиций юнитов*/
+var unitsPreviousCoordinates = [];
+var basesPreviousCoordinates = [];
 var queue = []; /*массив ключей локаций в объекте локаций*/
 
 /**
@@ -26,7 +29,7 @@ function startUpdateElevation(games, locations){
 **/
 function begin(games, locations){
     updateElevationRun(0, games, locations, function(){
-        setTimeout(begin, 1000, games, locations);
+        setTimeout(begin, updatePeriod, games, locations);
     });
 }
 
@@ -50,7 +53,7 @@ function updateElevationRun(index, games, locations, callback){
 
 
 /**
-* получение высот точек от севиса высотных данных
+* получение высот точек от сервиса высотных данных
 * и обновление в соответсвии с ними объектов юнитов
 * в объекте игры game
 * @param index индекс хеша в массиве хешей юнитов
@@ -68,12 +71,17 @@ function updateElevation(index, game, callback){
     unitsPositionsHash[index] = hash;
     
     var dots = prepareDots(game);
-    if (dots.length == 0){
+
+    //удаляем undefined элементы
+    var clearDots = dots.filter(function(x) {
+        return x !== undefined && x !== null;
+    });
+    if (clearDots.length == 0){
         callback();
         return;
     }
   
-    getElevations(dots, function(result){
+    getElevations(clearDots, function(result){
         updateGameObject(game, result, callback);
     }); 
 }
@@ -95,6 +103,40 @@ function calcUnitsPositionsHash(game){
     return hash;
 }
 
+//подготавливаем только юнитов у которых изменились координаты, сохраняем текущие координаты
+function savePreviousCoordinates(offcet, dots,source) {
+    var number = source.length;
+    for (var i = 0; i < number; i++ ) {
+        var u = i + offcet;
+
+        if (source[i] == undefined) continue;//TODO: когдда может быть такая ситуэшн?
+/*
+        if (source[i] == undefined) {
+            console.log(i);
+            console.log(source);
+
+            return 0;
+        }
+        else {
+            console.log(i + ' ! ');
+            console.log(source);
+        }
+        */
+        if (unitsPreviousCoordinates[u] == undefined) {
+            dots[u][0] = source[i].latlng[0];
+            dots[u][1] = source[i].latlng[1];
+        }
+        else {
+            if (source[i].latlng[0] != unitsPreviousCoordinates[u][0] || source[i].latlng[1] != unitsPreviousCoordinates[u][1]) {
+                dots[u][0] = source[i].latlng[0];
+                dots[u][1] = source[i].latlng[1];
+            }
+        }
+
+        unitsPreviousCoordinates[u] = [source[i].latlng[0], source[i].latlng[1]];
+    }
+}
+
 /**
 * подготовка массива с координатами юнитов игры
 * @param game объект игры
@@ -103,21 +145,13 @@ function prepareDots(game){
     var dots = [];
     var rNumber = game.regiments.length;
     var bNumber = game.bases.length;
-    
-    for (var i = 0; i < rNumber + bNumber; i++ ){
+
+    for (var i = 0; i < rNumber + bNumber; i++)
         dots.push([0,0]);
-    }
-    
-    for ( var i = 0; i < rNumber; i++ ){
-        if ( game.regiments[i] == undefined ) continue;
-        dots[i][0] = game.regiments[i].latlng[0];
-        dots[i][1] = game.regiments[i].latlng[1];
-    }
-    for ( var i = 0; i < bNumber; i++ ){
-        if ( game.bases[i] == undefined ) continue;
-        dots[i+rNumber][0] = game.bases[i].latlng[0];
-        dots[i+rNumber][1] = game.bases[i].latlng[1];
-    }
+
+    //подготавливаем только юнитов и базы у которых изменились координаты
+    savePreviousCoordinates(0, dots, game.regiments);
+    savePreviousCoordinates(rNumber, dots, game.bases);
     
     return dots;
 }

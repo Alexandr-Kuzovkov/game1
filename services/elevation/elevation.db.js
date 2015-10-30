@@ -65,7 +65,7 @@ function getElevations(dots, callback){
 	var group = groupDots(dots);
 	//console.log(group);
 	var arrSQL = prepSQLArray(group);
-	//console.log(arrSQL);
+	console.log(arrSQL);
 	queryArrayRun(0, arrSQL, callback);
 }
 
