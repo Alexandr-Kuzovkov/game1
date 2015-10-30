@@ -97,7 +97,7 @@ var Locations = {
         name: 'mariel_defence',
         bounds: {SW: [55.540024, 44.185282], NE: [58.368193, 52.520890]},
         countries: ['NATO', 'MariEl'],
-        units: {foot: 23, base: 8},
+        units: {foot: 2, base: 1},
         mission: 'miss_desc',
         geoserver: 'http://127.0.0.1:8016',
         year: 2013,
