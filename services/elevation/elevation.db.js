@@ -5,9 +5,7 @@ else
     var dbPath = '/var/www/game1/sqlite/el.sqlite';
 
 
-var sqlite3;
-sqlite3 = require('sqlite3');
-console.log(dbPath);
+var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database(dbPath);
 var delta = 0.01;
 var resultArr = [];

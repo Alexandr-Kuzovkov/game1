@@ -381,3 +381,40 @@ Countries.Confederation = {
         return {name: this.name, id: this.id,icon: this.icon};
     }
 };
+
+Countries.NATO = {
+    name:	'nato',
+    id:	    'NATO',
+
+    icon: 	{   url: '/img/country/NATO-big.png',
+        size: [24,24],
+        anchor: [12,36],
+        shadowanchor: [4,23],
+        popupanchor: [-3,-23]
+
+    },
+
+
+    toString: function(){
+        return {name: this.name, id: this.id,icon: this.icon};
+    }
+};
+
+Countries.MariEl = {
+    name:	'mariel', /*имя*/
+    id:	    'MariEl',               /*идентификатор*/
+    /*картинка иконки*/
+    icon: 	{   url: '/img/country/Russia.png',
+        size: [24,24],
+        anchor: [12,36],
+        shadowanchor: [4,23],
+        popupanchor: [-3,-23]
+
+    },
+
+
+    toString: function(){                             /*преобразование объекта в вид который может быть преобразован в строку*/
+        return {name: this.name, id: this.id,icon: this.icon};
+    }
+
+};

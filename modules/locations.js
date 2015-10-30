@@ -77,8 +77,33 @@ var Locations = {
         year: 2013,
          minZoom: 12,
         maxZoom: 14
-    }
+    },
 
+    invading_to_russia:{
+        id: 'invading_to_russia',
+        name: 'invading_to_russia',
+        bounds: {SW: [44.826868, 28.222686], NE: [61.833239, 37.491232]},
+        countries: ['NATO', 'Russia'],
+        units: {foot: 20, base: 6},
+        mission: 'miss_desc',
+        geoserver: 'http://127.0.0.1:8016',
+        year: 2013,
+        minZoom: 12,
+        maxZoom: 14
+    },
+
+    mariel_defence:{
+        id: 'mariel_defence',
+        name: 'mariel_defence',
+        bounds: {SW: [55.540024, 44.185282], NE: [58.368193, 52.520890]},
+        countries: ['NATO', 'MariEl'],
+        units: {foot: 23, base: 8},
+        mission: 'miss_desc',
+        geoserver: 'http://127.0.0.1:8016',
+        year: 2013,
+        minZoom: 1,
+        maxZoom: 20
+    }
 };
 
 exports.locations = Locations;

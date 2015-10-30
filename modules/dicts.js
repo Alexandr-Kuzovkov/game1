@@ -76,9 +76,13 @@ var Dicts = {
         uzbekistan: 'Узбекистан',
         novorossia: 'Новороссия',
         hato: 'НАТО',
+        mariel: 'MariEl',
+        nato: 'NATO',
         confederation: 'Конфедерация',
         russia_hato: 'Россия-НАТО',
-        usa_war: 'Гражданская война в США' 
+        usa_war: 'Гражданская война в США',
+        invading_to_russia: 'Вторжение в Россию',
+        mariel_defence: 'MariEl defence'
         
     },
     en:{
@@ -156,11 +160,15 @@ var Dicts = {
          pakistan: 'Pakistan',
          turkmenistan: 'Turkmenistan',
          uzbekistan: 'Uzbekistan',
+         mariel: 'MariEl',
+         nato: 'NATO',
         novorossia: 'novorossia',
         hato: 'НАТО',
         confederation: 'Confederation',
         russia_hato: 'Russia-НАТО',
-        usa_war: 'Late unpleasantness'     
+        usa_war: 'Late unpleasantness',
+        invading_to_russia: 'Invading in Russia',
+        mariel_defence: 'MariEl defence'
     }
 };
 

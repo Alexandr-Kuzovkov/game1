@@ -151,7 +151,8 @@ body
 {
     #map
     {
-    	width: 1240px; 
+    	/*width: 1240px;*/
+        width: 100%;
         
     }
     
