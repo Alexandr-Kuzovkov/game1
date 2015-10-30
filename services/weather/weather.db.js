@@ -100,6 +100,12 @@ function getWeather(date, latitude, longitude, callback){
 **/
 function getWeatherMulti(date, dots, callback){
 	//console.log('getWeatherMulti dots:' + JSON.stringify(dots));
+
+	if (dots.length == 0) {
+        callback(RESULT_FAIL);
+        return;
+    }
+
     var year = date.slice(0, 4);
 	if (parseInt(year) < START_YEAR || parseInt(year) > END_YEAR){
 		callback(RESULT_FAIL);
@@ -152,12 +158,12 @@ function getWeatherMulti(date, dots, callback){
         
 		var sql = "SELECT * FROM meteo WHERE thedate='"+date+"' AND (";
 		for(var i = 0; i < points.length; i++){
-			if (!wban[i] || !stn[i]) continue;
+			if (!wban[i] || !stn[i]) continue; //TODO: создаёт ошибку в запросе при запуске игры
 			sql += "(wban='"+wban[i]+"' AND stn='"+stn[i]+"')";
 			if (i < points.length - 1) sql += ' OR ';
 		}
 		sql += ')';
-		//console.log(sql);
+		console.log(sql);
 		queryMeteoMulti(year, sql, function(rows){
 			if (rows == null){
 				callback(RESULT_FAIL);
