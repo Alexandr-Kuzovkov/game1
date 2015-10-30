@@ -1,5 +1,12 @@
 /*модуль маршрутов spatialite*/
 /*с отсечением узлов и с усечением графа*/
+
+
+if (process.env.NODE_ENV == 'alexander')
+    var DB_FOLDER = '/site5/services/around/db'; /*каталог с базами данных*/
+else
+    var DB_FOLDER = '/var/www/game1/sqlite/';
+
 var sqlite = require('spatialite');
 var time = require('./time');
 var db = null; 
@@ -15,7 +22,6 @@ var NEG_INF = -999999999 /**отрицательное большое число
 var margin = 0.6; /**коэффициент расширения для определения части графа для обсчета**/
 var margin2 = 2.0;/**коэффициент расширения для определения части графа для обсчета**/
 var ready = false;
-var DB_FOLDER = '/site5/services/around/db'; /*каталог с базами данных*/
 var CONNECTED_COFF = 0.95; /**часть связных узлов**/
 var boundary = {    /**объект задающий границы графа дорожной сети **/
                     min_lat:null,

@@ -1,6 +1,14 @@
 /**получение высот из базы высот**/
-var sqlite3 = require('sqlite3');
-var db = new sqlite3.Database('/site5/services/elevation/el2.sqlite');
+if (process.env.NODE_ENV == 'alexander')
+    var dbPath = '/site5/services/elevation/el2.sqlite';
+else
+    var dbPath = '/var/www/game1/sqlite/el.sqlite';
+
+
+var sqlite3;
+sqlite3 = require('sqlite3');
+console.log(dbPath);
+var db = new sqlite3.Database(dbPath);
 var delta = 0.01;
 var resultArr = [];
 

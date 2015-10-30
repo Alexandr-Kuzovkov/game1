@@ -1,7 +1,12 @@
 /**модуль получения погоды из базы**/
+
+if (process.env.NODE_ENV == 'alexander')
+    var DB_DIR = '/site5/services/weather/db/';
+else
+    var DB_DIR = '/var/www/game1/sqlite/';
+
 var START_YEAR = 1994;
 var END_YEAR = 2014;
-var DB_DIR = '/site5/services/weather/db/';
 var BIG_NUM = 9999999999999999;
 
 var sqlite3 = require('sqlite3');
