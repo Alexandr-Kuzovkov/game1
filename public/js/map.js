@@ -30,9 +30,12 @@ Map.init = function(app){
 	attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
    
-   /*создаем tile-слои Google*/ 
-   var ggl = new Map.lib.Google('SATELLITE',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
-   var ggl2 = new Map.lib.Google('TERRAIN',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+    /*создаем tile-слои Google*/
+    var ggl = new Map.lib.Google('SATELLITE',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+    var ggl2 = new Map.lib.Google('TERRAIN',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
+
+    /*создаем tile-слой Yandex*/
+    var yndx = new Map.lib.Yandex();
     
 	/*создаем другие базовые слои от других провайдеров*/     
 	var osmde = Map.lib.tileLayer.provider('OpenStreetMap.DE',{maxZoom: Map.maxZoom, minZoom: Map.minZoom});
@@ -41,14 +44,15 @@ Map.init = function(app){
 	Map.map.addLayer(ggl2);
     /*создаем контрол для переключения слоев*/
 	Map.baseLayers = 	{
-							"OpenStreetMap": osmde,
-                            "Mapbox": mapbox,
-							"OpenStreetMap Black and White": osmBW,
-                            "Thunderforest.Landscape": Thunderforest_Landscape,
-							"Esri WorldImagery": ersiwi,
-                            "Google Satellite": ggl,
-                            "Google Terrain": ggl2
-						};
+        "OpenStreetMap": osmde,
+        "Mapbox": mapbox,
+        "OpenStreetMap Black and White": osmBW,
+        "Thunderforest.Landscape": Thunderforest_Landscape,
+        "Esri WorldImagery": ersiwi,
+        "Google Satellite": ggl,
+        "Google Terrain": ggl2,
+        "Yandex" : yndx
+    };
 
 	Map.lib.control.layers(Map.baseLayers).addTo(Map.map);
 };

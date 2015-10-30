@@ -26,23 +26,28 @@
 	attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });
    
-   /*создаем tile-слои Google*/ 
-   var ggl = new L.Google('SATELLITE',{maxZoom: maxZoom, minZoom: minZoom});
-   var ggl2 = new L.Google('TERRAIN',{maxZoom: maxZoom, minZoom: minZoom});
+    /*создаем tile-слои Google*/
+    var ggl = new L.Google('SATELLITE',{maxZoom: maxZoom, minZoom: minZoom});
+    var ggl2 = new L.Google('TERRAIN',{maxZoom: maxZoom, minZoom: minZoom});
+
+	/*создаем tile-слой Yandex*/
+	var yndx = new L.Yandex();
     
 	/*создаем другие базовые слои от других провайдеров*/     
 	var osmde = L.tileLayer.provider('OpenStreetMap.DE',{maxZoom: maxZoom, minZoom: minZoom});
 	var osmBW = L.tileLayer.provider('OpenStreetMap.BlackAndWhite',{maxZoom: maxZoom, minZoom: minZoom}).addTo(map);
 	var ersiwi = L.tileLayer.provider('Esri.WorldImagery',{maxZoom: maxZoom, minZoom: minZoom});
+
 	/*создаем контрол для переключения слоев*/
-	var baseLayers = 	{
-							"OpenStreetMap": osmde,
-                            "Mapbox": mapbox,
-							"OpenStreetMap Black and White": osmBW,
-                            "Thunderforest.Landscape": Thunderforest_Landscape,
-							"Esri WorldImagery": ersiwi,
-                            "Google Satellite": ggl,
-                            "Google Terrain": ggl2
-						};
+	var baseLayers = {
+		"OpenStreetMap": osmde,
+		"Mapbox": mapbox,
+		"OpenStreetMap Black and White": osmBW,
+		"Thunderforest.Landscape": Thunderforest_Landscape,
+		"Esri WorldImagery": ersiwi,
+		"Google Satellite": ggl,
+		"Google Terrain": ggl2,
+		"Yandex" : yndx
+	};
 
 	L.control.layers(baseLayers).addTo(map);
